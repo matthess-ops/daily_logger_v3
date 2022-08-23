@@ -1,0 +1,1 @@
+php artisan serve 2>&1 | Select-String "losin" -NotMatch | Select-String "accep" -NotMatch | Select-String "favicon.ic" -NotMatch | Select-String "app" -NotMatch
