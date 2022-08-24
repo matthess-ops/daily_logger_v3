@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Activity;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Action;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class ClientActivitiesController extends Controller
 {
@@ -16,10 +19,9 @@ class ClientActivitiesController extends Controller
     public function index()
     {
         error_log('ClientActivitiesController@index called');
-        $clientActivities = Auth::user()->client->activities;
-        // dump($clientActivities);
 
-        return view('web.sections.client.activities.index',['activities'=>$clientActivities]);
+        $clientActivities = Auth::user()->client->activities->sortByDesc('created_at');
+        return view('web.sections.client.activities.index', ['activities' => $clientActivities  ]);
     }
 
     /**
@@ -40,7 +42,41 @@ class ClientActivitiesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        error_log('ClientActivitiesController@store called');
+
+        
+    
+        if ($request->has('mainActivity')) {
+
+            $validatedData = $request->validate([
+                'mainActivity' => 'required|min:6',
+           
+            ]);
+            Activity::create([
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'user_id' => Auth::id(),
+                'value' => $request->input('mainActivity'),
+                'type' => 'main',
+            ]);
+        }
+
+        if ($request->has('scaledActivity')) {
+
+            $validatedData = $request->validate([
+                'scaledActivity' => 'required|min:6',
+           
+            ]);
+            Activity::create([
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'user_id' => Auth::id(),
+                'value' => $request->input('scaledActivity'),
+                'type' => 'scaled',
+            ]);
+        } 
+
+        return redirect()->back();
     }
 
     /**
@@ -85,10 +121,9 @@ class ClientActivitiesController extends Controller
      */
     public function destroy(Request $request)
     {
-        error_log("test");
-        error_log('ClientActivitiesController@destory called');
-        error_log(json_encode($request->all()));
 
+        $activityToRemove = $request->input('removeActivity');
+        Activity::destroy($activityToRemove);
         return redirect()->back();
     }
 }

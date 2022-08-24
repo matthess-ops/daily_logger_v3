@@ -2,6 +2,7 @@
 
 @section('content')
     <h3>web.client.edit.blade.php</h3>
+    {{ $errors }}
     <form action="{{ route('client.update',['client_id'=>Auth::user()->client->user_id]) }}" method="POST">
         {{ method_field('patch') }}
 

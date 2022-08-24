@@ -31,14 +31,18 @@ class DailyActivitySeeder extends Seeder
                 }
             }
             $startDateTime = Carbon::now()->subDays(7);
-            for ($i=0; $i < 2; $i++) {
-                $startDateTime->addDay();
+            // for ($i=0; $i < 10; $i++) { 
+            //     error_log("i = ".$i);
+            // }
+
+            for ($i=0; $i < 10; $i++)  {
+                $startDateTime= $startDateTime->addDay();
                 $newTimeSlots = [];
                 $newMainActivities =[];
                 $newScaledActivities=[];
                 $newScaledActivitiesScores =[];
 
-                for ($i=0; $i <= 95; $i++) {
+                for ($j=0; $j<= 95; $j++) {
                     array_push($newTimeSlots,$i);
                     $randMainActivity = $mainActivities[rand(0,count($mainActivities)-1)];
                     array_push($newMainActivities,$randMainActivity);
@@ -48,16 +52,13 @@ class DailyActivitySeeder extends Seeder
 
                 DailyActivity::create([
 
-                    'user_id'=>'1',
-                    // 'time_slots'=>["a","b"],
-                    //     'main_activities'=>["a","b"],
-                    // 'scaled_activities'=>["a","b"],
-                    // 'scaled_activities_scores'=>["a","b"],
-                      'time_slots'=>$newTimeSlots,
-                        'main_activities'=>$newMainActivities,
+                    'user_id'=>$client->id,
+                    'time_slots'=>$newTimeSlots,
+                    'main_activities'=>$newMainActivities,
                     'scaled_activities'=>$newScaledActivities,
                     'scaled_activities_scores'=>$newScaledActivitiesScores,
-
+                    'created_at'=>$startDateTime,
+                    'updated_at'=>$startDateTime,
                     'date_today'=>$startDateTime->format('Y-m-d'),
 
                 ]);

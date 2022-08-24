@@ -38,14 +38,19 @@ Route::group(['prefix' => 'client'], function() {
 
 
 Route::group(['prefix' => 'client/activities'], function() {
-
     Route::get('/', 'ClientActivitiesController@index')->name('clientActivities.index')->middleware('auth');
-    // Route::get('/create', 'ClientActivitiesController@create')->name('ClientActivities.create')->middleware('auth');
     Route::post('/create', 'ClientActivitiesController@store')->name('clientActivities.store')->middleware('auth');
-    // Route::get('/{ClientActivities_id}/show', 'ClientActivitiesController@show')->name('ClientActivities.show')->middleware('auth');
-    // Route::patch('/{ClientActivities_id}/update', 'ClientActivitiesController@update')->name('ClientActivities.update')->middleware('auth');
-    // Route::delete('/{id}/delete', 'ClientActivitiesController@destroy')->name('clientActivities.destroy')->middleware('auth');
     Route::delete('/deletee', 'ClientActivitiesController@destroy')->name('clientActivities.destroy')->middleware('auth');
+});
 
-    // Route::get('/{ClientActivities_id}/edit', 'ClientActivitiesController@edit')->name('ClientActivities.edit')->middleware('auth');
+
+Route::group(['prefix' => 'client/daily-activity'], function() {
+
+    Route::get('{user_id}/', 'DailyActivityController@index')->name('dailyActivity.index')->middleware('auth');
+    Route::get('{user_id}/create', 'DailyActivityController@create')->name('dailyActivity.create')->middleware('auth');
+    Route::post('{user_id}/create', 'DailyActivityController@store')->name('dailyActivity.store')->middleware('auth');
+    Route::get('{user_id}/{daily_activity_id}/show', 'DailyActivityController@show')->name('dailyActivity.show')->middleware('auth');
+    Route::patch('{user_id}/{daily_activity_id}/update', 'DailyActivityController@update')->name('dailyActivity.update')->middleware('auth');
+    Route::delete('{user_id}/{daily_activity_id}/delete', 'DailyActivityController@destroy')->name('dailyActivity.destroy')->middleware('auth');
+    Route::get('{user_id}/{daily_activity_id}/edit', 'DailyActivityController@edit')->name('dailyActivity.edit')->middleware('auth');
 });

@@ -33,7 +33,7 @@
                   Activiteiten
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="">Logger</a>
+                  <a class="dropdown-item" href="{{ route('dailyActivity.index',['user_id'=>Auth::id()])}}" >Logger</a>
                   <a class="dropdown-item" href="{{ route('clientActivities.index')}}">Instellingen</a>
                   <a class="dropdown-item" href="">Grafieken</a>
                 </div>
