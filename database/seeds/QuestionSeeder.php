@@ -5,13 +5,11 @@ use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use App\Question;
 
+//Seeder to for the questions table.
 class QuestionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+    // pick for each client an random non duplicate number of questions
+    // and create and question entry in the question table.
     public function run()
     {
         $clients = Client::all();

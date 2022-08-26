@@ -5,13 +5,11 @@ use Faker\Generator as Faker;
 use App\User;
 use App\Client;
 
+//Seeder for the client table
 class ClientSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+   //check and create for all users if an user has an role of client
+   //if so create for the user and client entry in the client table
     public function run(Faker $faker)
     {
         $users = User::all();

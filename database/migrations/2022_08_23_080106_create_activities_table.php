@@ -18,6 +18,8 @@ class CreateActivitiesTable extends Migration
             $table->timestamps();
             $table->string('user_id');
             $table->string('value');
+            $table->string('color')->nullable(); // either scaled or main activity type
+
             $table->string('type'); // either scaled or main activity type
         });
     }

@@ -5,12 +5,15 @@ use App\Client;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
+//Seeder that creates activity table rows.
+
 class ActivitySeeder extends Seeder
 {
-    //pick a random string from an array without duplicates
+    //pick an random number of activities without duplicates and
+    //save these to the database
     //$type = scale or main
     //user_id = is the user id
-    //$activities = an arary of activities
+    //$activities = an array of activities
     public function pickRandomFromArray(array $activities, string $type, string $user_id)
     {
         $numToPick =  rand(1, count($activities));
@@ -30,9 +33,12 @@ class ActivitySeeder extends Seeder
                 'user_id' => $user_id,
                 'value' => $randActivity,
                 'type' => $type,
+                'color'=> '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT),
             ]);
         }
     }
+    //Create for each client an random no duplicate array of main and scaled activities
+    //and save these to the Activity table
     public function run()
     {
         $clients = Client::all();

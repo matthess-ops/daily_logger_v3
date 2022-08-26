@@ -5,6 +5,7 @@ use Faker\Generator as Faker;
 use App\User;
 use App\Admin;
 
+//Seeder that creates and save admins to to admin table
 class AdminSeeder extends Seeder
 {
     /**
@@ -12,6 +13,8 @@ class AdminSeeder extends Seeder
      *
      * @return void
      */
+    //for each user in the user table check if the user role is admin
+    //if so create for this user and admin entry in the admin table
     public function run(Faker $faker)
     {
         $users = User::all();

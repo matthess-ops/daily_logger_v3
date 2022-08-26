@@ -5,11 +5,7 @@ use App\User;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+
     public function run()
     {
          // number of random client, admin, mentor users to make

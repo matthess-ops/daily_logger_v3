@@ -5,19 +5,18 @@ use App\DailyQuestion;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
+//Seeder that create dailyQuestion entries for the daiyQuestion table
 class DailyQuestionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+    //generate and save for each client for each of the last x days an
+    //dailyreport entry.
     public function run()
     {
         // get all clients
+        $nrOfDaysToGenerateData = 7; // nr of days to generate entries for.
+
         $clients = Client::all();
         foreach ($clients as $client) {
-            // start date is 7 days ago
             $questions = [];
             $scores = [];
 
@@ -28,8 +27,8 @@ class DailyQuestionSeeder extends Seeder
                 array_push($scores, rand(0, 10));
             }
 
-            $startDateTime = Carbon::now()->subDays(7);
-            for ($i = 0; $i < 7; $i++) {
+            $startDateTime = Carbon::now()->subDays($nrOfDaysToGenerateData);
+            for ($i = 0; $i < $nrOfDaysToGenerateData; $i++) {
                 //pick random int to set filled field to true or false
                 $randomInt = rand(0, 2);
                 $startDateTime->addDay();

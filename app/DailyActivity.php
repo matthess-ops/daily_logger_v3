@@ -11,6 +11,7 @@ class DailyActivity extends Model
         'main_activities' => 'array',
         'scaled_activities' => 'array',
         'scaled_activities_scores' => 'array',
+        'colors' => 'array',
 
     ];
 }

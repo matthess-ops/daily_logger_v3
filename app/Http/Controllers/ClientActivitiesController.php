@@ -9,48 +9,45 @@ use Illuminate\Notifications\Action;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 
+//authorization consideration: since only the client needs to have the ability to crud
+//its own data. It was decided in each function to use the Auth plus db relationships to retrieve
+//the needed data. This way an user can only retrieve its own data.
+
+
+
+//controller that is responsible for storing and deleting main and scaled activities
+//for an particular client.
 class ClientActivitiesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    //return a view with the activities associated with the currently logged in user.
     public function index()
     {
         error_log('ClientActivitiesController@index called');
 
-        $clientActivities = Auth::user()->client->activities->sortByDesc('created_at');
+        $clientActivities = Auth::user()->client->activities->sortByDesc('created_at'); // sort for created_at to put the latest on top
+        $this->authorize('viewAny', $clientActivities[0]);
+
         return view('web.sections.client.activities.index', ['activities' => $clientActivities  ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    //validate and store a main or scaled activity to the activities table.
+    //since main and scaled activities inputs use the the same form, you will
+    //need to check if the input is an mainActivity or a scaledActivity
     public function store(Request $request)
     {
         error_log('ClientActivitiesController@store called');
-
-        
-    
+        //check if the $request has an mainActivity input field
         if ($request->has('mainActivity')) {
-
+            // validate the mainAcitivit input
             $validatedData = $request->validate([
-                'mainActivity' => 'required|min:6',
-           
+                'mainActivity' => 'required',
+
             ]);
             Activity::create([
                 'created_at' => Carbon::now(),
@@ -60,12 +57,12 @@ class ClientActivitiesController extends Controller
                 'type' => 'main',
             ]);
         }
-
+        //check if the $request has an scaledActivity input field
         if ($request->has('scaledActivity')) {
 
             $validatedData = $request->validate([
-                'scaledActivity' => 'required|min:6',
-           
+                'scaledActivity' => 'required',
+
             ]);
             Activity::create([
                 'created_at' => Carbon::now(),
@@ -74,7 +71,7 @@ class ClientActivitiesController extends Controller
                 'value' => $request->input('scaledActivity'),
                 'type' => 'scaled',
             ]);
-        } 
+        }
 
         return redirect()->back();
     }
@@ -119,11 +116,14 @@ class ClientActivitiesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    //Destroy a main or scaled activity.
     public function destroy(Request $request)
     {
 
         $activityToRemove = $request->input('removeActivity');
-        Activity::destroy($activityToRemove);
+        $activity = Activity::find($activityToRemove);
+        $this->authorize('delete-activity', $activity);
+        $activity->delete();
         return redirect()->back();
     }
 }

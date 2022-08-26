@@ -23,6 +23,8 @@ class CreateDailyActivitiesTable extends Migration
             $table->json('scaled_activities_scores');
 
             $table->string('date_today');
+            $table->json('colors');
+
         });
     }
 

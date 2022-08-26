@@ -48,7 +48,7 @@ class ClientController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     //return client data
+     //return a view with the associated client data
     public function show($id)
     {
         error_log("client.show called");
@@ -80,12 +80,13 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    //validate and update client data.
     public function update(Request $request, $id)
     {
         error_log('client.update called');
         $client = Client::find(Auth::id());
         $this->authorize('update', $client);
-
+        //user data is needed because this model contains the email address.
         $user = User::find($client->user_id);
 
         $validatedData = $request->validate([
@@ -103,7 +104,7 @@ class ClientController extends Controller
             'phone_number' => 'required',
             'city' => 'required',
         ]);
-
+        //the updated client data
         $client->firstname = $request->input('firstname');
         $client->lastname = $request->input('lastname');
         $client->street = $request->input('street');
@@ -113,12 +114,10 @@ class ClientController extends Controller
         $client->phone_number = $request->input('phone_number');
 
         $client->save();
+        // the update user/client email
         $user->email = $request->input('email');
 
         $user->save();
-
-
-
         return redirect()->back();
     }
 

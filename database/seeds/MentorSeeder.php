@@ -5,13 +5,11 @@ use Faker\Generator as Faker;
 use App\User;
 use App\Mentor;
 
+//Seeder to create mentor entries for the mentor table
 class MentorSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+    // check for each user if the user has an role of mentor. If so
+    // create for this user and mentor entry in the mentor table
     public function run(Faker $faker)
     {
         $users = User::all();
