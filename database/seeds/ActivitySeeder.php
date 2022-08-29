@@ -16,7 +16,7 @@ class ActivitySeeder extends Seeder
     //$activities = an array of activities
     public function pickRandomFromArray(array $activities, string $type, string $user_id)
     {
-        $numToPick =  rand(1, count($activities));
+        $numToPick =  rand(3, count($activities));
         for ($i = 0; $i < $numToPick; $i++) {
             $randActivityIndex = rand(0, count($activities) - 1);
             $randActivity = $activities[$randActivityIndex];

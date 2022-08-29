@@ -17,7 +17,7 @@ class QuestionSeeder extends Seeder
             //dummy questions
             $questions = ["Hoe was je dag,", "Hoe gespannen was je.", "Was je erg nerveus", "Was je erg anstig", "Hoeveel pijn had je vandaag", "Was je er erg druk in je hoofd", "Had je veel pijn"];
             //random number of questions to save to the db for this client
-            $numOfQuestions =  rand(0, count($questions));
+            $numOfQuestions =  rand(4, count($questions));
             for ($i = 0; $i < $numOfQuestions; $i++) {
 
                 $randomQuestionIndex = rand(0, count($questions) - 1);

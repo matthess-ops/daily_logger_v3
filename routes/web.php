@@ -54,3 +54,14 @@ Route::group(['prefix' => 'client/daily-activity'], function() {
     Route::delete('{user_id}/{daily_activity_id}/delete', 'DailyActivityController@destroy')->name('dailyActivity.destroy')->middleware('auth');
     Route::get('{user_id}/{daily_activity_id}/edit', 'DailyActivityController@edit')->name('dailyActivity.edit')->middleware('auth');
 });
+
+Route::group(['prefix' => 'client/daily-question'], function() {
+
+    Route::get('{user_id}/', 'DailyQuestionController@index')->name('dailyQuestion.index')->middleware('auth');
+    Route::get('{user_id}/create', 'DailyQuestionController@create')->name('dailyQuestion.create')->middleware('auth');
+    Route::post('{user_id}/create', 'DailyQuestionController@store')->name('dailyQuestion.store')->middleware('auth');
+    Route::get('{user_id}/{daily_question_id}/show', 'DailyQuestionController@show')->name('dailyQuestion.show')->middleware('auth');
+    Route::patch('{user_id}/{daily_question_id}/update', 'DailyQuestionController@update')->name('dailyQuestion.update')->middleware('auth');
+    Route::delete('{user_id}/{daily_question_id}/delete', 'DailyQuestionController@destroy')->name('dailyQuestion.destroy')->middleware('auth');
+    Route::get('{user_id}/{daily_question_id}/edit', 'DailyQuestionController@edit')->name('dailyQuestion.edit')->middleware('auth');
+});

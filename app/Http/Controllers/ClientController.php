@@ -15,9 +15,23 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+
+      // fix authorization
+        error_log(json_encode($request->all()));
+        error_log('ClientController@index');
+
+     
+            error_log("check search ".$request->input('search'));
+            $search = $request->input('search');
+        $clients = Client::paginate(10);
+                        $clients = Client::with('user')
+              ->where('firstname', 'LIKE', "%{$search}%")
+              ->orWhere('lastname', 'LIKE', "%{$search}%")
+              ->paginate(10);
+        return view('web.sections.admin.client.index', compact('clients'));
+
     }
 
     /**
@@ -48,7 +62,7 @@ class ClientController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     //return a view with the associated client data
+    //return a view with the associated client data
     public function show($id)
     {
         error_log("client.show called");

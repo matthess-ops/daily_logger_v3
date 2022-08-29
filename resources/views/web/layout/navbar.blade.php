@@ -44,7 +44,7 @@
                   Dagelijkse rapportage
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="">Overzicht</a>
+                  <a class="dropdown-item" href="{{ route('dailyQuestion.index',['user_id'=>Auth::id()])}}">Overzicht</a>
                   <a class="dropdown-item" href="">Grafieken</a>
                 </div>
               </li>
@@ -68,7 +68,7 @@
                   Clienten
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="">Zoeken</a>
+                  <a class="dropdown-item" href="{{ route('client.index')}}">Zoeken</a>
                   <a class="dropdown-item" href="">Toevoegen</a>
                 </div>
               </li>

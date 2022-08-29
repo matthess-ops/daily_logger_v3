@@ -13,7 +13,7 @@ class DailyActivityController extends Controller
     public function index($user_id)
     {
         error_log('DailyActivityController@index called');
-        $dailyActivities = DailyActivity::where('user_id', $user_id)->orderBy('created_at') // sort to put the latest dailyActivity on top
+        $dailyActivities = DailyActivity::where('user_id', $user_id)->orderBy('created_at','DESC') // sort to put the latest dailyActivity on top
             ->take(5) // 5 days
             ->get()
             ->makeHidden(['time_slots', 'main_activities','scaled_activities','scaled_activities_scores']); // not all data is needed for the view to function
