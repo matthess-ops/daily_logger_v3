@@ -20,10 +20,25 @@ class ClientPolicy
         //
     }
 
+    public function before(User $user)
+{
+    error_log('clientpolicy before called');
+    if ($user->role == 'admin') {
+        return true;
+    }
+}
+
     public function view(User $user, Client $client){
 
         error_log('called clientpolicy view');
         return $user->id == $client->user_id;
+
+    }
+
+    public function create(User $user){
+
+        error_log('called clientpolicy view');
+        return $user->isAdmin();
 
     }
 

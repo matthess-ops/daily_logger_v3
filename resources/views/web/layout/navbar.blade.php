@@ -69,7 +69,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="{{ route('client.index')}}">Zoeken</a>
-                  <a class="dropdown-item" href="">Toevoegen</a>
+                  <a class="dropdown-item" href="{{ route('client.create')}}">Toevoegen</a>
                 </div>
               </li>
 
@@ -78,8 +78,8 @@
                   Begeleiders
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="">Zoeken</a>
-                  <a class="dropdown-item" href="">Toevoegen</a>
+                  <a class="dropdown-item" href="{{ route('mentor.index')}}">Zoeken</a>
+                  <a class="dropdown-item" href="{{ route('mentor.create')}}">Toevoegen</a>
                 </div>
               </li>
 

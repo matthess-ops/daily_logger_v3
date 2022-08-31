@@ -4,6 +4,7 @@ use App\Client;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use App\Question;
+use App\User;
 
 //Seeder to for the questions table.
 class QuestionSeeder extends Seeder
@@ -12,11 +13,32 @@ class QuestionSeeder extends Seeder
     // and create and question entry in the question table.
     public function run()
     {
+        $adminDefaultQuestions = ["Hoe was je dag,", "Hoe gespannen was je.", "Was je erg nerveus", "Was je erg anstig", "Hoeveel pijn had je vandaag", "Was je er erg druk in je hoofd", "Had je veel pijn"];
+        $adminId =User::where('role','admin')->first()->id;
+        // error_log("ADMIMID ".$adminId);
+        // // dd($admin);
+        foreach($adminDefaultQuestions as $adminDefaultQuestion){
+            Question::create([
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'user_id' => $adminId,
+                'question' => $adminDefaultQuestion,
+            ]);
+        }
+
+
+
+
+
+
+
         $clients = Client::all();
         foreach ($clients as $client) {
             //dummy questions
-            $questions = ["Hoe was je dag,", "Hoe gespannen was je.", "Was je erg nerveus", "Was je erg anstig", "Hoeveel pijn had je vandaag", "Was je er erg druk in je hoofd", "Had je veel pijn"];
+            // $questions = ["Hoe was je dag,", "Hoe gespannen was je.", "Was je erg nerveus", "Was je erg anstig", "Hoeveel pijn had je vandaag", "Was je er erg druk in je hoofd", "Had je veel pijn"];
             //random number of questions to save to the db for this client
+            $questions = ["Hoe was je dag,", "Hoe gespannen was je.", "Was je erg nerveus", "Was je erg anstig", "Hoeveel pijn had je vandaag", "Was je er erg druk in je hoofd", "Had je veel pijn"];
+
             $numOfQuestions =  rand(4, count($questions));
             for ($i = 0; $i < $numOfQuestions; $i++) {
 

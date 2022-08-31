@@ -41,6 +41,28 @@ class User extends Authenticatable
         return $this->hasOne(Client::class);
     }
 
+    public function mentor(){
+        return $this->hasOne(Mentor::class);
+    }
+
+    public function isAdmin(){
+        if($this->role == 'admin'){
+            return true;
+        }
+    }
+
+    public function isClient(){
+        if($this->role == 'client'){
+            return true;
+        }
+    }
+
+    public function isMentor(){
+        if($this->role == 'mentor'){
+            return true;
+        }
+    }
+
 
 
 

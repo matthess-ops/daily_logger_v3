@@ -17,22 +17,29 @@
                 <th>Voornaam</th>
                 <th>Achternaam</th>
                 <th>Email</th>
+                <th>Account aangemaakt</th>
+
                 <th>Account status</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($clients as $client)
-            <tr>
+            <tr onclick="location.href='{{ route('client.show', ['client_id' => $client->id]) }}'">
+
+            {{-- <tr onclick="location.href='{{ route('client.show'), ['id' => $client->id]) }}'"> --}}
 
             <td>{{ $client->firstname }}</td>
             <td>{{ $client->lastname }}</td>
             <td>{{ $client->user->email }}</td>
-            <td>        @if ($client->user->account_status)
+            <td>{{ $client->user->created_at->format('M d Y') }}</td>
+
+            {{-- <td>{{$client->user->active}}</td> --}}
+            <td>        @if ($client->user->active == true)
                 active
             @else
                 non-active
             @endif</td>
-    
+
             </tr>
         @endforeach
         </tbody>
@@ -40,18 +47,8 @@
 
     {{ $clients->links() }}
 
-    
- 
 
-  
-    {{-- @foreach ($dailyActivities as $dailyActivity)
-    <div class="row">
-        <a href="{{ route('dailyActivity.edit', ['user_id' => Auth::id(),'daily_activity_id'=>$dailyActivity->id]) }}" class="link-secondary"
-            >{{ $dailyActivity->date_today }}</a>
 
-    </div>
-    
-    @endforeach --}}
 
 
 

@@ -11,7 +11,7 @@ class UserSeeder extends Seeder
          // number of random client, admin, mentor users to make
          $numOfClients = 10;
          $numOfAdmins = 0;
-         $numOfMentors = 0;
+         $numOfMentors = 10;
 
 
 
