@@ -93,9 +93,21 @@ Route::group(['prefix' => 'question'], function() {
 
     Route::get('/', 'QuestionController@index')->name('question.index')->middleware('auth');
     Route::get('/create', 'QuestionController@create')->name('question.create')->middleware('auth');
-    Route::post('/create', 'QuestionController@store')->name('question.store')->middleware('auth');
+    Route::post('{user_id}/create', 'QuestionController@store')->name('question.store')->middleware('auth');
     Route::get('/{question_id}/show', 'QuestionController@show')->name('question.show')->middleware('auth');
-    Route::patch('/{question_id}/update', 'QuestionController@update')->name('question.update')->middleware('auth');
+    Route::patch('/{user_id}/update', 'QuestionController@update')->name('question.update')->middleware('auth');
     Route::delete('/{question_id}/delete', 'QuestionController@destroy')->name('question.destroy')->middleware('auth');
-    Route::get('/{question_id}/edit', 'QuestionController@edit')->name('question.edit')->middleware('auth');
+    Route::get('/{client_id}/edit', 'QuestionController@edit')->name('question.edit')->middleware('auth');
+});
+
+
+Route::group(['prefix' => 'defaultquestion'], function() {
+
+    // Route::get('/', 'DefaultQuestionController@index')->name('defaultquestion.index')->middleware('auth');
+    // Route::get('/create', 'DefaultQuestionController@create')->name('defaultquestion.create')->middleware('auth');
+    Route::post('/create', 'DefaultQuestionController@store')->name('defaultquestion.store')->middleware('auth');
+    // Route::get('/{DefaultQuestion_id}/show', 'DefaultQuestionController@show')->name('defaultquestion.show')->middleware('auth');
+    // Route::patch('/{user_id}/update', 'DefaultQuestionController@update')->name('defaultquestion.update')->middleware('auth');
+    Route::delete('/{defaulquestion_id}/delete', 'DefaultQuestionController@destroy')->name('defaultquestion.destroy')->middleware('auth');
+    Route::get('/edit', 'DefaultQuestionController@edit')->name('defaultquestion.edit')->middleware('auth');
 });

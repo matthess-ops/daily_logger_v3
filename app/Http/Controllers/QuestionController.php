@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Client;
+use App\Question;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class QuestionController extends Controller
 {
@@ -26,15 +29,22 @@ class QuestionController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    // store a new question with user_id to the the Question table
+    //only admin
+    public function store(Request $request, $user_id)
     {
-        //
+        error_log('QuestionController@store called');
+        $this->authorize('isAdmin');
+        $validatedData = $request->validate([
+            'question' => 'required',
+
+        ]);
+
+        $newQuestion = new Question();
+        $newQuestion->user_id = $user_id;
+        $newQuestion->question = $request->input('question');
+        $newQuestion->save();
+        return redirect()->back();
     }
 
     /**
@@ -48,37 +58,45 @@ class QuestionController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    //return view with the questions of the client with an id of client_id
+    //only admin access
+    public function edit($client_id)
     {
-        //
+        error_log('QuestionController@edit called');
+        $this->authorize('isAdmin');
+
+        $client = Client::find($client_id);
+        $questions = $client->questions;
+        return view('web.sections.admin.client.question.edit', ['questions'=>$questions,'client'=>$client]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    //update/replace all the questions related to the user_id to the default questions
+    //only admin access
+    public function update(Request $request, $user_id)
     {
-        //
+        $this->authorize('isAdmin');
+
+       error_log('QuestionController@update called');
+       Question::where('user_id',$user_id)->delete(); // delete all client questions
+        $defaultQuestions =  Question::where('user_id',Auth::id())->get(); //get the admin default questions
+        foreach ($defaultQuestions as $defaultquestion) {
+            $newQuestion = new Question();
+            $newQuestion->user_id = $user_id;
+            $newQuestion->question= $defaultquestion->question;
+            $newQuestion->save();
+                }
+       return redirect()->back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    // delete the question with an id of question_id.
+
+    //only admin
+    public function destroy($question_id)
     {
-        //
+        $this->authorize('isAdmin');
+
+        $question = Question::find($question_id);
+        $question->delete();
+        return redirect()->back();
     }
 }

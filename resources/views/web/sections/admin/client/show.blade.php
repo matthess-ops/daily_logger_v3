@@ -39,6 +39,7 @@
 
 
     @endforeach
+    <a name="" id="" class="btn btn-primary" href="{{route('question.edit',['client_id'=>$client->id])}}" role="button">Edit questions</a>
 
 
 

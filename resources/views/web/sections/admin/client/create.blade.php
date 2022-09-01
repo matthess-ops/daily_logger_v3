@@ -3,6 +3,7 @@
 @section('content')
 
     <h3>web.admin.client.create.blade.php</h3>
+    {{Auth::user()->role}}
     <form action="{{ route('client.store') }}" autocomplete="off" method="POST">
 
         @csrf

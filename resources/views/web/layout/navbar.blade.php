@@ -58,6 +58,9 @@
                   {{-- <a class="dropdown-item" href="{{ route('password.edit', ['id' =>Auth::id()])}}">Wachtwoord Wijzigen</a> --}}
                 </div>
               </li>
+              <li>
+                {{Auth::user()->role}}
+              </li>
           </ul>
           @endcan
 
@@ -88,7 +91,7 @@
                   Rapportage
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="">Instellen</a>
+                  <a class="dropdown-item" href="{{ route('defaultquestion.edit')}}">config</a>
                 </div>
               </li>
           </ul>

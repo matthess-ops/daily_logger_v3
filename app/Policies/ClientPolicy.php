@@ -42,6 +42,13 @@ class ClientPolicy
 
     }
 
+    // public function viewAny(User $user){
+
+    //     error_log('called clientpolicy viewAny');
+    //     return $user->isAdmin();
+
+    // }
+
     public function update(User $user, Client $client){
 
         error_log('called clientpolicy update');

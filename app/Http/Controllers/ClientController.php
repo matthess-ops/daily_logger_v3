@@ -12,20 +12,12 @@ use Illuminate\Validation\Rule;
 
 class ClientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    //return view with paginated search results for clients.
+    // only admin accessable.
     public function index(Request $request)
     {
-
-        // fix authorization
-        error_log(json_encode($request->all()));
         error_log('ClientController@index');
-
-
-        error_log("check search " . $request->input('search'));
+        $this->authorize('viewAny');
         $search = $request->input('search');
         $clients = Client::paginate(10);
         $clients = Client::with('user')
@@ -40,8 +32,12 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // return the view to create an new client.
+    //only admin
     public function create()
     {
+        $this->authorize('create');
+
         return view('web.sections.admin.client.create');
     }
 
@@ -51,9 +47,11 @@ class ClientController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    //store a new client
+    //only admin access
     public function store(Request $request)
     {
-        // $this->authorize('create');
+        $this->authorize('create');
 
         error_log('ClientController@store called');
         $validatedData = $request->validate([
@@ -64,21 +62,21 @@ class ClientController extends Controller
                 'email',
                 'unique:users,email'
             ],
-              'street' => 'required',
+            'street' => 'required',
             'street_nr' => 'required',
 
             'postcode' => 'required',
             'phone_number' => 'required',
             'city' => 'required',
-            'password'=>'required',
+            'password' => 'required',
         ]);
 
         $user = new User();
         $user->name = $request->input('firstname');
         $user->password = Hash::make($request->input('password'));
         $user->email = $request->input('email');
-        $user->role='client';
-        $user->active=true;
+        $user->role = 'client';
+        $user->active = true;
         $user->save();
 
 
@@ -94,7 +92,7 @@ class ClientController extends Controller
         $client->phone_number = $request->input('phone_number');
 
         $client->save();
-        return Redirect::route('client.show',['client_id'=>$client->id]);
+        return Redirect::route('client.show', ['client_id' => $client->id]);
         // return view('web.sections.admin.client.show', compact('client'));
     }
 
@@ -106,6 +104,7 @@ class ClientController extends Controller
      */
 
     //return a view with the associated client data
+    //only user and admin
     public function show($id)
     {
         error_log("client.show called");
@@ -125,6 +124,7 @@ class ClientController extends Controller
      * @return \Illuminate\Http\Response
      */
     // return client data
+    // only user
     public function edit($id)
     {
         error_log("client.edit called");
