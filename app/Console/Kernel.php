@@ -13,7 +13,10 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        // Commands\DailyQuestionCron::class,
+        Commands\DemoCron::class,
+
+
     ];
 
     /**
@@ -24,7 +27,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // $schedule->command('inspire')->everyMinute();
+        // $schedule->command('dailyQuestion:cron')->everyMinute();
+        $schedule->command('demo:cron')
+        ->everyTwoMinutes();
     }
 
     /**
@@ -35,7 +41,6 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
-
         require base_path('routes/console.php');
     }
 }

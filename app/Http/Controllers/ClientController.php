@@ -16,8 +16,8 @@ class ClientController extends Controller
     // only admin accessable.
     public function index(Request $request)
     {
-        error_log('ClientController@index');
-        $this->authorize('viewAny');
+        error_log('ClientController@index called');
+        $this->authorize('viewAny',Client::class);
         $search = $request->input('search');
         $clients = Client::paginate(10);
         $clients = Client::with('user')
@@ -36,7 +36,7 @@ class ClientController extends Controller
     //only admin
     public function create()
     {
-        $this->authorize('create');
+        $this->authorize('create',Client::class);
 
         return view('web.sections.admin.client.create');
     }

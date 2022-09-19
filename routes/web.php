@@ -37,16 +37,16 @@ Route::group(['prefix' => 'client'], function() {
 });
 
 
-Route::group(['prefix' => 'client'], function() {
+// Route::group(['prefix' => 'client'], function() {
 
-    Route::get('/', 'ClientController@index')->name('client.index')->middleware('auth');
-    Route::get('/create', 'ClientController@create')->name('client.create')->middleware('auth');
-    Route::post('/create', 'ClientController@store')->name('client.store')->middleware('auth');
-    Route::get('/{client_id}/show', 'ClientController@show')->name('client.show')->middleware('auth');
-    Route::patch('/{client_id}/update', 'ClientController@update')->name('client.update')->middleware('auth');
-    Route::delete('/{id}/delete', 'ClientController@destroy')->name('client.destroy')->middleware('auth');
-    Route::get('/{client_id}/edit', 'ClientController@edit')->name('client.edit')->middleware('auth');
-});
+//     Route::get('/', 'ClientController@index')->name('client.index')->middleware('auth');
+//     Route::get('/create', 'ClientController@create')->name('client.create')->middleware('auth');
+//     Route::post('/create', 'ClientController@store')->name('client.store')->middleware('auth');
+//     Route::get('/{client_id}/show', 'ClientController@show')->name('client.show')->middleware('auth');
+//     Route::patch('/{client_id}/update', 'ClientController@update')->name('client.update')->middleware('auth');
+//     Route::delete('/{id}/delete', 'ClientController@destroy')->name('client.destroy')->middleware('auth');
+//     Route::get('/{client_id}/edit', 'ClientController@edit')->name('client.edit')->middleware('auth');
+// });
 
 
 Route::group(['prefix' => 'client/activities'], function() {

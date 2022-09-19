@@ -7,6 +7,10 @@ use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
+
+
 
 class MentorController extends Controller
 {
@@ -51,7 +55,49 @@ class MentorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->authorize('create',Mentor::class);
+
+        error_log('MentorController@store called');
+        $validatedData = $request->validate([
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'email' => [
+                'required',
+                'email',
+                'unique:users,email'
+            ],
+            'street' => 'required',
+            'street_nr' => 'required',
+
+            'postcode' => 'required',
+            'phone_number' => 'required',
+            'city' => 'required',
+            'password' => 'required',
+        ]);
+
+        $user = new User();
+        $user->name = $request->input('firstname');
+        $user->password = Hash::make($request->input('password'));
+        $user->email = $request->input('email');
+        $user->role = 'mentor';
+        $user->active = true;
+        $user->save();
+
+
+        $mentor = new Mentor();
+        $mentor->firstname = $request->input('firstname');
+        $mentor->user_id = $user->id;
+
+        $mentor->lastname = $request->input('lastname');
+        $mentor->street = $request->input('street');
+        $mentor->street_nr = $request->input('street_nr');
+        $mentor->city = $request->input('city');
+        $mentor->postcode = $request->input('postcode');
+        $mentor->phone_number = $request->input('phone_number');
+
+        $mentor->save();
+        return Redirect::route('mentor.show', ['mentor_id' => $mentor->id]);
+        // return view('web.sections.admin.client.show', compact('client'));
     }
 
     /**
