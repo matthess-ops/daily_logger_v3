@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         // Commands\DailyQuestionCron::class,
         Commands\DemoCron::class,
+        Commands\DailyActivityCron::class,
 
 
     ];
@@ -29,8 +30,10 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->everyMinute();
         // $schedule->command('dailyQuestion:cron')->everyMinute();
-        $schedule->command('demo:cron')
-        ->everyTwoMinutes();
+        $schedule->command('dailyActivity:cron')->everyMinute();
+
+        // $schedule->command('demo:cron')
+        // ->everyTwoMinutes();
     }
 
     /**

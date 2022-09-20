@@ -9,7 +9,7 @@ class UserSeeder extends Seeder
     public function run()
     {
          // number of random client, admin, mentor users to make
-         $numOfClients = 10;
+         $numOfClients = 2;
          $numOfAdmins = 0;
          $numOfMentors = 10;
 

@@ -114,6 +114,9 @@ class ClientController extends Controller
             return view('web.sections.admin.client.show', compact('client'));
         } elseif (Auth::user()->isClient()) {
             return view('web.sections.client.show', compact('client'));
+        }elseif(Auth::user()->isMentor()){
+            return view('web.sections.mentor.client.show', compact('client'));
+
         }
     }
 

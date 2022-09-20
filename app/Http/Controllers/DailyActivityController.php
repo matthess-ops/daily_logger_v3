@@ -77,7 +77,7 @@ class DailyActivityController extends Controller
         $dailyActivity = DailyActivity::find($daily_activity_id);
         $this->authorize('update', $dailyActivity);
 
-        $scaledActivitiesScores = $request->input('scaled');
+        $scaledActivitiesScores = array_map('intval',$request->input('scaled')) ;
         $checkBoxesOn = $request->input('boxOn'); // checkboxes input
         //cannot modify/update the dailyActivity directly because of an Indirect modification of overloaded property erro
         $newMainActivities = $dailyActivity->main_activities;

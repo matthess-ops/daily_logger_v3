@@ -59,7 +59,6 @@
                 </div>
               </li>
               <li>
-                {{Auth::user()->role}}
               </li>
           </ul>
           @endcan
@@ -99,12 +98,13 @@
 
           @can('isMentor', App\Testpol::class)
           <ul class="navbar-nav mr-auto">
-              <li class="nav-item dropdown ">
+            <li class="nav-item dropdown ">
                 <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Clienten
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="">Zoeken</a>
+                  <a class="dropdown-item" href="{{ route('client.index')}}">Zoeken</a>
+                  {{-- <a class="dropdown-item" href="{{ route('client.create')}}">Toevoegen</a> --}}
                 </div>
               </li>
 

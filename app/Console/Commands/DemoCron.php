@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
+
 class DemoCron extends Command
 {
     /**
@@ -39,12 +40,12 @@ class DemoCron extends Command
     {
         \Log::info("Cron is working fine!");
         error_log("decmo cron");
-     
+
         /*
            Write your database logic we bellow:
            Item::create(['name'=>'hello new']);
         */
-      
+
         $this->info('Demo:Cron Cummand Run successfully!');
     }
 }

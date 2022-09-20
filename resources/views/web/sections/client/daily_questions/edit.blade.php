@@ -9,7 +9,7 @@
 
         @csrf
 
-  
+
 
 
 
@@ -18,18 +18,18 @@
         {{ $loop->index }}
       <label for="">{{ $question  }}</label>
       <select class="form-control" name="scores[]" id="">
-       
+
         @for ($i = 1; $i < 10; $i++)
         @if($dailyQuestions->scores[$loop->index] == $i)
         <option selected value="{{ $i }}">{{ $i }}</option>
- 
+
         @else
         <option value="{{ $i }}">{{ $i }}</option>
 
         @endif
         @endfor
 
-        
+
         {{-- <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -43,7 +43,7 @@
       </select>
     </div>
 
-        
+
     @endforeach
     <button type="submit" class="btn btn-primary">Opslaan</button>
 

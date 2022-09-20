@@ -46,7 +46,7 @@ class DailyActivitySeeder extends Seeder
                 //60 minutes /4 *24 = 96
                 // since index 0 is counted put $j on 95
                 for ($j=0; $j<= 95; $j++) {
-                    array_push($newTimeSlots,$i);
+                    array_push($newTimeSlots,$j);
                     $randInt = rand(0,count($mainActivities)-1);
                     //for testing purposes not each timeslot/timeinterval is assigned and mainActivity
                     //only one out of 3 timeslots are given an mainactivity and its associated color

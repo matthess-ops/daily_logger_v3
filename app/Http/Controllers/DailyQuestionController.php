@@ -76,8 +76,9 @@ class DailyQuestionController extends Controller
         ]);
         $dailyQuestion = DailyQuestion::find($daily_question_id);
         $this->authorize('update', $dailyQuestion);
+        $dailyQuestion->scores = array_map('intval',$request->input('scores'));
 
-        $dailyQuestion->scores = $request->input('scores');
+        // $dailyQuestion->scores = $request->input('scores');
         $dailyQuestion->save();
         return redirect()->back();
     }

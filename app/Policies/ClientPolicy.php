@@ -23,7 +23,7 @@ class ClientPolicy
     public function before(User $user)
 {
     error_log('clientpolicy before called');
-    if ($user->role == 'admin') {
+    if ($user->role == 'admin' or $user->role == 'mentor') {
         return true;
     }
 }
@@ -42,7 +42,7 @@ class ClientPolicy
 
     }
 
-   
+
 
     public function viewAny(User $user){
 
