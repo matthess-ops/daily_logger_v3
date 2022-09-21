@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DailyQuestion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DailyQuestionController extends Controller
 {
@@ -12,12 +13,21 @@ class DailyQuestionController extends Controller
     public function index($user_id)
     {
         error_log("DailyQuestionController@index called");
-        $dailyQuestions = DailyQuestion::where('user_id', $user_id)->orderBy('created_at','DESC') // sort to put the latest dailyActivity on top
+        if(Auth::user()->isClient())
+        {
+            $dailyQuestions = DailyQuestion::where('user_id', $user_id)->orderBy('created_at','DESC') // sort to put the latest dailyActivity on top
             ->take(5) // 5 days
             ->get();
             $this->authorize('viewAny', $dailyQuestions->first());
 
         return view('web.sections.client.daily_questions.index',['dailyQuestions'=>$dailyQuestions]);
+
+        }elseif(Auth::user()->isMentor()){
+            $dailyQuestions = DailyQuestion::where('mentor_filled',false)->orderBy('created_at','DESC')->get();
+            return view('web.sections.mentor.daily_questions.index',['dailyQuestions'=>$dailyQuestions]); 
+
+        }
+  
     }
 
     /**

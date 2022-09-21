@@ -13,9 +13,16 @@ class DailyQuestion extends Model
 
     protected $casts = [
         'filled_at' => 'datetime',
+        'mentor_filled_at'=> 'datetime',
         'questions' => 'json',
         'scores' => 'json',
+        'mentor_scores'=>'json',
         'filled'=>'boolean',
+        'mentor_filled'=>'boolean',
 
     ];
+
+    public function client(){
+        return $this->hasOne(Client::class,'user_id','user_id');
+    }
 }

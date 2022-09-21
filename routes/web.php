@@ -89,6 +89,18 @@ Route::group(['prefix' => 'mentor'], function() {
     Route::get('/{mentor_id}/edit', 'MentorController@edit')->name('mentor.edit')->middleware('auth');
 });
 
+
+Route::group(['prefix' => 'mentor/dailyquestion'], function() {
+
+    Route::get('/', 'Mentor\DailyQuestionController@index')->name('mentor.dailyquestion.index')->middleware('auth');
+    Route::get('/create', 'Mentor\DailyQuestionController@create')->name('mentor.dailyquestion.create')->middleware('auth');
+    Route::post('/create', 'Mentor\DailyQuestionController@store')->name('mentor.dailyquestion.store')->middleware('auth');
+    Route::get('/{question_id}/show', 'Mentor\DailyQuestionController@show')->name('mentor.dailyquestion.show')->middleware('auth');
+    Route::patch('/{question_id}/update', 'Mentor\DailyQuestionController@update')->name('mentor.dailyquestion.update')->middleware('auth');
+    Route::delete('/{question_id}/delete', 'Mentor\DailyQuestionController@destroy')->name('mentor.dailyquestion.destroy')->middleware('auth');
+    Route::get('/{question_id}/edit', 'Mentor\DailyQuestionController@edit')->name('mentor.dailyquestion.edit')->middleware('auth');
+});
+
 Route::group(['prefix' => 'question'], function() {
 
     Route::get('/', 'QuestionController@index')->name('question.index')->middleware('auth');
@@ -111,3 +123,7 @@ Route::group(['prefix' => 'defaultquestion'], function() {
     Route::delete('/{defaulquestion_id}/delete', 'DefaultQuestionController@destroy')->name('defaultquestion.destroy')->middleware('auth');
     Route::get('/edit', 'DefaultQuestionController@edit')->name('defaultquestion.edit')->middleware('auth');
 });
+
+
+
+

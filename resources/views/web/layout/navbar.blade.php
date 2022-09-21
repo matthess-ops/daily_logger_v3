@@ -113,7 +113,7 @@
                   Rapportages
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="">Open</a>
+                  <a class="dropdown-item" href="{{ route('dailyQuestion.index',['user_id'=>Auth::id()])}}">Open</a>
                   {{-- <a class="dropdown-item" href="">Toevoegen</a> --}}
                 </div>
               </li>

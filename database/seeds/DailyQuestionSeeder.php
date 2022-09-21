@@ -37,9 +37,15 @@ class DailyQuestionSeeder extends Seeder
                         'user_id' => $client->user_id,
                         'questions' => $questions,
                         'scores' => $scores,
+                        'mentor_scores'=>$scores,
+                        'mentor_id'=>null,
                         'filled' => true,
+                        'mentor_filled'=>true,
+
                         'created_at' => $startDateTime,
                         'filled_at' => $startDateTime,
+                        'mentor_filled_at'=> null,
+
                     ]);
                 } else {
 
@@ -48,9 +54,13 @@ class DailyQuestionSeeder extends Seeder
                         'user_id' => $client->user_id,
                         'questions' => $questions,
                         'scores' => $scores,
+                        'mentor_scores'=>$scores,
+                        'mentor_id'=>null,
                         'filled' => false,
+                        'mentor_filled'=>false,
                         'created_at' => $startDateTime,
                         'filled_at' => $startDateTime,
+                        'mentor_filled_at'=> null,
                     ]);
                 }
             }
