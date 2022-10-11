@@ -125,5 +125,13 @@ Route::group(['prefix' => 'defaultquestion'], function() {
 });
 
 
+Route::group(['prefix' => 'graphs'], function() {
+
+
+    Route::get('/{user_id}/activitiesgraph', 'GraphController@activities')->name('graph.activities')->middleware('auth');
+
+});
+
+
 
 

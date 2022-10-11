@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Mentor;
 
 use App\DailyQuestion;
 use App\Http\Controllers\Controller;
+use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DailyQuestionController extends Controller
@@ -13,9 +15,28 @@ class DailyQuestionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // return view('web.sections.test.index');
+        error_log(json_encode($request->all()));
+
+        $search = $request->input('search');
+
+        $dailyQuestions = DailyQuestion::where('mentor_filled', false)
+
+
+            ->with('client')
+            ->whereHas('client', function ($query) use ($search) {
+                $query->where('firstname', 'like', '%' . $search . '%')            // ->orWhere('lastname', 'LIKE', "%{$search}%")
+                    ->orWhere('lastname', 'LIKE', '%' . $search . '%');
+            })
+            ->orderBy('created_at', 'DESC')
+
+            ->get();
+
+
+
+
+        return view('web.sections.mentor.daily_questions.index', ['dailyQuestions' => $dailyQuestions, 'searchQuery'=>$search]);
     }
 
     /**
@@ -60,8 +81,7 @@ class DailyQuestionController extends Controller
 
         $dailyQuestions = DailyQuestion::findOrFail($question_id);
 
-        return view('web.sections.mentor.daily_questions.edit',['dailyQuestions'=>$dailyQuestions]);
-
+        return view('web.sections.mentor.daily_questions.edit', ['dailyQuestions' => $dailyQuestions]);
     }
 
     /**
@@ -74,17 +94,24 @@ class DailyQuestionController extends Controller
     public function update(Request $request, $question_id)
     {
         // dd($request->all());
-      error_log('Mentor.DailyQuestions@update called');
-      $validatedData = $request->validate([
-        'scores' => 'required|array',
 
-    ]);
-    $dailyQuestion = DailyQuestion::findOrFail($question_id);
-    $dailyQuestion->mentor_scores = array_map('intval',$request->input('scores'));
+        // dd($request->all());
 
-    // $dailyQuestion->scores = $request->input('scores');
-    $dailyQuestion->save();
-      return redirect()->back();
+        error_log('Mentor.DailyQuestions@update called');
+        $validatedData = $request->validate([
+            'scores' => 'required|array',
+
+        ]);
+        $dailyQuestion = DailyQuestion::findOrFail($question_id);
+        $dailyQuestion->mentor_scores = array_map('intval', $request->input('scores'));
+        $dailyQuestion->mentor_filled = true;
+        $dailyQuestion->mentor_filled_at = Carbon::now();
+        $dailyQuestion->mentor_id = Auth::id();
+
+
+        // $dailyQuestion->scores = $request->input('scores');
+        $dailyQuestion->save();
+        return redirect()->route('mentor.dailyquestion.index');
     }
 
     /**

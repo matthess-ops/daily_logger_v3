@@ -22,12 +22,13 @@ class DailyQuestionController extends Controller
 
         return view('web.sections.client.daily_questions.index',['dailyQuestions'=>$dailyQuestions]);
 
+        /// remove mentor stuff because it gets its own controller
         }elseif(Auth::user()->isMentor()){
             $dailyQuestions = DailyQuestion::where('mentor_filled',false)->orderBy('created_at','DESC')->get();
-            return view('web.sections.mentor.daily_questions.index',['dailyQuestions'=>$dailyQuestions]); 
+            return view('web.sections.mentor.daily_questions.index',['dailyQuestions'=>$dailyQuestions]);
 
         }
-  
+
     }
 
     /**

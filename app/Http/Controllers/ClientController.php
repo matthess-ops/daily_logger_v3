@@ -51,7 +51,7 @@ class ClientController extends Controller
     //only admin access
     public function store(Request $request)
     {
-        $this->authorize('create');
+        $this->authorize('create',Client::class);
 
         error_log('ClientController@store called');
         $validatedData = $request->validate([

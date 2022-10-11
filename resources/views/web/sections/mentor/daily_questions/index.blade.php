@@ -8,6 +8,12 @@
         {{ $dailyQuestion->client->firstname }}
     @endforeach --}}
 
+    <form action="{{ route('mentor.dailyquestion.index')}}" method="GET">
+        <input type="text" name="search"
+            @isset($searchQuery) value= "{{ $searchQuery }}" @endisset />
+        <button type="submit" class="btn btn-primary">Zoek</button>
+    </form>
+
 
     <table class="table table-hover">
         <thead>
@@ -43,6 +49,6 @@
         </tbody>
     </table>
 
-    
+
 
 @endsection

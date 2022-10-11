@@ -19,12 +19,14 @@ class DailyQuestionSeeder extends Seeder
         foreach ($clients as $client) {
             $questions = [];
             $scores = [];
+            $mentorScores = [];
 
             $clientQuestions = $client->questions;
             //fill questions and scores arrays
             foreach ($clientQuestions as $clientQuestion) {
                 array_push($questions, $clientQuestion->question);
                 array_push($scores, rand(0, 10));
+                array_push($mentorScores,0);
             }
 
             $startDateTime = Carbon::now()->subDays($nrOfDaysToGenerateData);
@@ -37,7 +39,7 @@ class DailyQuestionSeeder extends Seeder
                         'user_id' => $client->user_id,
                         'questions' => $questions,
                         'scores' => $scores,
-                        'mentor_scores'=>$scores,
+                        'mentor_scores'=>$mentorScores,
                         'mentor_id'=>null,
                         'filled' => true,
                         'mentor_filled'=>true,
@@ -54,7 +56,7 @@ class DailyQuestionSeeder extends Seeder
                         'user_id' => $client->user_id,
                         'questions' => $questions,
                         'scores' => $scores,
-                        'mentor_scores'=>$scores,
+                        'mentor_scores'=>$mentorScores,
                         'mentor_id'=>null,
                         'filled' => false,
                         'mentor_filled'=>false,
