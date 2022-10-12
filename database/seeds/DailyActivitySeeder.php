@@ -15,13 +15,13 @@ class DailyActivitySeeder extends Seeder
 
     public function run()
     {
-        $nrOfDaysToGenerateData = 7; // nr of days to generate entries for.
+        $nrOfDaysToGenerateData = 15; // nr of days to generate entries for.
         $clients =  client::all();
         foreach ($clients as $client) {
             $activities = $client->activities; // get activities from the client model
             $mainActivities = [];
             $scaledActivities=[];
-            $scoreArray = [];
+            $scoreArray = []; // score array with only zeros
             $colors = []; // each main activity has its own unique color
             foreach ($activities as $activity) {
                 if($activity->type == "scaled"){
@@ -50,17 +50,27 @@ class DailyActivitySeeder extends Seeder
                     $randInt = rand(0,count($mainActivities)-1);
                     //for testing purposes not each timeslot/timeinterval is assigned and mainActivity
                     //only one out of 3 timeslots are given an mainactivity and its associated color
+                    //if a time slot has a null mainativity the scaledActivites scorearray should contain all zeros
                     if(rand(0,3) == 2){
                         $randMainActivity = null;
                         $randMainActivityColor = null;
+                        array_push($newScaledActivitiesScores,$scoreArray);
+
                     }else{
                         $randMainActivity = $mainActivities[$randInt];
                         $randMainActivityColor = $colors[$randInt];
+                        $randScoreArray = [];
+                        // if timeslot has an main activity the the scorearray should contain random values 0-10
+                        foreach ($scoreArray as $score) {
+                            $randomScore = rand(0,10);
+                            array_push($randScoreArray,$randomScore);
+                        }
+                        array_push($newScaledActivitiesScores,$randScoreArray);
+
                     }
 
                     array_push($newMainActivities,$randMainActivity);
                     array_push($newScaledActivities,$scaledActivities);
-                    array_push($newScaledActivitiesScores,$scoreArray);
                     array_push($newMainActivitiesColors,$randMainActivityColor );
 
                 }

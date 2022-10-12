@@ -35479,6 +35479,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //3a: generate graph
 
 
+var colorScheme = ["#25CCF7", "#FD7272", "#54a0ff", "#00d2d3", "#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#f1c40f", "#e67e22", "#e74c3c", "#ecf0f1", "#95a5a6", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d", "#55efc4", "#81ecec", "#74b9ff", "#a29bfe", "#dfe6e9", "#00b894", "#00cec9", "#0984e3", "#6c5ce7", "#ffeaa7", "#fab1a0", "#ff7675", "#fd79a8", "#fdcb6e", "#e17055", "#d63031", "#feca57", "#5f27cd", "#54a0ff", "#01a3a4"];
 
 var getDateRange = function getDateRange() {
   var dates = dailyActivities.map(function (dailyActivity) {
@@ -35587,7 +35588,9 @@ var convertMainActTotalsToGraphInput = function convertMainActTotalsToGraphInput
     datasets.push({
       label: mainActTotal.mainActivity,
       backgroundColor: mainActTotal.color,
-      data: mainActTotal.values
+      data: mainActTotal.values,
+      stack: "Stack 0",
+      yAxisID: 'y'
     });
   });
   return {
@@ -35652,10 +35655,6 @@ var convertMainActTotalsToGraphInput = function convertMainActTotalsToGraphInput
 //         },
 //     });
 // };
-// let myChart = null
-// var myChart = new Chart(ctx, data);
-// myChart.config.data = new_data;
-// myChart.update();
 
 
 var makeChart = function makeChart(chartLabels, chartDatasets) {
@@ -35686,7 +35685,12 @@ var makeChart = function makeChart(chartLabels, chartDatasets) {
           stacked: true
         },
         y: {
-          stacked: true
+          stacked: true,
+          position: 'left'
+        },
+        y1: {
+          stacked: true,
+          position: 'right'
         }
       }
     }
@@ -35709,11 +35713,97 @@ var createMainActivityInterface = function createMainActivityInterface(mainActiv
     mainActInterface.appendChild(newCheckbox);
     mainActInterface.appendChild(br);
   });
+}; // step 2: scaled data visualisation
+// 1 for each of the scaled activities calculate the average daily score
+// 2 plot these as seperate bars in the graph
+//1: get all the scaled activities and there colors from the database
+//2: calculate for each date in daterange for each scaled activity the average
+//3: plot this
+//type is either scaled or main activity
+
+
+var getUniqueScaledActivities = function getUniqueScaledActivities() {
+  var dailyScaledActivities = [];
+  dailyActivities.forEach(function (dailyActivity) {
+    var scaledActivities = dailyActivity.scaled_activities[0];
+    scaledActivities.forEach(function (scaledActivity) {
+      dailyScaledActivities.push(scaledActivity);
+    });
+  });
+
+  var uniqueDailyScaledActivities = _toConsumableArray(new Set(dailyScaledActivities));
+
+  return uniqueDailyScaledActivities;
 };
 
-var checkAllButton = function checkAllButton(dateRange, mainActivitiesPlusColor) {
-  document.getElementById('all').addEventListener('click', function () {
-    console.log('clicked button');
+var calcDailyAverageScaledActivitiesScore = function calcDailyAverageScaledActivitiesScore(dateRange, uniqueDailyScaledActivities) {
+  var scaledActivitiesAveScores = [];
+  dateRange.forEach(function (date) {
+    dailyActivities.forEach(function (dailyActivity) {
+      if (dailyActivity.date_today == date.format("YYYY-MM-DD")) {
+        var dailyScaledActivitiesTotalScores = new Array(uniqueDailyScaledActivities.length).fill(0);
+        var dailyScaledActivitiesInputCounts = new Array(uniqueDailyScaledActivities.length).fill(0);
+        uniqueDailyScaledActivities.forEach(function (uniqueDailyScaledActivity) {
+          var indexOfDailyActivity = dailyActivity.scaled_activities[0].findIndex(function (scaledActivity) {
+            return scaledActivity == uniqueDailyScaledActivity;
+          });
+          dailyActivity.scaled_activities_scores.forEach(function (timeSlotScoreArray) {
+            if (timeSlotScoreArray.reduce(function (a, b) {
+              return a + b;
+            }) > 0) {
+              dailyScaledActivitiesTotalScores[indexOfDailyActivity] = dailyScaledActivitiesTotalScores[indexOfDailyActivity] + timeSlotScoreArray[indexOfDailyActivity];
+              dailyScaledActivitiesInputCounts[indexOfDailyActivity] = dailyScaledActivitiesInputCounts[indexOfDailyActivity] + 1;
+            }
+          });
+        });
+        var dailyScaledActivitiesAverageScores = [];
+        dailyScaledActivitiesTotalScores.forEach(function (score, index) {
+          var count = dailyScaledActivitiesInputCounts[index];
+          var averageDailyScore = score / count;
+          dailyScaledActivitiesAverageScores.push(averageDailyScore.toFixed(2));
+        });
+        scaledActivitiesAveScores.push(dailyScaledActivitiesAverageScores); // console.log(dailyScaledActivitiesTotalScores)
+        // console.log('conts',dailyScaledActivitiesInputCounts)
+        // console.log(date.format("YYYY-MM-DD"),'averages',dailyScaledActivitiesAverageScores)
+        // console.log(dailyScaledActivitiesTotalScores.dailyScaledActivitiesInputCounts)
+      }
+    });
+  });
+  var converted = [];
+  uniqueDailyScaledActivities.forEach(function (uniqueDailyScaledActivity, index) {
+    var newscores = [];
+    scaledActivitiesAveScores.forEach(function (scaledActivityAveScores) {
+      newscores.push(scaledActivityAveScores[index]);
+    });
+    converted.push({
+      scaledActivity: uniqueDailyScaledActivity,
+      aveScoresForDateRange: newscores
+    });
+  });
+  return converted;
+};
+
+var convertDailyScaledActivitiesScoresToChartDatasets = function convertDailyScaledActivitiesScoresToChartDatasets(scaledActivityScores) {
+  console.log('scores');
+  console.log(scaledActivityScores);
+  var datasets = [];
+  scaledActivityScores.forEach(function (scaledActivityScore, index) {
+    datasets.push({
+      label: scaledActivityScore.scaledActivity,
+      backgroundColor: colorScheme[index],
+      data: scaledActivityScore.aveScoresForDateRange,
+      stack: "Stack " + (index + 1),
+      barThickness: 10,
+      barPercentage: 1.0,
+      yAxisID: 'y1'
+    });
+  });
+  return datasets;
+};
+
+var checkAllButton = function checkAllButton(dateRange, mainActivitiesPlusColor, scaledActivityChartDatasets) {
+  document.getElementById("all").addEventListener("click", function () {
+    console.log("clicked button");
     mainActivitiesPlusColor.forEach(function (mainActivityPlusColor) {
       document.getElementById(mainActivityPlusColor[0]).checked = true;
     });
@@ -35733,23 +35823,17 @@ var checkAllButton = function checkAllButton(dateRange, mainActivitiesPlusColor)
           datasets = _convertMainActTotals.datasets; // clearCanvas()
 
 
+      scaledActivityChartDatasets.forEach(function (scaledActivityChartDataset) {
+        datasets.push(scaledActivityChartDataset);
+      });
       makeChart(chartLabels, datasets);
     }
   });
 };
 
-var combined = function combined() {
-  var dateRange = getDateRange(); // get the date ranges
-
-  var mainActivitiesPlusColor = getAllMainActivitiesWithAssociatedColor();
-  createMainActivityInterface(mainActivitiesPlusColor);
-  interfaceEventListner(dateRange, mainActivitiesPlusColor);
-  checkAllButton(dateRange, mainActivitiesPlusColor);
-};
-
-var interfaceEventListner = function interfaceEventListner(dateRange, mainActivitiesPlusColor) {
+var interfaceEventListner = function interfaceEventListner(dateRange, mainActivitiesPlusColor, scaledActivityChartDatasets) {
   document.getElementById("interface").addEventListener("click", function () {
-    console.log('interface cliked');
+    console.log("interface cliked");
     var checkedBoxes = [];
     mainActivitiesPlusColor.forEach(function (mainActivityPlusColor) {
       if (document.getElementById(mainActivityPlusColor[0]).checked) {
@@ -35763,16 +35847,99 @@ var interfaceEventListner = function interfaceEventListner(dateRange, mainActivi
 
       var _convertMainActTotals2 = convertMainActTotalsToGraphInput(mainActsTotalsColors, dateRange),
           chartLabels = _convertMainActTotals2.chartLabels,
-          datasets = _convertMainActTotals2.datasets; // clearCanvas()
+          datasets = _convertMainActTotals2.datasets;
 
+      console.log('main datasets');
+      console.log(datasets);
+      console.log('scaled datasets');
+      console.log(scaledActivityChartDatasets);
+      scaledActivityChartDatasets.forEach(function (scaledActivityChartDataset) {
+        datasets.push(scaledActivityChartDataset);
+      });
+      console.log('combined datasets');
+      console.log(datasets); //add the scaled activities dataset here
+      // scaledActivityChartDatasets
+      // clearCanvas()
 
       makeChart(chartLabels, datasets);
     }
   });
 };
 
-combined(); // interfaceEventListner();
-// checkAllButton()
+var combined = function combined() {
+  var dateRange = getDateRange(); // get the date ranges
+
+  var mainActivitiesPlusColor = getAllMainActivitiesWithAssociatedColor();
+  var uniqueDailyScaledActivities = getUniqueScaledActivities(); // const dateRange = getDateRange();
+
+  var dailyAverageScaledActvitiesScores = calcDailyAverageScaledActivitiesScore(dateRange, uniqueDailyScaledActivities);
+  var scaledActivityChartDatasets = convertDailyScaledActivitiesScoresToChartDatasets(dailyAverageScaledActvitiesScores);
+  createMainActivityInterface(mainActivitiesPlusColor);
+  interfaceEventListner(dateRange, mainActivitiesPlusColor, scaledActivityChartDatasets);
+  checkAllButton(dateRange, mainActivitiesPlusColor, scaledActivityChartDatasets);
+}; // const uniqueDailyScaledActivities = getUniqueScaledActivities();
+// const dateRange = getDateRange();
+// const dailyAverageScaledActvitiesScores =calcDailyAverageScaledActivitiesScore(dateRange, uniqueDailyScaledActivities);
+// const scaledActivityChartDatasets = convertDailyScaledActivitiesScoresToChartDatasets(dailyAverageScaledActvitiesScores)
+// console.log(scaledActivityChartDatasets)
+
+
+combined(); ///////////////////////////////test stuff
+
+var testChart = function testChart() {
+  var ctx = document.getElementById("testchart").getContext("2d");
+  var myChart = new chart_js_auto__WEBPACK_IMPORTED_MODULE_1__["default"](ctx, {
+    type: "bar",
+    data: {
+      labels: ["<  1", "1 - 2", "3 - 4", "5 - 9", "10 - 14", "15 - 19", "20 - 24", "25 - 29", "> - 29"],
+      datasets: [{
+        label: "Employee",
+        backgroundColor: "#caf270",
+        data: [12, 59, 5, 56, 58, 12, 59, 87, 45],
+        stack: "Stack 0"
+      }, {
+        label: "Engineer",
+        backgroundColor: "#45c490",
+        data: [12, 59, 5, 56, 58, 12, 59, 85, 23],
+        stack: "Stack 0"
+      }, {
+        label: "Government",
+        backgroundColor: "#008d93",
+        data: [12, 59, 5, 56, 58, 12, 59, 65, 51],
+        stack: "Stack 1",
+        barThickness: 10,
+        barPercentage: 1.0
+      }, {
+        label: "Political parties",
+        backgroundColor: "#2e5468",
+        data: [12, 59, 5, 56, 58, 12, 59, 12, 74],
+        stack: "Stack 2",
+        barThickness: 10,
+        barPercentage: 1.0
+      }]
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: "Chart.js Bar Chart - Stacked"
+        }
+      },
+      responsive: true,
+      scales: {
+        x: {
+          stacked: true
+        },
+        y: {
+          stacked: true
+        }
+      }
+    }
+  });
+}; // testChart();
+
+
+console.log(dailyActivities);
 
 /***/ }),
 
