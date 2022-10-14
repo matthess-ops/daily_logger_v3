@@ -10,6 +10,8 @@
     <span>{{ $client->user->email }} </span> <br>
     <span>{{ $client->phone_number }} </span> <br><br>
 
+    <a name="" id="" class="btn btn-primary" href="{{route('graph.mentordailyreportsgraph',['user_id'=>$client->user_id])}}" role="button">Goto Daily graphing</a>
+
     {{-- @if ($client->user->active)
     <form action="{{route('client.update',['client_id'=>$client->id])}}" method="POST">
        @csrf

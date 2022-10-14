@@ -3,10 +3,11 @@
 @section('content')
 
     <h3>web.mentor.report.index.blade.php</h3>
-    {{-- {{ json_encode($dailyQuestions) }} --}}
-    {{-- @foreach ($dailyQuestions as $dailyQuestion)
-        {{ $dailyQuestion->client->firstname }}
-    @endforeach --}}
+   <ul>
+    <li>kan natuurlijk zijn dat clienten niet elke dat aanwezig zijn dus een optie inbouwen om te zeggen dat de client er niet is</li>
+   <li>kan het ook op een andere manier doen, van dat een mentor een client moet opzoeken om dan een dagelijkse rapportage aan te maken/ in te vullen. Echter dit is natuurlijk wel meer werk voor de mentor. En het probleem is als er meerdere mentors aanwezig zijn het niet overzichtelijk is als een andere mentor de dag rapportage al heeft gedaan</li>
+<li>op het moment staan hier ook al de niet ingevulde dag rapportage. Zo houden of alleen limiteren tot een aantal dagen?</li>
+</ul>
 
     <form action="{{ route('mentor.dailyquestion.index')}}" method="GET">
         <input type="text" name="search"

@@ -129,6 +129,8 @@ Route::group(['prefix' => 'graphs'], function() {
 
 
     Route::get('/{user_id}/activitiesgraph', 'GraphController@activities')->name('graph.activities')->middleware('auth');
+    Route::get('/{user_id}/dailyreportsgraph', 'GraphController@dailyreportsgraph')->name('graph.dailyreportsgraph')->middleware('auth');
+    Route::get('/{user_id}/mentordailyreportsgraph', 'GraphController@mentordailyreportsgraph')->name('graph.mentordailyreportsgraph')->middleware('auth');
 
 });
 

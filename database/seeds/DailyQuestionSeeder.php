@@ -17,21 +17,31 @@ class DailyQuestionSeeder extends Seeder
 
         $clients = Client::all();
         foreach ($clients as $client) {
-            $questions = [];
-            $scores = [];
-            $mentorScores = [];
+            // $questions = [];
+            // $scores = [];
+            // $mentorScores = [];
 
             $clientQuestions = $client->questions;
-            //fill questions and scores arrays
-            foreach ($clientQuestions as $clientQuestion) {
-                array_push($questions, $clientQuestion->question);
-                array_push($scores, rand(0, 10));
-                array_push($mentorScores,0);
-            }
+            // foreach ($clientQuestions as $clientQuestion) {
+            //     array_push($questions, $clientQuestion->question);
+            //     array_push($scores, rand(0, 10));
+            //     array_push($mentorScores,0);
+            // }
 
             $startDateTime = Carbon::now()->subDays($nrOfDaysToGenerateData);
             for ($i = 0; $i < $nrOfDaysToGenerateData; $i++) {
                 //pick random int to set filled field to true or false
+
+                $questions = [];
+                $scores = [];
+                $mentorScores = [];
+                foreach ($clientQuestions as $clientQuestion) {
+                    array_push($questions, $clientQuestion->question);
+                    array_push($scores, rand(0, 10));
+                    array_push($mentorScores, rand(0, 10));
+                }
+
+
                 $randomInt = rand(0, 2);
                 $startDateTime->addDay();
                 if ($randomInt == 1) {

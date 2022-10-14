@@ -3,6 +3,11 @@
 @section('content')
     <h3>web.client.show.blade.php</h3>
 
+    <ul>
+        <li>Met deactiveer stop je dat de client nog steeds dagelijkse rapportage en activiteiten logger entries worden aangemaakt</li>
+        <li>De dagelijkse rapportage vragen veranderen op een apparte page zetten.</li>
+    </ul>
+
     <br>
     <span>{{ $client->firstname }} {{ $client->lastname }}</span> <br>
     <span>{{ $client->street }} {{ $client->street_nr }} </span> <br>

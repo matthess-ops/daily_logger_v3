@@ -1,5 +1,7 @@
 {
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
-    "/js/graphactivities.js": "/js/graphactivities.js"
+    "/js/dailyquestionsgraph.js": "/js/dailyquestionsgraph.js",
+    "/js/graphactivities.js": "/js/graphactivities.js",
+    "/js/mentordailyquestionsgraph.js": "/js/mentordailyquestionsgraph.js"
 }

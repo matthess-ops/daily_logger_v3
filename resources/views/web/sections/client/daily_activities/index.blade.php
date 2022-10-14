@@ -2,7 +2,10 @@
 
 @section('content')
     <h3>web.client.daily_activities.index.blade.php</h3>
-    <h3>test</h3>
+    <ul>
+        <li>Stel voor de laatste 5 dagen van de activiteiten logger hier te plaatsen.Dan kan een client nog altijd iets aanpassen.</li>
+    <li>iets inbouwen zodat de client kan zien dat er nog timeslots zijn die nog niet helemaal zijn ingevuld</li>
+    </ul>
     <div class="container">
 
     @foreach ($dailyActivities as $dailyActivity)

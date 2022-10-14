@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Client;
 use App\User;
 use App\DailyActivity;
+use App\DailyQuestion;
+use Auth;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
+
 class GraphController extends Controller
 {
 
@@ -20,6 +24,27 @@ class GraphController extends Controller
         $scaledActivities = Activity::where('user_id',$user_id)->where('type','scaled')->get();
 
         return view('web.sections.graph.activities',['dailyActivities'=>$dailyActivities,'mainActivities'=>$mainActivities,'scaledActivities'=>$scaledActivities]);
+
+    }
+
+    public function dailyreportsgraph($user_id){
+        error_log('graphcontroller dailyreport called');
+        if(Auth::user()->role == 'client'){
+            $dailyQuestions = DailyQuestion::where('user_id',$user_id)->get()->makeHidden(['mentor_scores','mentor_id','mentor_filled_at','mentor_filled']);
+
+        }
+        return view('web.sections.graph.dailyReports',['dailyQuestions'=>$dailyQuestions]);
+    }
+
+    public function mentordailyreportsgraph($user_id){
+
+
+        error_log("called mentordailyreportsgraph ".$user_id);
+        if(Auth::user()->role == 'mentor'){
+            $dailyQuestions = DailyQuestion::where('user_id',$user_id)->get();
+
+        }
+        return view('web.sections.graph.mentordailygraph',['dailyQuestions'=>$dailyQuestions]);
 
     }
 

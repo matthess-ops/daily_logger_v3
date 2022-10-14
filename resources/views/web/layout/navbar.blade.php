@@ -189,8 +189,8 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item"
                                     href="{{ route('dailyQuestion.index', ['user_id' => Auth::id()]) }}">Overzicht</a>
-                                <a class="dropdown-item" href="">Grafieken</a>
-                            </div>
+                                    <a class="dropdown-item" href="{{ route('graph.dailyreportsgraph', ['user_id' => Auth::id()])  }}">Grafieken</a>
+                                </div>
                         </li>
 
                         <li class="nav-item dropdown">
