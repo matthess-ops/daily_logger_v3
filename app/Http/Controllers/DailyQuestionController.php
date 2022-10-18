@@ -13,8 +13,7 @@ class DailyQuestionController extends Controller
     public function index($user_id)
     {
         error_log("DailyQuestionController@index called");
-        if(Auth::user()->isClient())
-        {
+
             $dailyQuestions = DailyQuestion::where('user_id', $user_id)->orderBy('created_at','DESC') // sort to put the latest dailyActivity on top
             ->take(5) // 5 days
             ->get();
@@ -22,46 +21,10 @@ class DailyQuestionController extends Controller
 
         return view('web.sections.client.daily_questions.index',['dailyQuestions'=>$dailyQuestions]);
 
-        /// remove mentor stuff because it gets its own controller
-        }elseif(Auth::user()->isMentor()){
-            $dailyQuestions = DailyQuestion::where('mentor_filled',false)->orderBy('created_at','DESC')->get();
-            return view('web.sections.mentor.daily_questions.index',['dailyQuestions'=>$dailyQuestions]);
 
-        }
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
     //return the view with the DailyQuestion of interest.
     //only access for cient
@@ -94,14 +57,5 @@ class DailyQuestionController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+
 }

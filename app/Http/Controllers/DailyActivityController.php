@@ -13,47 +13,16 @@ class DailyActivityController extends Controller
     public function index($user_id)
     {
         error_log('DailyActivityController@index called');
+
         $dailyActivities = DailyActivity::where('user_id', $user_id)->orderBy('created_at','DESC') // sort to put the latest dailyActivity on top
             ->take(5) // 5 days
             ->get()
             ->makeHidden(['time_slots', 'main_activities','scaled_activities','scaled_activities_scores']); // not all data is needed for the view to function
+            $this->authorize('viewAny', $dailyActivities[0]);
 
-        $this->authorize('viewAny', $dailyActivities[0]);
 
 
         return view('web.sections.client.daily_activities.index',['dailyActivities'=>$dailyActivities]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     //return a view for the specified client  and daily activity.
@@ -102,14 +71,5 @@ class DailyActivityController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+
 }

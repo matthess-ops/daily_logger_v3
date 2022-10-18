@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Gate;
 use App\User;
 use App\Activity;
 use App\Policies\ClientActivitiesPolicy;
+use app\DailyActivity;
+use App\DailyQuestion;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -47,5 +49,17 @@ class AuthServiceProvider extends ServiceProvider
             return $user->id == $activity->user_id;
 
         });
+
+        Gate::define('isClientDailyActivityOwner', function (User $user, DailyActivity $dailyActivity) {
+            error_log('isClientDailyActivityOwner gate called');
+            return $user->id ==$dailyActivity->user_id;
+        });
+
+        Gate::define('isClientDailyQuestionOwner', function (User $user, DailyQuestion $dailyQuestion) {
+            error_log('isClientDailyQuestionOwner gate called');
+            return $user->id ==$dailyQuestion->user_id;
+        });
+
+
     }
 }

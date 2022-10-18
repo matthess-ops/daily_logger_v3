@@ -9,8 +9,7 @@
 
 <script>
     const dailyActivities = @json($dailyActivities);
-    const mainActivitiesData = @json($mainActivities);
-    const scaledActivitiesData = @json($scaledActivities);
+
 
 </script>
 

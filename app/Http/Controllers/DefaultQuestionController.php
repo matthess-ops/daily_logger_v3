@@ -10,24 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class DefaultQuestionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-    }
 
     //store a new default question.
     public function store(Request $request)
@@ -49,23 +32,7 @@ class DefaultQuestionController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     //return the edit view with the default questions
     //only admin
     public function edit()
@@ -76,17 +43,7 @@ class DefaultQuestionController extends Controller
         return view('web.sections.admin.default_question.edit', compact('defaultQuestions'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+
 
     //destroy the default question with the defaulquestion_id
     //only admin

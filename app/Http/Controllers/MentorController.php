@@ -23,6 +23,7 @@ class MentorController extends Controller
     {
         error_log('MentorController@index');
         error_log(json_encode($request->all()));
+        $this->authorize('isAdmin');
 
 
         error_log("check search " . $request->input('search'));
@@ -43,6 +44,7 @@ class MentorController extends Controller
     public function create()
     {
         error_log('MentorController@create');
+        $this->authorize('isAdmin');
 
         return view('web.sections.admin.mentor.create');
     }
