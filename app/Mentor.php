@@ -4,6 +4,26 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Mentor
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $user_id
+ * @property string $firstname
+ * @property string $lastname
+ * @property string $street
+ * @property string $street_nr
+ * @property string $postcode
+ * @property string $phone_number
+ * @property string $city
+ * @property-read \App\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Mentor newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Mentor newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Mentor query()
+ * @mixin \Eloquent
+ */
 class Mentor extends Model
 {
     public function user(){

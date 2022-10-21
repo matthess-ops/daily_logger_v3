@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -35662,14 +35662,14 @@ questionInterfaceListner();
 
 /***/ }),
 
-/***/ 3:
+/***/ 4:
 /*!*********************************************************!*\
   !*** multi ./resources/js/mentordailyquestionsgraph.js ***!
   \*********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\matthijn\Desktop\daily_logger_v3\daily_logger_v3\resources\js\mentordailyquestionsgraph.js */"./resources/js/mentordailyquestionsgraph.js");
+module.exports = __webpack_require__(/*! C:\Users\desktop\Desktop\daily_logger_v3\daily_logger_v3\resources\js\mentordailyquestionsgraph.js */"./resources/js/mentordailyquestionsgraph.js");
 
 
 /***/ })

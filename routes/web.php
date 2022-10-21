@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -133,6 +134,21 @@ Route::group(['prefix' => 'graphs'], function() {
     Route::get('/{user_id}/mentordailyreportsgraph', 'GraphController@mentordailyreportsgraph')->name('graph.mentordailyreportsgraph')->middleware('auth');
 
 });
+
+
+Route::group(['prefix' => 'logger'], function() {
+
+    Route::get('/{user_id}/index', 'LogController@index')->name('log.index')->middleware('auth');
+    // Route::get('/create', 'QuestionController@create')->name('question.create')->middleware('auth');
+    // Route::post('{user_id}/create', 'QuestionController@store')->name('question.store')->middleware('auth');
+    // Route::get('/{question_id}/show', 'QuestionController@show')->name('question.show')->middleware('auth');
+    Route::patch('/{user_id}/update', 'LogController@update')->name('log.update')->middleware('auth');
+    // Route::delete('/{question_id}/delete', 'QuestionController@destroy')->name('question.destroy')->middleware('auth');
+    Route::get('/{user_id}/edit', 'LogController@edit')->name('log.edit')->middleware('auth');
+});
+
+
+
 
 
 

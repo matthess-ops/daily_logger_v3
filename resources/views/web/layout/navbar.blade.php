@@ -168,7 +168,7 @@
 
                 @can('isClient', App\Testpol::class)
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item dropdown ">
+                        {{-- <li class="nav-item dropdown ">
                             <a class="nav-link dropdown-toggle " href="" id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Activiteiten
@@ -202,9 +202,45 @@
                                 <a class="dropdown-item"
                                     href="{{ route('client.show', ['client_id' => Auth::user()->client->id]) }}">Gegevens</a>
                             </div>
+                        </li> --}}
+
+                        {{-- new tabs --}}
+
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ route('log.edit', ['user_id' => Auth::id()]) }}">Vandaag </a>
+                          </li>
+
+
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Terugkijken
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item"
+
+                                    href="{{ route('log.index', ['user_id' => Auth::id()]) }}">Deze week aanpassen</a>
+                                    <a class="dropdown-item"
+                                    href="">Overzicht</a>
+                            </div>
+
                         </li>
-                        <li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Account
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item"
+                                    href="">Activiteiten aanpassen</a>
+                                    <a class="dropdown-item"
+                                    href="">Persoonlijke informatie aanpassen</a>
+                            </div>
+
                         </li>
+
                     </ul>
                 @endcan
 

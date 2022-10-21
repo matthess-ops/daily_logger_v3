@@ -4,6 +4,24 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\DailyActivity
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $user_id
+ * @property array $time_slots
+ * @property array $main_activities
+ * @property array $scaled_activities
+ * @property array $scaled_activities_scores
+ * @property string $date_today
+ * @property array $colors
+ * @method static \Illuminate\Database\Eloquent\Builder|DailyActivity newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|DailyActivity newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|DailyActivity query()
+ * @mixin \Eloquent
+ */
 class DailyActivity extends Model
 {
 
