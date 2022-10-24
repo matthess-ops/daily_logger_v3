@@ -98,7 +98,10 @@
                 @foreach ($dailyActivityResults->time_slots as $time_slot)
                     @if ($loop->index % 4 == 0)
                         <div class="row">
-                            {{ $moduloCounter - 1 }}:00 - {{ $moduloCounter }}:00
+                            {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->format('H:i')}} -
+                            {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->addHour()->format('H:i')}} 
+
+                            {{-- {{ $moduloCounter - 1 }}:00 - {{ $moduloCounter }}:00 --}}
                         </div>
                         <div>
                             <button type="button" class="btn btn-secondary btn-sm" name='hourButton'

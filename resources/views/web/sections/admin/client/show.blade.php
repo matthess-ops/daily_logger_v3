@@ -8,7 +8,29 @@
     <span>{{ $client->street }} {{ $client->street_nr }} </span> <br>
     <span>{{ $client->postcode }} {{ $client->city }} </span> <br>
     <span>{{ $client->user->email }} </span> <br>
-    <span>{{ $client->phone_number }} </span> <br><br>
+    <span>{{ $client->phone_number }} </span> <br>
+    <span>{{ $client->activity_time }} </span> <br><br>
+
+    @if ($client->activity_time == '24hour')
+    <form action="{{ route('clientWorkTime.update',['client_id'=>$client->id]) }}" method="POST">
+       @csrf
+       {{ method_field('patch') }}
+       <input type="hidden" name="timeState" value="toWorkDay">
+
+       <button type="submit" class="btn btn-primary">set naar werkdag</button>
+    </form>
+
+
+    @else
+    <form action="{{ route('clientWorkTime.update',['client_id'=>$client->id]) }}" method="POST">
+        @csrf
+
+        {{ method_field('patch') }}
+        <input type="hidden" name="timeState" value="to24Hour">
+
+        <button type="submit" class="btn btn-primary">set naar 24 hour</button>
+     </form>
+    @endif
 
     @if ($client->user->active)
     <form action="{{route('client.update',['client_id'=>$client->id])}}" method="POST">

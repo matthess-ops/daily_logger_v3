@@ -24,6 +24,8 @@ class CreateClientsTable extends Migration
             $table->string('postcode');
             $table->string('phone_number');
             $table->string('city');
+            $table->string('activity_time')->default('24hour');
+
         });
     }
 

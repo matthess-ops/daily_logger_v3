@@ -24,6 +24,8 @@ class CreateDailyActivitiesTable extends Migration
 
             $table->string('date_today');
             $table->json('colors');
+            $table->json('time_values');
+
 
         });
     }

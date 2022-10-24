@@ -24,6 +24,7 @@ class ClientSeeder extends Seeder
                     'postcode'=>$faker->postcode,
                     'phone_number'=>$faker->phoneNumber,
                     'city'=>$faker->city,
+                    'activity_time'=> ['24hour','workday'][array_rand(['24hour','workday'], 1)],
                 ]);
             }
         }

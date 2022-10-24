@@ -36,6 +36,7 @@ class DailyActivity extends Model
         'scaled_activities' => 'array',
         'scaled_activities_scores' => 'array',
         'colors' => 'array',
+        'time_values'=>'array',
 
     ];
 }
