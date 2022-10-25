@@ -35,10 +35,12 @@ class DailyQuestionSeeder extends Seeder
                 $questions = [];
                 $scores = [];
                 $mentorScores = [];
+                $randScoreArraySeeds = [null,0,1,2,3,4,5,6,7,8,9,10];
                 foreach ($clientQuestions as $clientQuestion) {
                     array_push($questions, $clientQuestion->question);
-                    array_push($scores, rand(0, 10));
-                    array_push($mentorScores, rand(0, 10));
+                    array_push($scores, $randScoreArraySeeds[array_rand($randScoreArraySeeds )]);
+                    array_push($mentorScores,$randScoreArraySeeds[array_rand($randScoreArraySeeds )]);
+
                 }
 
 
@@ -57,7 +59,11 @@ class DailyQuestionSeeder extends Seeder
                         'created_at' => $startDateTime,
                         'filled_at' => $startDateTime,
                         'mentor_filled_at'=> null,
-
+                        'date_today' => $startDateTime->format('Y-m-d'),
+                        'started' => rand(0,1),
+                        'completed'=>rand(0,1),
+                        'mentor_started' => rand(0,1),
+                        'mentor_completed'=>rand(0,1),
                     ]);
                 } else {
 
@@ -73,6 +79,9 @@ class DailyQuestionSeeder extends Seeder
                         'created_at' => $startDateTime,
                         'filled_at' => $startDateTime,
                         'mentor_filled_at'=> null,
+                        'date_today' => $startDateTime->format('Y-m-d'),
+                        'started' => rand(0,1),
+                        'completed'=>rand(0,1),
                     ]);
                 }
             }

@@ -19,6 +19,7 @@ class CreateDailyQuestionsTable extends Migration
             $table->string('user_id');
             $table->json('questions');
             $table->json('scores');
+            $table->string('date_today');
 
             $table->json('mentor_scores');
             $table->json('mentor_id')->nullable();
@@ -29,7 +30,10 @@ class CreateDailyQuestionsTable extends Migration
             $table->boolean('mentor_filled')->default(0);
             $table->text('client_remark')->nullable();
             $table->text('mentor_remark')->nullable();
-
+            $table->boolean('started')->default(0);
+            $table->boolean('completed')->default(0);
+            $table->boolean('mentor_started')->default(0);
+            $table->boolean('mentor_completed')->default(0);
 
 
         });

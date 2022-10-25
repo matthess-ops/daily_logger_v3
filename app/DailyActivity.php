@@ -37,6 +37,14 @@ class DailyActivity extends Model
         'scaled_activities_scores' => 'array',
         'colors' => 'array',
         'time_values'=>'array',
+        'started'=>'boolean',
+        'completed'=>'boolean',
+
+
+        // $table->boolean('started')->default(0);
+        //     $table->boolean('completed')->default(0);
+        //     $table->boolean('mentor_started')->default(0);
+        //     $table->boolean('mentor_completed')->default(0);
 
     ];
 }

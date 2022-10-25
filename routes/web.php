@@ -144,17 +144,7 @@ Route::group(['prefix' => 'logger'], function() {
     // Route::get('/{question_id}/show', 'QuestionController@show')->name('question.show')->middleware('auth');
     Route::patch('/{user_id}/update', 'LogController@update')->name('log.update')->middleware('auth');
     // Route::delete('/{question_id}/delete', 'QuestionController@destroy')->name('question.destroy')->middleware('auth');
-    Route::get('/{user_id}/edit', 'LogController@edit')->name('log.edit')->middleware('auth');
-});
-
-
-Route::group(['prefix' => 'setactivityduration'], function() {
-
-    // Route::get('/create', 'QuestionController@create')->name('question.create')->middleware('auth');
-    // Route::post('{user_id}/create', 'QuestionController@store')->name('question.store')->middleware('auth');
-    // Route::get('/{question_id}/show', 'QuestionController@show')->name('question.show')->middleware('auth');
-    Route::patch('/{client_id}/update', 'ClientWorkTimeController@update')->name('clientWorkTime.update')->middleware('auth');
-    // Route::delete('/{question_id}/delete', 'QuestionController@destroy')->name('question.destroy')->middleware('auth');
+    Route::get('/{user_id}/{date}/edit', 'LogController@edit')->name('log.edit')->middleware('auth');
 });
 
 

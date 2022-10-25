@@ -25,6 +25,8 @@ class CreateDailyActivitiesTable extends Migration
             $table->string('date_today');
             $table->json('colors');
             $table->json('time_values');
+            $table->boolean('started')->default(0);
+            $table->boolean('completed')->default(0);
 
 
         });

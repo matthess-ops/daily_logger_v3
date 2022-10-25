@@ -32,12 +32,19 @@ class LogController extends Controller
             'created_at',
             [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]
         )
-        ->orderBy('created_at','DESC')
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
+        $dialyActivities = DailyActivity::where('user_id', $user_id)->whereBetween(
+            'created_at',
+            [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]
+        )
+            ->orderBy('created_at', 'DESC')
             ->get();
 
         error_log('logcontroller@index called');
-
-        return view('web.sections.client.logger.index',['dailyQuestions'=>$dailyQuestions]);
+            // dd($dailyQuestions,$dialyActivities);
+        return view('web.sections.client.logger.index', ['dailyQuestions' => $dailyQuestions,'dailyActivities'=>$dialyActivities]);
     }
 
     /**
@@ -78,11 +85,12 @@ class LogController extends Controller
      * @return \Illuminate\Http\Response
      */
     //get today daily_activities and daily_questions and return these
-    public function edit($user_id)
+    public function edit($user_id, $date)
     {
         //add authorization
-        $dailyActivity = DailyActivity::where('user_id', $user_id)->where('date_today', Carbon::now()->format('Y-m-d'))->first();
-        $dailyQuestions = DailyQuestion::where('user_id', $user_id)->where('created_at', '>=', Carbon::today())->first();
+        error_log('date is ' . $date);
+        $dailyActivity = DailyActivity::where('user_id', $user_id)->where('date_today', Carbon::parse($date)->format('Y-m-d'))->first();
+        $dailyQuestions = DailyQuestion::where('user_id', $user_id)->where('date_today', Carbon::parse($date)->format('Y-m-d'))->first();
         $activities = User::find($user_id)->client->activities;
         return view('web.sections.client.logger.edit', ['dailyActivityResults' => $dailyActivity, 'dailyQuestions' => $dailyQuestions, 'activities' => $activities]);
     }
@@ -127,8 +135,26 @@ class LogController extends Controller
             $dailyActivity->main_activities = $newMainActivities;
             $dailyActivity->scaled_activities_scores = $newScaledActivitiesScores;
             $dailyActivity->colors = $newColors;
-            $dailyActivity->save();
         }
+        // check if dailyActivity is completed or started
+        $isComplete =  true;
+        $isStarted = false;
+        foreach ($dailyActivity->main_activities as $mainActivity) {
+            if ($mainActivity === null) {
+                $isComplete = false;
+            }
+            if ($mainActivity !== null) {
+                $isStarted = true;
+            }
+        }
+        $dailyActivity->completed = $isComplete;
+        $dailyActivity->started=$isStarted;
+        $dailyActivity->save();
+
+
+
+
+
         // save daily question stuff
 
 
@@ -138,6 +164,30 @@ class LogController extends Controller
         if ($request->input('clientRemark') !=  null) {
             $dailyQuestion->client_remark = $request->input('clientRemark');
         }
+
+        //check if dailyQuestion is complete and or started
+
+        $isComplete =  true;
+        $isStarted = false;
+
+        $dailyQuestionStarted = false;
+        $dailyQuestionCompleted = true;
+        foreach ($request->input('scores') as $score) {
+            if($score ===null){
+                $isComplete = false;
+            }
+            if($score !==null){
+                $isStarted = true;
+            }
+        }
+
+        $dailyQuestion->started= $isStarted;
+        $dailyQuestion->completed = $isComplete;
+
+
+
+
+
         $dailyQuestion->save();
 
         return redirect()->back();

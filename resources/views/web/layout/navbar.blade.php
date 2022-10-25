@@ -207,7 +207,7 @@
                         {{-- new tabs --}}
 
                         <li class="nav-item active">
-                            <a class="nav-link" href="{{ route('log.edit', ['user_id' => Auth::id()]) }}">Vandaag </a>
+                            <a class="nav-link" href="{{ route('log.edit', ['user_id' => Auth::id(),'date'=>Carbon\Carbon::today()]) }}">Vandaag </a>
                           </li>
 
 

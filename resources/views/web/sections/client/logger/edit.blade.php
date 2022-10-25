@@ -98,8 +98,8 @@
                 @foreach ($dailyActivityResults->time_slots as $time_slot)
                     @if ($loop->index % 4 == 0)
                         <div class="row">
-                            {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->format('H:i')}} -
-                            {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->addHour()->format('H:i')}} 
+                            {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->format('H:i') }} -
+                            {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->addHour()->format('H:i') }}
 
                             {{-- {{ $moduloCounter - 1 }}:00 - {{ $moduloCounter }}:00 --}}
                         </div>
@@ -154,18 +154,18 @@
 
                         <div class="col-7">
                             @if ($dailyActivityResults->main_activities[$loop->index] == null)
-                            @foreach ($dailyActivityResults->scaled_activities_scores[$loop->index] as $scores)
-                            Nan
-                        @endforeach                            @else
+                                @foreach ($dailyActivityResults->scaled_activities_scores[$loop->index] as $scores)
+                                    Nan
+                                @endforeach
+                            @else
                                 @foreach ($dailyActivityResults->scaled_activities_scores[$loop->index] as $scores)
                                     {{-- {{ $scores }} --}}
-                                   @if ($scores ==0)
-                                       n.v.t
-                                   @else
-                                       {{$scores}}
-                                   @endif
-
-                                    @endforeach
+                                    @if ($scores == 0)
+                                        n.v.t
+                                    @else
+                                        {{ $scores }}
+                                    @endif
+                                @endforeach
                             @endif
 
 
@@ -180,31 +180,35 @@
                 @endforeach
             </div>
             <h3>Waardering</h3>
+            @php
+                $dailyQuestionsValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-
+            @endphp
+            {{ json_encode($dailyQuestions->scores) }}
             @foreach ($dailyQuestions->questions as $question)
                 <div class="form-group">
                     {{ $loop->index }}
                     <label for="">{{ $question }}</label>
-                    <select class="form-control" name="scores[]" id="">
 
-                        @for ($i = 0; $i < 10; $i++)
-                            @if ($dailyQuestions->scores[$loop->index] == $i)
-                                @if ($dailyQuestions->scores[$loop->index] == 0)
-                                    <option selected value="{{ $i }}">n.v.t</option>
-                                @else
-                                    <option selected value="{{ $i }}">{{ $i }}</option>
-                                @endif
+                    <select class="form-control" name="scores[]" id="">
+                        @if ($dailyQuestions->scores[$loop->index] === null)
+                            <option selected value="{{ null }}">Leeg</option>
+                        @endif
+                        @if ($dailyQuestions->scores[$loop->index] === 0)
+                            <option selected value="{{ 0 }}">n.v.t</option>
+                        @else
+                            <option value="{{ 0 }}">n.v.t</option>
+                        @endif
+                        @for ($i = 1; $i <= 10; $i++)
+                            @if ($dailyQuestions->scores[$loop->index] === $i)
+                                <option selected value="{{ $i }}">{{ $i }}</option>
                             @else
-                                @if ($i == 0)
-                                    <option value="{{ $i }}">n.v.t</option>
-                                @else
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                @endif
+                                <option value="{{ $i }}">{{ $i }}</option>
                             @endif
                         @endfor
 
                     </select>
+
                 </div>
             @endforeach
             <div class="form-group">

@@ -42,7 +42,10 @@ class DailyQuestion extends Model
         'mentor_filled'=>'boolean',
         'client_remark'=>'string',
         'mentor_remark'=>'string',
-
+        'started'=>'boolean',
+        'completed'=>'boolean',
+        'mentor_started'=>'boolean',
+        'mentor_completed'=>'boolean'
     ];
 
     public function client(){

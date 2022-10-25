@@ -98,7 +98,7 @@ class DailyActivitySeeder extends Seeder
                     for ($j = 0; $j <= 31; $j++) {
                         array_push($newTimeSlots, $j);
 
-                     
+
                         array_push($newTimeValues,$timeValuesStartTime->clone());
                         $timeValuesStartTime->addMinutes(15);
 
@@ -142,7 +142,8 @@ class DailyActivitySeeder extends Seeder
                     'updated_at' => $startDateTime,
                     'date_today' => $startDateTime->format('Y-m-d'),
                     'time_values'=>$newTimeValues,
-
+                    'started' => rand(0,1),
+                    'completed'=>rand(0,1),
                 ]);
             }
         }
