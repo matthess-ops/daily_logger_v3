@@ -17,6 +17,7 @@ const mix = require('laravel-mix');
  .js('resources/js/checkHourBoxes.js', 'public/js')
 
  .js('resources/js/mentordailyquestionsgraph.js', 'public/js')
+ .js('resources/js/indexDailyActivitiesGraph.js', 'public/js')
 
 
 

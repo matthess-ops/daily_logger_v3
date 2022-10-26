@@ -218,11 +218,10 @@
                                 Terugkijken
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item"
-
-                                    href="{{ route('log.index', ['user_id' => Auth::id()]) }}">Deze week aanpassen</a>
-                                    <a class="dropdown-item"
-                                    href="">Overzicht</a>
+                                
+                                
+                                <a class="dropdown-item" href="{{ route('log.index', ['user_id' => Auth::id()]) }}">Deze week aanpassen</a>
+                                <a class="dropdown-item" href="{{ route('graph.index', ['user_id' => Auth::id()]) }}">Overzicht</a>
                             </div>
 
                         </li>

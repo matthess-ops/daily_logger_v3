@@ -4,5 +4,6 @@
     "/js/checkHourBoxes.js": "/js/checkHourBoxes.js",
     "/js/dailyquestionsgraph.js": "/js/dailyquestionsgraph.js",
     "/js/graphactivities.js": "/js/graphactivities.js",
+    "/js/indexDailyActivitiesGraph.js": "/js/indexDailyActivitiesGraph.js",
     "/js/mentordailyquestionsgraph.js": "/js/mentordailyquestionsgraph.js"
 }
