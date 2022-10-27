@@ -12,21 +12,13 @@ use app\User;
 
 class LogController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+
+
     public function index($user_id)
     {
 
-        //         $items = Item::select('*')
-        // ->whereBetween('created_at',
-        //     [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
-        // )
-        // ->get();
 
-        // dd($items);
 
         $dailyQuestions = DailyQuestion::where('user_id', $user_id)->whereBetween(
             'created_at',
@@ -43,15 +35,11 @@ class LogController extends Controller
             ->get();
 
         error_log('logcontroller@index called');
-            // dd($dailyQuestions,$dialyActivities);
-        return view('web.sections.client.logger.index', ['dailyQuestions' => $dailyQuestions,'dailyActivities'=>$dialyActivities]);
+        // dd($dailyQuestions,$dialyActivities);
+        return view('web.sections.client.logger.index', ['dailyQuestions' => $dailyQuestions, 'dailyActivities' => $dialyActivities]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         //
@@ -148,7 +136,7 @@ class LogController extends Controller
             }
         }
         $dailyActivity->completed = $isComplete;
-        $dailyActivity->started=$isStarted;
+        $dailyActivity->started = $isStarted;
         $dailyActivity->save();
 
 
@@ -173,15 +161,15 @@ class LogController extends Controller
         $dailyQuestionStarted = false;
         $dailyQuestionCompleted = true;
         foreach ($request->input('scores') as $score) {
-            if($score ===null){
+            if ($score === null) {
                 $isComplete = false;
             }
-            if($score !==null){
+            if ($score !== null) {
                 $isStarted = true;
             }
         }
 
-        $dailyQuestion->started= $isStarted;
+        $dailyQuestion->started = $isStarted;
         $dailyQuestion->completed = $isComplete;
 
 

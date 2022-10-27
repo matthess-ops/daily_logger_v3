@@ -15,33 +15,40 @@ use Gate;
 class GraphController extends Controller
 {
 
-    public function index(Request $request, $user_id)
-    {
-        error_log('GraphController@index called');
-        error_log(json_encode($request->all()));
-        if ($request->has('startDate') and $request->has('endDate')) {
-            error_log('has start and end date check if valid');
-
-            $validatedData = $request->validate([
-                'startDate' => 'required|date|',
-                'endDate' => 'required|date|after:startDate',
-
-            ]);
-            if ($request->input('action') === "logger") {
-                $dailyActivities = DailyActivity::where('user_id', $user_id)->whereBetween('created_at', [$request->input('startDate'), $request->input('endDate')])->get();
-                return view('web.sections.graph.index',['dailyActivities'=>$dailyActivities,'backStartDate'=>$request->input('startDate'),'backEndDate'=>$request->input('endDate')]);
-            }
-            if ($request->input('action') === "daily") {
-            }
-
-            return view('web.sections.graph.index');
-        } else {
-
-            error_log('does not start and end date');
-
-            return view('web.sections.graph.index');
-        }
+        public function index($user_id){
+        $dailyActivities = DailyActivity::where('user_id', $user_id)->get();
+        $dailyQuestions = DailyQuestion::where('user_id', $user_id)->get();
+        return view('web.sections.graph.index', ['dailyQuestions' => $dailyQuestions,'dailyActivities'=>$dailyActivities]);
     }
+
+
+    // public function index(Request $request, $user_id)
+    // {
+    //     error_log('GraphController@index called');
+    //     error_log(json_encode($request->all()));
+    //     if ($request->has('startDate') and $request->has('endDate')) {
+    //         error_log('has start and end date check if valid');
+
+    //         $validatedData = $request->validate([
+    //             'startDate' => 'required|date|',
+    //             'endDate' => 'required|date|after:startDate',
+
+    //         ]);
+    //         if ($request->input('action') === "logger") {
+    //             $dailyActivities = DailyActivity::where('user_id', $user_id)->whereBetween('created_at', [$request->input('startDate'), $request->input('endDate')])->get();
+    //             return view('web.sections.graph.index',['dailyActivities'=>$dailyActivities,'backStartDate'=>$request->input('startDate'),'backEndDate'=>$request->input('endDate')]);
+    //         }
+    //         if ($request->input('action') === "daily") {
+    //         }
+
+    //         return view('web.sections.graph.index');
+    //     } else {
+
+    //         error_log('does not start and end date');
+
+    //         return view('web.sections.graph.index');
+    //     }
+    // }
 
 
     public function activities($user_id)
