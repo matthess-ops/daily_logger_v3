@@ -18,6 +18,7 @@ const mix = require('laravel-mix');
 
  .js('resources/js/mentordailyquestionsgraph.js', 'public/js')
  .js('resources/js/indexDailyActivitiesGraph.js', 'public/js')
+ .js('resources/js/graphing.js', 'public/js')
 
 
 

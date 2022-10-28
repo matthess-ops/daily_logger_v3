@@ -15,7 +15,7 @@ class DailyActivitySeeder extends Seeder
 
     public function run()
     {
-        $nrOfDaysToGenerateData = 15; // nr of days to generate entries for.
+        $nrOfDaysToGenerateData = 30; // nr of days to generate entries for.
         $clients =  client::all();
         foreach ($clients as $client) {
             $activities = $client->activities; // get activities from the client model

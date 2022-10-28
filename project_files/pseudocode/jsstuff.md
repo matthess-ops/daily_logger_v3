@@ -1,0 +1,97 @@
+page layout
+
+input: activities/daily rapports selection
+input: week/ month selection
+
+Depending on week or month selection the correct week or month picker is 
+added both for a start/end week/month.
+
+week activities, month activities
+week questions, month questions
+
+filterDailyActivitiesForStartEndDate():
+1: filter the dailyActivities logs for start and end date this should improve improve performace down the line
+2: return filterDailyActivities
+
+getUniqueMainActivities():
+1: get all unique main activities
+2: return uniqueMainActivities
+
+getUniqueScaledActivities():
+1: get all unique scaled activities
+2: return uniqueScaledActivities
+
+makeWeekDateRange():
+1: get start and end week
+2: for each week create the following
+
+{
+    weeknr:
+    mondayDate:
+    sundayDate:
+    weekActivityLogs:[{date:.. log:..}] orderd for date
+    weekQuestionLogs: [{date:.. log:..}] orderd for date
+    weekDailyMainActivityTotals: [{mainActivityName:...,dailyTotals:[mondayTotal,tuesdayTotal, etc]}]
+    uniqueMainActivities: [programmeren, lezen etc]
+    uniqueScaledActivities: [pijn level, gespannen etc]
+    WeekDailyScaledActivityAverages:[{scaledActivityName:...,dailyAve:[mondayAve,tuesdayAve, etc]}]
+    weekDataSet: graph datasets
+    weeklabels: graph day labels
+    filterdDatasets: filtered weekDataset for user input
+
+}
+
+3:return array of all the week
+
+addActivityLogsToWeekDateRange()
+1: foreach weeknr in makeWeekDateRange() foreach date in weekActivityLogs
+2: find the the corresponding log in filterDailyActivitiesForStartEndDate() and this.
+return the array:
+
+calcWeekMainActivityLogsData()
+1: foreach weeknr in addActivityLogsToWeekDateRange() foreach date in weekActivityLogs foreach uniqueMainActivity in uniqueMainActivities:
+2: calc the total minutes spend on that mainActivity.
+2: create weekDailyMainActivityTotals for each week.
+return the updated array
+
+calcWeekScaledActivityLogsData():
+1: foreach weeknr in addActivityLogsToWeekDateRange() foreach date in weekActivityLogs foreach uniqueScaledActivity in uniqueScaledActivities:
+2: calc the average score for the uniqueScaledActivity
+return the updatd array
+
+generateWeekActivityGrapDatasets():
+1: foreach weeknr in addActivityLogsToWeekDateRange() foreach weekDailyMainActivityTotals generate the following
+   {
+                    label: mainActivity from uniqueMainActivities,
+                    backgroundColor:colorArray,
+                    data: weekDailyMainActivityTotals [12, 59, 5, 56, 58, 12, 59, 85, 23],
+                    stack: "Stack 0",
+                },
+
+2: foreach weeknr in addActivityLogsToWeekDateRange() foreach WeekDailyScaledActivityAverages generate the following
+   {
+                    label: scaledActivity from uniqueScaledActivities,
+                    backgroundColor:colorArray[i],
+                    data: WeekDailyScaledActivityAverages[12, 59, 5, 56, 58, 12, 59, 85, 23],
+                    stack: "Stack 1", // each uniqueScaledActivity should get its own stack
+                },
+
+add mainActivity and scaledActivity stuff to weekDataSet
+return 
+
+createWeekLabels():
+    add labels to the makeWeekDateRange: Each label is a day of the week plus date
+
+    return makeWeekDateRange
+
+
+filterDatasets():
+    based on mainActivity scaledActivty check box state filter the datasets:
+    return 
+
+createWeekActivityGraphs():
+    foreach week in makeWeekDateRange generate a graph for
+        filterdDatasets title is weeknumber
+
+
+
