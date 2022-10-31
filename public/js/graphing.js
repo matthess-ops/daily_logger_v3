@@ -21857,6 +21857,14 @@ module.exports = function(module) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -21932,6 +21940,144 @@ var changePickers = function changePickers() {
   }
 };
 
+var makeGraph = function makeGraph() {
+  document.getElementById('makeGraph').addEventListener('click', function () {
+    var startWeekValue = document.getElementById("startWeek").value;
+    var endWeekValue = document.getElementById("endWeek").value;
+
+    if (startWeekValue != "" && endWeekValue != "") {
+      document.getElementById('startEndWeekEmpty').classList.add("d-none");
+      console.log("make the graph");
+      console.log("week start and end ", startWeekValue, endWeekValue);
+    } else {
+      document.getElementById('startEndWeekEmpty').classList.remove("d-none");
+    }
+
+    console.log("startWeekvalue is ", startWeekValue);
+  });
+};
+
+makeGraph();
+
+var filterDailyActivitiesForDate = function filterDailyActivitiesForDate(startDate, endDate) {
+  var filtered = dailyActivities.filter(function (log) {
+    if (moment__WEBPACK_IMPORTED_MODULE_0___default()(log.created_at) >= moment__WEBPACK_IMPORTED_MODULE_0___default()(startDate, "YYYY-MM-DD") && moment__WEBPACK_IMPORTED_MODULE_0___default()(log.created_at) <= moment__WEBPACK_IMPORTED_MODULE_0___default()(endDate, "YYYY-MM-DD")) {
+      return log;
+    }
+  }); // console.log("nbon filted activities ", dailyActivities.length)
+  // console.log("filted array length activities ",filtered.length)
+  // console.log(filtered)
+
+  return filtered;
+};
+
+var getUniqueScaledAndMainActivities = function getUniqueScaledAndMainActivities(dailyActivities) {
+  var allMainActivities = [];
+  var allScaledActivities = [];
+  dailyActivities.forEach(function (dailyActivityLog) {
+    dailyActivityLog.main_activities.forEach(function (mainActivities) {
+      allMainActivities = allMainActivities.concat(mainActivities);
+    });
+    dailyActivityLog.scaled_activities.forEach(function (scaledActivities) {
+      allScaledActivities = allScaledActivities.concat(scaledActivities);
+    });
+  });
+
+  var uniqueMainActivities = _toConsumableArray(new Set(allMainActivities));
+
+  var uniqueScaledActivities = _toConsumableArray(new Set(allScaledActivities));
+
+  return [uniqueMainActivities, uniqueScaledActivities];
+}; //rekenin ghouden met jaar wisseling
+
+
+var makeWeekActivitiesDataRange = function makeWeekActivitiesDataRange(uniqueMainActivities, uniqueScaledActivities) {
+  var startWeekValue = document.getElementById("startWeek").value;
+  var endWeekValue = document.getElementById("endWeek").value;
+  var intStartWeek = parseInt(startWeekValue.split("W")[1]);
+  var intEndWeek = parseInt(endWeekValue.split("W")[1]);
+  var startYear = startWeekValue.split("W")[0].substring(0, 4);
+  var endYear = endWeekValue.split("W")[0].substring(0, 4);
+  var weekDiff = intEndWeek - intStartWeek;
+  var dateRange = [];
+
+  for (var i = 0; i < weekDiff; i++) {
+    var newWeek = {
+      weekNr: intStartWeek + i,
+      mondayDate: moment__WEBPACK_IMPORTED_MODULE_0___default()(startYear).add(intStartWeek + i, 'weeks').weekday(1),
+      sundayDate: moment__WEBPACK_IMPORTED_MODULE_0___default()(startYear).add(intStartWeek + i, 'weeks').weekday(7),
+      activityLogs: null,
+      questionLogs: null,
+      mainActivityTotal: null,
+      scaledActivityAverages: null,
+      uniqueMainActivities: uniqueMainActivities,
+      uniqueScaledActivities: uniqueScaledActivities,
+      datasets: null,
+      labels: null,
+      filteredDatasets: null
+    };
+    dateRange.push(newWeek);
+  } // console.log(dateRange)
+
+
+  return dateRange;
+};
+
+var addActivityLogsToWeekDateRange = function addActivityLogsToWeekDateRange(dateRange, filtedActivitiesLogs) {
+  dateRange.forEach(function (week) {
+    var logs = [];
+
+    var _loop = function _loop(i) {
+      var date = week.mondayDate.clone().add(i, 'days');
+      var thisLog = null;
+      filtedActivitiesLogs.forEach(function (log) {
+        if (log.date_today == date.format("YYYY-MM-DD")) {
+          thisLog = log;
+        }
+      });
+      logs.push({
+        date: date,
+        log: thisLog
+      });
+    };
+
+    for (var i = 0; i < 7; i++) {
+      _loop(i);
+    }
+
+    week.activityLogs.push(logs);
+  });
+};
+
+var calcWeekMainActivityData = function calcWeekMainActivityData(dateRange) {
+  dateRange.forEach(function (week) {
+    week.uniqueMainActivities.forEach(function (mainActivity) {// array = [ma, di,wo etc]
+      // week.activityLogs.forEach(dayActivities => {
+      // });
+    });
+  });
+};
+
+var test = function test() {
+  console.log(dailyActivities[0]);
+  var filtedDailyActivitiesLogs = filterDailyActivitiesForDate("2022-10-05", "2022-10-18");
+
+  var _getUniqueScaledAndMa = getUniqueScaledAndMainActivities(filtedDailyActivitiesLogs),
+      _getUniqueScaledAndMa2 = _slicedToArray(_getUniqueScaledAndMa, 2),
+      uniqueMainActivities = _getUniqueScaledAndMa2[0],
+      uniqueScaledActivities = _getUniqueScaledAndMa2[1]; // console.log(uniqueMainActivities)
+  // console.log(uniqueScaledActivities)
+
+
+  var weekActivtyDateRange = makeWeekActivitiesDataRange(uniqueMainActivities, uniqueScaledActivities);
+  var dateRangeWithLogs = addActivityLogsToWeekDateRange(weekActivtyDateRange, filtedDailyActivitiesLogs);
+  calcWeekMainActivityData(dateRangeWithLogs);
+};
+
+test(); // console.log("date sizzle")
+// let datetest = moment("2022").add(56, 'weeks').weekday(1)
+// console.log(datetest)
+
 /***/ }),
 
 /***/ 6:
@@ -21941,7 +22087,7 @@ var changePickers = function changePickers() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\desktop\Desktop\daily_logger_v3\daily_logger_v3\resources\js\graphing.js */"./resources/js/graphing.js");
+module.exports = __webpack_require__(/*! C:\Users\matthijn\Desktop\daily_logger_v3\daily_logger_v3\resources\js\graphing.js */"./resources/js/graphing.js");
 
 
 /***/ })

@@ -56,11 +56,11 @@
             <h3>Selecteer een start en eind week:</h3>
 
             <input class="form-control mr-sm-2 " type="week" aria-label="Search" name="startWeek" id="startWeek"
-                value="">
+                value="2022-W40">
             <label for="endWeek">Eind week:</label>
             <input class="form-control mr-sm-2 " type="week" aria-label="Search" name="endWeek" id="endWeek"
-                value="">
-            <div id="startEndWeekError" class="alert alert-danger d-none">Eind week voor of gelijk aan start week</div>
+                value="2022-W43">
+            {{-- <div id="startEndWeekError" class="alert alert-danger d-none">Eind week voor of gelijk aan start week</div> --}}
             <div id="startEndWeekEmpty" class="alert alert-danger d-none">Eind en start week moeten een week bevatten</div>
         </div>
 
@@ -74,7 +74,7 @@
             <label for="endMonth">Eind maand:</label>
             <input class="form-control mr-sm-2 " type="month" aria-label="Search" name="endMonth" id="endMonth"
                 value="">
-            <div id="startEndMonthError" class="alert alert-danger d-none">Eind maand voor of gelijk aan start maand</div>
+            {{-- <div id="startEndMonthError" class="alert alert-danger d-none">Eind maand voor of gelijk aan start maand</div> --}}
             <div id="startEndMonthEmpty" class="alert alert-danger d-none">Eind en start maand moeten een week bevatten</div>
         </div>
 
