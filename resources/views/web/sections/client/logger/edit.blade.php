@@ -1,7 +1,7 @@
 @extends('web.layout.navbar')
 
 @section('content')
-    <h3>web.client.logger.edit.blade.php</h3>
+    <h3>web.client.logger.edit.blade.php test</h3>
 
     {{-- <h2>daily questions</h2>
     {{ json_encode($dailyQuestions) }}

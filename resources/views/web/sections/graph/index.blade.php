@@ -82,10 +82,15 @@
         <button id="makeGraph" type="button" class="btn btn-primary ">Maak Grafiek</button>
 
 
-        {{-- <h1>Chart JS Stacked Bar example</h1>
+        <h1>Chart JS Stacked Bar example</h1>
         <div class="wrapper">
         <canvas id="testchart"></canvas>
-        </div> --}}
+        </div>
+
+
+        <div class="wrapper" id="chartDiv">
+
+        </div>
 
 
 

@@ -237,8 +237,7 @@ const makeChart = (chartLabels, chartDatasets) => {
     let chartStatus = Chart.getChart("myChart4"); // <canvas> id
     if (chartStatus != undefined) {
         chartStatus.destroy();
-        //(or)
-        // chartStatus.clear();
+
     }
 
     var ctx = document.getElementById("myChart4").getContext("2d");
