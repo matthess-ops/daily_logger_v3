@@ -94,4 +94,21 @@ createWeekActivityGraphs():
         filterdDatasets title is weeknumber
 
 
+///////////////button stuff
+1:make in index div for main activity and scale activity buttons
+2: only scaled or mainly activity buttons
+3: 
+
+addScaledCheckboxes():
+    for all scaled activiies add checboxes to scaledCheck div
+
+addMainCheckboxes():
+    for all main activities add checkboxes to mainCheck div
+
+addEventListners(): input is the div find all div check boxes
+    add eventlistners to to scaledCheck and mainCheck div on change
+    get all the checkboxes that are checked and get the value
+    return these
+
+
 

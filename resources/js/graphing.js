@@ -438,6 +438,55 @@ const makeWeekActivityCharts = (dateRange) => {
     });
 };
 
+const makeGroupCheckBoxes =(divId,checkBoxNames)=>{
+    const divOfInterest = document.getElementById(divId)
+    checkBoxNames.forEach((checkBoxName,index) => {
+        const newLabel = document.createElement("label");
+        newLabel.setAttribute("for", checkBoxName);
+        newLabel.innerHTML = checkBoxName;
+
+        const newCheckbox = document.createElement("input");
+        newCheckbox.setAttribute("type", "checkbox");
+        newCheckbox.setAttribute("id", checkBoxName);
+        newCheckbox.setAttribute("checked", true);
+        newCheckbox.setAttribute('value',checkBoxName)
+        const br = document.createElement("br");
+
+        divOfInterest.appendChild(newLabel);
+        divOfInterest.appendChild(newCheckbox);
+        divOfInterest.appendChild(br);
+    });
+
+    const groupButton = document.createElement("button");
+    groupButton.innerHTML ="deactivate main activites"
+    groupButton.classList.add("btn")
+    groupButton.classList.add("btn-primary")
+    groupButton.addEventListener('click',()=>{
+        console.log("button clicked")
+        checkBoxNames.forEach(checkBoxName => {
+            const checkboxOfInterest = document.getElementById(checkBoxName)
+            checkboxOfInterest.checked = false
+        });
+    })
+    divOfInterest.appendChild(groupButton);
+
+
+}
+
+const listenToCheckBoxChanges = (divId,checkBoxIds)=>{
+
+    document.getElementById(divId).addEventListener('change',()=>{
+        const checkedBoxes =checkBoxIds.filter(checkBoxId =>
+            document.getElementById(checkBoxId).checked ==true
+            )
+
+        return checkedBoxes
+    })
+
+}
+
+
+
 const test = () => {
     console.log(dailyActivities[0]);
     const filtedDailyActivitiesLogs = filterDailyActivitiesForDate(
@@ -472,6 +521,11 @@ const test = () => {
     makeWeekActivityCharts(dateRangeLabels);
 };
 test();
+
+
+makeGroupCheckBoxes('mainCheckBoxes',["programeren","lezen","koken"])
+makeGroupCheckBoxes('scaledCheckBoxes',["pijn","druk","verdrietig"])
+listenToCheckBoxChanges('mainCheckBoxes',["programeren","lezen","koken"])
 
 // const testChart = () => {
 //     var ctx = document.getElementById("testchart").getContext("2d");

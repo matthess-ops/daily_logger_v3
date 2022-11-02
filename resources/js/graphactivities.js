@@ -298,6 +298,7 @@ const createMainActivityInterface = (mainActivitiesInput) => {
 };
 
 
+
 // step 2: scaled data visualisation
 // 1 for each of the scaled activities calculate the average daily score
 // 2 plot these as seperate bars in the graph
