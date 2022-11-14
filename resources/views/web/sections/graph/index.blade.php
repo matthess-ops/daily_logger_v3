@@ -6,7 +6,6 @@
         const dailyQuestions = @json($dailyQuestions);
         const dailyActivities = @json($dailyActivities);
     </script>
-    {{-- {{$dailyActivities}} --}}
     <ul>
         <li>hoe willen we de opmerkingen van de logger showen, onder terugkijken een tab bouwen?</li>
     </ul>
@@ -56,10 +55,10 @@
             <h3>Selecteer een start en eind week:</h3>
 
             <input class="form-control mr-sm-2 " type="week" aria-label="Search" name="startWeek" id="startWeek"
-                value="2022-W40">
+                value="2022-W44">
             <label for="endWeek">Eind week:</label>
             <input class="form-control mr-sm-2 " type="week" aria-label="Search" name="endWeek" id="endWeek"
-                value="2022-W43">
+                value="2022-W46">
             {{-- <div id="startEndWeekError" class="alert alert-danger d-none">Eind week voor of gelijk aan start week</div> --}}
             <div id="startEndWeekEmpty" class="alert alert-danger d-none">Eind en start week moeten een week bevatten</div>
         </div>
@@ -81,6 +80,7 @@
 
         <button id="makeGraph" type="button" class="btn btn-primary ">Maak Grafiek</button>
 
+        <div id="checkBoxes">
         <div id="mainCheckBoxes">
             <h4>Main activities:</h4>
         </div>
@@ -88,9 +88,10 @@
         {{-- <button type="button" class="btn btn-primary"></button> --}}
 
         <div id ="scaledCheckBoxes">
+            <h4>Scaled activities:</h4>
 
         </div>
-
+    </div>
         <h1>Chart JS Stacked Bar example</h1>
         <div class="wrapper">
         <canvas id="testchart"></canvas>

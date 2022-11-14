@@ -111,4 +111,18 @@ addEventListners(): input is the div find all div check boxes
     return these
 
 
+we have a group of checkboxes in an unique div
+we want to disable on a button press all the checked checboxes in this div/group
+
+add an event listner to the div that listens to changes in the div when a change
+has been noticed retrieve all checked boxes and generate the graph
+
+when the button is pressed thus and eventlistner disables all the checed boxes
+
+
+/// ik heb een list van main en scaled activities
+/// foreach main acitivity create an checkbox and add these to the mainActivityCheckBoxesDiv -> the id of the checkbox is the mainActiviy name
+//after adding the checkboxes add an button that disables all mainActivity chekcb
+
+
 

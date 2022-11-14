@@ -362,6 +362,7 @@ const generateWeekDatasets = (dateRange) => {
         });
 
         week.datasets = datasets;
+        week.filteredDatasets =datasets
     });
     return dateRange;
 };
@@ -431,7 +432,7 @@ const makeWeekActivityCharts = (dateRange) => {
     dateRange.forEach((week) => {
         makeChart(
             week.labels,
-            week.datasets,
+            week.filteredDatasets,
             "test_" + week.weekNr,
             week.weekNr
         );
@@ -457,18 +458,7 @@ const makeGroupCheckBoxes =(divId,checkBoxNames)=>{
         divOfInterest.appendChild(br);
     });
 
-    const groupButton = document.createElement("button");
-    groupButton.innerHTML ="deactivate main activites"
-    groupButton.classList.add("btn")
-    groupButton.classList.add("btn-primary")
-    groupButton.addEventListener('click',()=>{
-        console.log("button clicked")
-        checkBoxNames.forEach(checkBoxName => {
-            const checkboxOfInterest = document.getElementById(checkBoxName)
-            checkboxOfInterest.checked = false
-        });
-    })
-    divOfInterest.appendChild(groupButton);
+
 
 
 }
@@ -479,7 +469,6 @@ const listenToCheckBoxChanges = (divId,checkBoxIds)=>{
         const checkedBoxes =checkBoxIds.filter(checkBoxId =>
             document.getElementById(checkBoxId).checked ==true
             )
-
         return checkedBoxes
     })
 
@@ -488,15 +477,15 @@ const listenToCheckBoxChanges = (divId,checkBoxIds)=>{
 
 
 const test = () => {
-    console.log(dailyActivities[0]);
     const filtedDailyActivitiesLogs = filterDailyActivitiesForDate(
-        "2022-10-05",
-        "2022-10-18"
+        "2022-10-16",
+        "2022-11-09"
     );
+   
+
     const [uniqueMainActivities, uniqueScaledActivities] =
         getUniqueScaledAndMainActivities(filtedDailyActivitiesLogs);
-    // console.log(uniqueMainActivities)
-    // console.log(uniqueScaledActivities)
+ 
     const weekActivtyDateRange = makeWeekActivitiesDataRange(
         uniqueMainActivities,
         uniqueScaledActivities
@@ -513,19 +502,117 @@ const test = () => {
     const dateRangeDatasets = generateWeekDatasets(
         dataRangeScaledAveraveScores
     );
-    console.log(dateRangeDatasets);
 
     const dateRangeLabels = generateWeekActivityLabels(dateRangeDatasets);
     // console.log(dateRangeLabels)
     // makeChart(dateRangeLabels[0].labels,dateRangeLabels[0].datasets,"test",10)
     makeWeekActivityCharts(dateRangeLabels);
 };
-test();
+
+//  test();
 
 
-makeGroupCheckBoxes('mainCheckBoxes',["programeren","lezen","koken"])
-makeGroupCheckBoxes('scaledCheckBoxes',["pijn","druk","verdrietig"])
-listenToCheckBoxChanges('mainCheckBoxes',["programeren","lezen","koken"])
+// makeGroupCheckBoxes('mainCheckBoxes',["programeren","lezen","koken"])
+// makeGroupCheckBoxes('scaledCheckBoxes',["pijn","druk","verdrietig"])
+// listenToCheckBoxChanges('mainCheckBoxes',["programeren","lezen","koken"])
+
+const filterDataRangeForCheckBoxes =(weekDatas,mainActivities,scaledActivities)=>{
+ 
+    const labelsToRemove = [].concat(mainActivities, scaledActivities)
+    weekDatas.forEach((weekData) => {
+        const filtedWeekDatasets = []
+        weekData.datasets.forEach(label => {
+            let keepData = false
+            labelsToRemove.forEach(labelToRemove => {
+                    if(label.label == labelToRemove){
+                        keepData = true
+                    }
+            });
+            if(keepData == true){
+                filtedWeekDatasets.push(label)
+            }
+        });
+        weekData.filteredDatasets = filtedWeekDatasets
+    });
+    makeWeekActivityCharts(weekDatas);
+
+
+}
+
+
+const generateWeekGraphs = ()=>{
+
+    const filtedDailyActivitiesLogs = filterDailyActivitiesForDate(
+        "2022-10-16",
+        "2022-11-09"
+    );
+   
+
+    const [uniqueMainActivities, uniqueScaledActivities] =
+        getUniqueScaledAndMainActivities(filtedDailyActivitiesLogs);
+
+
+ 
+    const weekActivtyDateRange = makeWeekActivitiesDataRange(
+        uniqueMainActivities,
+        uniqueScaledActivities
+    );
+    const dateRangeWithLogs = addActivityLogsToWeekDateRange(
+        weekActivtyDateRange,
+        filtedDailyActivitiesLogs
+    );
+    const dateRangeMainActivityTotals =
+        calcWeekMainActivityData(dateRangeWithLogs);
+    const dataRangeScaledAveraveScores = calcWeekScaledActivityData(
+        dateRangeMainActivityTotals
+    );
+    const dateRangeDatasets = generateWeekDatasets(
+        dataRangeScaledAveraveScores
+    );
+
+    //create the main and scaled activity boxes
+    // make listeners for the checboxes
+    //on change boxes get the main en scaled filter de data
+
+    const dateRangeLabels = generateWeekActivityLabels(dateRangeDatasets);
+    makeWeekActivityCharts(dateRangeLabels);
+    // console.log(dateRangeLabels)
+    makeGroupCheckBoxes('mainCheckBoxes',uniqueMainActivities.map(activity => activity !== null ? activity : "niet ingevuld"))
+    makeGroupCheckBoxes('scaledCheckBoxes',uniqueScaledActivities)
+
+    document.getElementById('checkBoxes').addEventListener('change',()=>{
+        console.log('change registed')
+        const mainActivitiesChecked = uniqueMainActivities.map(activity => activity !== null ? activity : "niet ingevuld").filter(checkBoxId =>
+            document.getElementById(checkBoxId).checked ==true
+            )
+
+            const scaledActivitiesChecked = uniqueScaledActivities.filter(checkBoxId =>
+                document.getElementById(checkBoxId).checked ==true
+                )
+            console.log("main acts ",mainActivitiesChecked)
+            console.log("scaled acts ",scaledActivitiesChecked)
+            filterDataRangeForCheckBoxes(dateRangeLabels,mainActivitiesChecked,scaledActivitiesChecked)
+
+    })
+
+
+
+
+    // console.log(uniqueMainActivities)
+    // makeGroupCheckBoxes('mainCheckBoxes',uniqueMainActivities)
+    // makeGroupCheckBoxes('scaledCheckBoxes',uniqueScaledActivities)
+    // listenToCheckBoxChanges('mainCheckBoxes',uniqueMainActivities)
+    // listenToCheckBoxChanges('mainCheckBoxes',uniqueScaledActivities)
+
+}
+
+generateWeekGraphs()
+
+// ok ik heb een wekelijkse en maandelijkse input die changes moet ik tracken
+// ook daily activities and daily questions radio input checckend indien de juiste input
+// get main activities m
+
+// generateWeekGraphs()
 
 // const testChart = () => {
 //     var ctx = document.getElementById("testchart").getContext("2d");
