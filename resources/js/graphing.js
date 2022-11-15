@@ -481,11 +481,11 @@ const test = () => {
         "2022-10-16",
         "2022-11-09"
     );
-   
+
 
     const [uniqueMainActivities, uniqueScaledActivities] =
         getUniqueScaledAndMainActivities(filtedDailyActivitiesLogs);
- 
+
     const weekActivtyDateRange = makeWeekActivitiesDataRange(
         uniqueMainActivities,
         uniqueScaledActivities
@@ -517,7 +517,7 @@ const test = () => {
 // listenToCheckBoxChanges('mainCheckBoxes',["programeren","lezen","koken"])
 
 const filterDataRangeForCheckBoxes =(weekDatas,mainActivities,scaledActivities)=>{
- 
+
     const labelsToRemove = [].concat(mainActivities, scaledActivities)
     weekDatas.forEach((weekData) => {
         const filtedWeekDatasets = []
@@ -540,19 +540,19 @@ const filterDataRangeForCheckBoxes =(weekDatas,mainActivities,scaledActivities)=
 }
 
 
-const generateWeekGraphs = ()=>{
+const generateWeeklyActivitiesGraphs = ()=>{
 
     const filtedDailyActivitiesLogs = filterDailyActivitiesForDate(
         "2022-10-16",
         "2022-11-09"
     );
-   
+
 
     const [uniqueMainActivities, uniqueScaledActivities] =
         getUniqueScaledAndMainActivities(filtedDailyActivitiesLogs);
 
 
- 
+
     const weekActivtyDateRange = makeWeekActivitiesDataRange(
         uniqueMainActivities,
         uniqueScaledActivities
@@ -598,15 +598,74 @@ const generateWeekGraphs = ()=>{
 
 
 
-    // console.log(uniqueMainActivities)
-    // makeGroupCheckBoxes('mainCheckBoxes',uniqueMainActivities)
-    // makeGroupCheckBoxes('scaledCheckBoxes',uniqueScaledActivities)
-    // listenToCheckBoxChanges('mainCheckBoxes',uniqueMainActivities)
-    // listenToCheckBoxChanges('mainCheckBoxes',uniqueScaledActivities)
 
 }
 
-generateWeekGraphs()
+// generateWeekGraphs()
+
+////////////////////////////////// monthly week activities/////////////////////
+
+const filterActivityLogsForMonthRange = ()=>{
+
+
+}
+
+
+const generateMonthlyActivitiesGraphs = ()=>{
+
+    const filteredActivityLogsForMonthRange = filterActivityLogsForMonthRange(
+        "2022-10-16",
+        "2022-11-09"
+    );
+
+
+    // const [uniqueMainActivities, uniqueScaledActivities] =
+    //     getUniqueScaledAndMainActivities(filtedDailyActivitiesLogs);
+
+
+
+    // const weekActivtyDateRange = makeWeekActivitiesDataRange(
+    //     uniqueMainActivities,
+    //     uniqueScaledActivities
+    // );
+    // const dateRangeWithLogs = addActivityLogsToWeekDateRange(
+    //     weekActivtyDateRange,
+    //     filtedDailyActivitiesLogs
+    // );
+    // const dateRangeMainActivityTotals =
+    //     calcWeekMainActivityData(dateRangeWithLogs);
+    // const dataRangeScaledAveraveScores = calcWeekScaledActivityData(
+    //     dateRangeMainActivityTotals
+    // );
+    // const dateRangeDatasets = generateWeekDatasets(
+    //     dataRangeScaledAveraveScores
+    // );
+
+
+
+    // const dateRangeLabels = generateWeekActivityLabels(dateRangeDatasets);
+    // makeWeekActivityCharts(dateRangeLabels);
+    // makeGroupCheckBoxes('mainCheckBoxes',uniqueMainActivities.map(activity => activity !== null ? activity : "niet ingevuld"))
+    // makeGroupCheckBoxes('scaledCheckBoxes',uniqueScaledActivities)
+
+    // document.getElementById('checkBoxes').addEventListener('change',()=>{
+    //     console.log('change registed')
+    //     const mainActivitiesChecked = uniqueMainActivities.map(activity => activity !== null ? activity : "niet ingevuld").filter(checkBoxId =>
+    //         document.getElementById(checkBoxId).checked ==true
+    //         )
+
+    //         const scaledActivitiesChecked = uniqueScaledActivities.filter(checkBoxId =>
+    //             document.getElementById(checkBoxId).checked ==true
+    //             )
+    //         console.log("main acts ",mainActivitiesChecked)
+    //         console.log("scaled acts ",scaledActivitiesChecked)
+    //         filterDataRangeForCheckBoxes(dateRangeLabels,mainActivitiesChecked,scaledActivitiesChecked)
+
+    // })
+
+}
+
+
 
 // ok ik heb een wekelijkse en maandelijkse input die changes moet ik tracken
 // ook daily activities and daily questions radio input checckend indien de juiste input

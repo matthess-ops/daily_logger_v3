@@ -1,7 +1,7 @@
 @extends('web.layout.navbar')
 
 @section('content')
-    <script src="{{ asset('js/graphing.js') }}" defer></script>
+    <script src="{{ asset('js/graphingv2.js') }}" defer></script>
     <script>
         const dailyQuestions = @json($dailyQuestions);
         const dailyActivities = @json($dailyActivities);
@@ -36,35 +36,45 @@
         <div id="weekMonthRadio">
             <h3>Selecteer Activiteiten logger of dagelijkse raportten grafieken:</h3>
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="activitiesQuestionsRadio" id="activities"
+                <input class="form-check-input" type="radio" name="activitiesQuestionsRadio" id="activitiesRadio"
                     value="activities" checked>
                 <label class="form-check-label" for="activities">
                     Activiteiten:
                 </label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="activitiesQuestionsRadio" id="questions"
+                <input class="form-check-input" type="radio" name="activitiesQuestionsRadio" id="questionsRadio"
                     value="questions">
                 <label class="form-check-label" for="questions">
                     Dagelijkse vragen:
                 </label>
             </div>
         </div>
-        <div class="" id="weekpicker">
+
+        <div id="datePicker">
+
+        </div>
+        <div id ="datePickerErrors">
+        {{-- <div id="startEndWeekError" class="alert alert-danger">Eind week voor of gelijk aan start week</div> --}}
+
+        </div>
+
+
+        {{-- <div class="" id="weekpicker">
             <label for="startWeek">Start week:</label>
             <h3>Selecteer een start en eind week:</h3>
 
             <input class="form-control mr-sm-2 " type="week" aria-label="Search" name="startWeek" id="startWeek"
-                value="2022-W44">
+                value="">
             <label for="endWeek">Eind week:</label>
             <input class="form-control mr-sm-2 " type="week" aria-label="Search" name="endWeek" id="endWeek"
-                value="2022-W46">
+                >
             {{-- <div id="startEndWeekError" class="alert alert-danger d-none">Eind week voor of gelijk aan start week</div> --}}
-            <div id="startEndWeekEmpty" class="alert alert-danger d-none">Eind en start week moeten een week bevatten</div>
-        </div>
+            {{-- <div id="startEndWeekEmpty" class="alert alert-danger d-none">Eind en start week moeten een week bevatten</div>
+        </div> --}}
 
 
-        <div class="d-none" id="monthpicker">
+        {{-- <div class="d-none" id="monthpicker">
             <label for="startMonth">Start maand:</label>
             <h3>Selecteer een start en eind maand:</h3>
 
@@ -73,12 +83,11 @@
             <label for="endMonth">Eind maand:</label>
             <input class="form-control mr-sm-2 " type="month" aria-label="Search" name="endMonth" id="endMonth"
                 value="">
-            {{-- <div id="startEndMonthError" class="alert alert-danger d-none">Eind maand voor of gelijk aan start maand</div> --}}
             <div id="startEndMonthEmpty" class="alert alert-danger d-none">Eind en start maand moeten een week bevatten</div>
-        </div>
+        </div> --}}
 
 
-        <button id="makeGraph" type="button" class="btn btn-primary ">Maak Grafiek</button>
+        <button id="makeGraphButton" type="button" class="btn btn-primary ">Maak Grafiek</button>
 
         <div id="checkBoxes">
         <div id="mainCheckBoxes">
