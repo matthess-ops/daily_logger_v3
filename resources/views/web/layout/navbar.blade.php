@@ -221,7 +221,7 @@
                                 
                                 
                                 <a class="dropdown-item" href="{{ route('log.index', ['user_id' => Auth::id()]) }}">Deze week aanpassen</a>
-                                <a class="dropdown-item" href="{{ route('graph.index', ['user_id' => Auth::id()]) }}">Overzicht</a>
+                                {{-- <a class="dropdown-item" href="{{ route('graph.index', ['user_id' => Auth::id()]) }}">Overzicht</a> --}}
                             </div>
 
                         </li>
