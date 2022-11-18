@@ -1,7 +1,7 @@
 @extends('web.layout.navbar')
 
 @section('content')
-    <script src="{{ asset('js/graphingv2.js') }}" defer></script>
+    <script src="{{ asset('js/graphfrontend.js') }}" defer></script>
     <script>
         const dailyQuestions = @json($dailyQuestions);
         const dailyActivities = @json($dailyActivities);
@@ -17,24 +17,24 @@
 
     @if (isset($dailyActivities) && !empty($dailyActivities))
         <div id="weekMonthRadio">
-            <h3>Selecteer week of maand Grafiek output:</h3>
+            <h3>Dagelijkse of wekelijkse output:</h3>
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="weekMonthRadio" id="weekRadio" value="week" checked>
-                <label class="form-check-label" for="weekRadio">
-                    Week
+                <input class="form-check-input" type="radio" name="dayWeekRadio" id="dayRadio" value="day" checked>
+                <label class="form-check-label" for="dayRadio">
+                    Dagelijks
                 </label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="weekMonthRadio" id="monthRadio" value="month">
-                <label class="form-check-label" for="monthRadio">
-                    Maand
+                <input class="form-check-input" type="radio" name="dayWeekRadio" id="weekRadio" value="week">
+                <label class="form-check-label" for="weekRadio">
+                    Wekelijks
                 </label>
             </div>
         </div>
 
 
         <div id="weekMonthRadio">
-            <h3>Selecteer Activiteiten logger of dagelijkse raportten grafieken:</h3>
+            <h3>Selecteer Activiteiten logger of dagelijkse raporten grafieken:</h3>
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="activitiesQuestionsRadio" id="activitiesRadio"
                     value="activities" checked>
@@ -52,10 +52,17 @@
         </div>
 
         <div id="datePicker">
+            <h3>Selecteer een start en eind week:</h3>
 
+            <label for="startWeek">Start week:</label>
+
+            <input class="form-control mr-sm-2 " type="week" aria-label="Search" name="startWeek" id="startWeek"
+                value="">
+            <label for="endWeek">Eind week:</label>
+            <input class="form-control mr-sm-2 " type="week" aria-label="Search" name="endWeek" id="endWeek">
         </div>
-        <div id ="datePickerErrors">
-        {{-- <div id="startEndWeekError" class="alert alert-danger">Eind week voor of gelijk aan start week</div> --}}
+        <div id="datePickerErrors">
+            {{-- <div id="startEndWeekError" class="alert alert-danger">Eind week voor of gelijk aan start week</div> --}}
 
         </div>
 
@@ -70,7 +77,7 @@
             <input class="form-control mr-sm-2 " type="week" aria-label="Search" name="endWeek" id="endWeek"
                 >
             {{-- <div id="startEndWeekError" class="alert alert-danger d-none">Eind week voor of gelijk aan start week</div> --}}
-            {{-- <div id="startEndWeekEmpty" class="alert alert-danger d-none">Eind en start week moeten een week bevatten</div>
+        {{-- <div id="startEndWeekEmpty" class="alert alert-danger d-none">Eind en start week moeten een week bevatten</div>
         </div> --}}
 
 
@@ -90,17 +97,17 @@
         <button id="makeGraphButton" type="button" class="btn btn-primary ">Maak Grafiek</button>
 
         <div id="checkBoxes">
-        <div id="mainCheckBoxes">
-            <h4>Main activities:</h4>
+            <div id="mainCheckBoxes">
+                <h4>Main activities:</h4>
+            </div>
+
+            {{-- <button type="button" class="btn btn-primary"></button> --}}
+
+            <div id="scaledCheckBoxes">
+                <h4>Scaled activities:</h4>
+
+            </div>
         </div>
-
-        {{-- <button type="button" class="btn btn-primary"></button> --}}
-
-        <div id ="scaledCheckBoxes">
-            <h4>Scaled activities:</h4>
-
-        </div>
-    </div>
         {{-- <h1>Chart JS Stacked Bar example</h1>
         <div class="wrapper">
         <canvas id="testchart"></canvas>

@@ -1,7 +1,7 @@
 import moment from "moment";
 import Chart from "chart.js/auto";
 import testexport from "./testexport.js"
-import generateWeeklyActivitiesGraphs from "./weekActivitiesGraph"
+import generateWeeklyActivitiesGraphs from "./dayActivitiesGraph"
 
 //user selects week or monthly data
 // user selects if its wants to generate activity or questions data

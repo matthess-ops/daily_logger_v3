@@ -1,5 +1,6 @@
 import moment from "moment";
 import Chart from "chart.js/auto";
+import { forEach } from "lodash";
 
 const colorScheme = [
     "#25CCF7",
@@ -51,8 +52,8 @@ const colorScheme = [
 const filterDailyActivitiesForDate = (startDate, endDate) => {
     const filtered = dailyActivities.filter((log) => {
         if (
-            moment(log.created_at) >= startDate &&
-            moment(log.created_at) <= endDate
+            moment(log.date_today) >= startDate &&
+            moment(log.date_today) <= endDate
         ) {
             return log;
         }
@@ -79,215 +80,187 @@ const getUniqueScaledAndMainActivities = (dailyActivities) => {
     const uniqueScaledActivities = [...new Set(allScaledActivities)];
     return [uniqueMainActivities, uniqueScaledActivities];
 };
-//rekenin ghouden met jaar wisseling
-const makeWeekActivitiesDataRange = (
-    uniqueMainActivities,
-    uniqueScaledActivities,
-    startDate,
-    endDate
-) => {
 
-    const startWeekValue = startDate;
+const makeDataRange = (startDate, endDate) => {
+    console.log("makeDataRange ", startDate, endDate);
+    let chunkArray = [];
+    let graphArray = [];
+    let weekStartDate = startDate.clone();
+    let weekEndDate = startDate.clone().add(7, "days");
+    while (weekStartDate < endDate) {
+        console.log("test while stop");
 
-    const endWeekValue = endDate;
-    const intStartWeek = parseInt(startWeekValue.split("W")[1]);
-    const intEndWeek = parseInt(endWeekValue.split("W")[1]);
-    const startYear = startWeekValue.split("W")[0].substring(0, 4);
-    const endYear = endWeekValue.split("W")[0].substring(0, 4);
-
-    const weekDiff = (intEndWeek - intStartWeek)+1;
-
-    let dateRange = [];
-    for (let i = 0; i < weekDiff; i++) {
-        const newWeek = {
-            weekNr: intStartWeek + i,
-            mondayDate: moment(startYear)
-                .add(intStartWeek + i, "weeks")
-                .weekday(1),
-            sundayDate: moment(startYear)
-                .add(intStartWeek + i, "weeks")
-                .weekday(7),
-            activityLogs: null,
-            questionLogs: null,
-            mainActivityTotal: null,
-            scaledActivityAverages: null,
-            uniqueMainActivities: uniqueMainActivities,
-            uniqueScaledActivities: uniqueScaledActivities,
-            datasets: null,
-            labels: null,
-            filteredDatasets: null,
+        let newWeek = {
+            weekStartDate: weekStartDate.clone(),
+            weekEndDate: weekStartDate.clone().add(6, "days").clone(),
         };
-        dateRange.push(newWeek);
+        // console.log("start ",newWeek.weekStartDate.format("YYYY-MM-DD dddd"))
+        // console.log("end ",newWeek.weekEndDate.format("YYYY-MM-DD dddd"))
+
+        graphArray.push(newWeek);
+        if (graphArray.length >= 8) {
+            chunkArray.push(graphArray);
+            graphArray = [];
+        }
+        weekStartDate.add(7, "days");
     }
-    // console.log(dateRange)
-    return dateRange;
+
+    if (graphArray.length > 0) {
+        chunkArray.push(graphArray);
+    }
+    return chunkArray;
 };
 
-const addActivityLogsToWeekDateRange = (dateRange, filtedActivitiesLogs) => {
-    dateRange.forEach((week) => {
-        let logs = [];
-        for (let i = 0; i < 7; i++) {
-            const date = week.mondayDate.clone().add(i, "days");
-            const thisLog = null;
-            filtedActivitiesLogs.forEach((log) => {
-                if (log.date_today == date.format("YYYY-MM-DD")) {
-                    thisLog = log;
+const addLogsToDataRange = (graphDataRange, filteredLogs) => {
+    console.log("filterd logs");
+    console.log(filteredLogs);
+    graphDataRange.forEach((dataRange) => {
+        dataRange.forEach((week) => {
+            const activitiesLogs = filteredLogs.filter((log) => {
+                if (
+                    moment(log.date_today) >= week.weekStartDate &&
+                    moment(log.date_today) <= week.weekEndDate
+                ) {
+                    return log;
                 }
             });
-
-            logs.push({
-                date: date,
-                log: thisLog,
-            });
-        }
-        week.activityLogs = logs;
+            week.activitiesLogs = activitiesLogs;
+        });
     });
-    return dateRange;
+
+    return graphDataRange;
 };
 
-const calcWeekMainActivityData = (dateRange) => {
-    dateRange.forEach((week) => {
-        let uniqueMainActivitiesTotals = [];
-        week.uniqueMainActivities.forEach((uniqueMainActivity) => {
-            let weekUniqueActivityData = [];
-            week.activityLogs.forEach((activityLog) => {
-                let uniqueActivityCountInLog = 0;
-                if (activityLog.log != null) {
-                    activityLog.log.main_activities.forEach((mainActivity) => {
-                        if (mainActivity == uniqueMainActivity) {
-                            uniqueActivityCountInLog =
-                                uniqueActivityCountInLog + 1;
+const calculateGraphDataRangeMainActivityTotals =(graphDataRange,uniqueMainActivities)=>{
+    let formattedData =[]
+    graphDataRange.forEach(graph => {
+        let mainActCounts = []
+        uniqueMainActivities.forEach(mainActivity => {
+        let graphActivityWeekTotals = []
+        graph.forEach(week => {
+                let weekActivityTotal = 0
+                week.activitiesLogs.forEach(log => {
+                    log.main_activities.forEach(activity => {
+                        if(activity ==mainActivity ){
+                            weekActivityTotal =weekActivityTotal+1
                         }
                     });
-                }
-                weekUniqueActivityData.push(uniqueActivityCountInLog * 15);
+                });
+                graphActivityWeekTotals.push(weekActivityTotal*15)
             });
+            mainActCounts.push({
+                activity:mainActivity,
+                totals: graphActivityWeekTotals
+            })
 
-            uniqueMainActivitiesTotals.push(weekUniqueActivityData);
         });
 
-        week.mainActivityTotal = uniqueMainActivitiesTotals;
-    });
-    return dateRange;
-};
+        const formatData = {
+            mainActTotals:mainActCounts,
+            weekData:graph
+        }
+        formattedData.push(formatData)
 
-const calcWeekScaledActivityData = (dateRange) => {
-    dateRange.forEach((week) => {
-        let averageScores = [];
-        week.uniqueScaledActivities.forEach((uniqueScaledActivity) => {
-            let dayScaledData = [];
-            week.activityLogs.forEach((activityLog) => {
-                // console.log(activityLog.date.format('dddd'))
-                if (activityLog.log != null) {
-                    // console.log('this moet toch kunnen ',activityLog.log.scaled_activities[0])
-                    const scaledActivities =
-                        activityLog.log.scaled_activities[0];
-                    const arrayIndexOfuniqueScaledActivity =
-                        scaledActivities.findIndex(
-                            (inputUniqueScaledActivity) => {
-                                return (
-                                    inputUniqueScaledActivity ==
-                                    uniqueScaledActivity
-                                );
-                            }
-                        );
-                    if (arrayIndexOfuniqueScaledActivity != -1) {
-                        let hits = 0;
-                        let zeroHits = 0;
-                        let totalScore = 0;
-                        activityLog.log.scaled_activities_scores.forEach(
-                            (activityScores) => {
-                                if (
-                                    activityScores[
-                                        arrayIndexOfuniqueScaledActivity
-                                    ] != 0
-                                ) {
-                                    hits = hits + 1;
-                                    totalScore =
-                                        totalScore +
-                                        activityScores[
-                                            arrayIndexOfuniqueScaledActivity
-                                        ];
-                                } else {
-                                    zeroHits = zeroHits + 1;
-                                }
-                            }
-                        );
-                        dayScaledData.push(totalScore / hits);
+    });
+    return formattedData
+}
+
+const calculateGraphDataRangeScaledActivityAverage = (graphDataRange,uniqueScaledActivities)=>{
+
+    graphDataRange.forEach(graph => {
+        let scaledActAverages = []
+        uniqueScaledActivities.forEach(scaledActivity => {
+        let graphScaledAverages= []
+        graph.weekData.forEach(week => {
+                let weekScaledActivityCount = 0
+                let weekScaledActivityTotal = 0
+                week.activitiesLogs.forEach(log => {
+                    const indexOfScaledActivity = log.scaled_activities[0].findIndex((logScaledActivity)=>{
+                        return logScaledActivity ==scaledActivity
+                    })
+
+                    if(indexOfScaledActivity != -1){
+                        log.scaled_activities_scores.forEach(scoreArray => {
+                            weekScaledActivityTotal =weekScaledActivityTotal+ scoreArray[indexOfScaledActivity]
+                            weekScaledActivityCount = weekScaledActivityCount+1
+                        });
                     }
-                } else {
-                    dayScaledData.push(null);
-                }
+                   //find for each log the index position of the scaledActivity in .scaled_activities
+                   //then loop through .scaled_activities_scores[index] and add the score
+                });
+                // console.log("scalescore ",weekScaledActivityCount,weekScaledActivityTotal)
+                const scaledActivityWeekScore = weekScaledActivityTotal/weekScaledActivityCount
+                graphScaledAverages.push(scaledActivityWeekScore)
             });
-            averageScores.push(dayScaledData);
-        });
-        week.scaledActivityAverages = averageScores;
-    });
-    return dateRange;
-};
+            scaledActAverages.push({
+                scaledActivity: scaledActivity,
+                averageScores:graphScaledAverages
+            })
 
-const generateWeekDatasets = (dateRange) => {
+
+        });
+        graph.scaledActivitesScores = scaledActAverages
+
+    });
+    return graphDataRange
+}
+
+const generateGraphDatasets = (dateRange) => {
     // console.log(dateRange);
-    dateRange.forEach((week) => {
+    dateRange.forEach((graph) => {
         let colorIndex = 0;
         let stackIndex = 0;
         let datasets = [];
 
-        ////main activity stuff
 
-        // label: scaledActivityScore.scaledActivity,
-        // backgroundColor: colorScheme[index],
-        // data: scaledActivityScore.aveScoresForDateRange,
-        // stack: "Stack "+(index+1),
-        // barThickness: 10,
-        // barPercentage: 1.0,
-        // yAxisID: 'y1',
 
-        week.mainActivityTotal.forEach((mainActivityTot, index) => {
+        graph.mainActTotals.forEach((mainActTotal, index) => {
             colorIndex += 1;
             const mainActSet = {
-                label: week.uniqueMainActivities[index] ==null?"niet ingevuld":week.uniqueMainActivities[index],
+                label: mainActTotal.activity==null?"niet ingevuld":mainActTotal.activity,
                 backgroundColor: colorScheme[colorIndex],
-                data: mainActivityTot,
+                data: mainActTotal.totals,
                 stack: "Stack 0",
                 yAxisID: "y",
             };
             datasets.push(mainActSet);
         });
-        week.scaledActivityAverages.forEach((scaledActivityAve, index) => {
+        graph.scaledActivitesScores.forEach((scaledActivityScore, index) => {
             colorIndex += 1;
             stackIndex += 1;
             const scaledActSet = {
-                label: week.uniqueScaledActivities[index],
+                label: scaledActivityScore.scaledActivity,
                 backgroundColor: colorScheme[colorIndex],
-                data: scaledActivityAve,
+                data: scaledActivityScore.averageScores,
                 stack: "Stack " + (stackIndex + 1),
                 yAxisID: "y1",
             };
             datasets.push(scaledActSet);
         });
 
-        week.datasets = datasets;
-        week.filteredDatasets =datasets
+        graph.datasets = datasets;
+        graph.filteredDatasets =datasets
     });
     return dateRange;
 };
 
-const generateWeekActivityLabels = (dateRange) => {
-    dateRange.forEach((week) => {
+
+const generateWeekActivityLabels = (graphDataRange) => {
+    graphDataRange.forEach((graph) => {
         let labels = [];
-        week.activityLogs.forEach((activityLog) => {
+
+        graph.weekData.forEach((week) => {
             const date =
-                activityLog.date.locale("nl").format("dddd") +
-                " " +
-                activityLog.date.format("DD-MM-YYYY");
+                week.weekStartDate.format("YYYY-WW")
+
             labels.push(date);
         });
-        week.labels = labels;
+        graph.labels = labels;
     });
 
-    return dateRange;
+    return graphDataRange;
 };
+
 
 const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
     let chartStatus = Chart.getChart(chartName); // <canvas> id
@@ -311,7 +284,7 @@ const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
             plugins: {
                 title: {
                     display: true,
-                    text: "Week resultaten :" + weeknr,
+                    // text: "Week resultaten :" + weeknr,
                 },
             },
             responsive: true,
@@ -334,186 +307,86 @@ const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
     myChart.update();
 };
 
-const makeWeekActivityCharts = (dateRange) => {
-    dateRange.forEach((week) => {
+const makeWeekActivityCharts = (graphDataRange) => {
+    graphDataRange.forEach((graph) => {
         makeChart(
-            week.labels,
-            week.filteredDatasets,
-            "test_" + week.weekNr,
-            week.weekNr
+            graph.labels,
+            graph.filteredDatasets,
+            "test_" + graph.labels,
+            graph.labels
         );
     });
 };
 
-const makeGroupCheckBoxes =(divId,checkBoxNames)=>{
-    const divOfInterest = document.getElementById(divId)
-    checkBoxNames.forEach((checkBoxName,index) => {
-        const newLabel = document.createElement("label");
-        newLabel.setAttribute("for", checkBoxName);
-        newLabel.innerHTML = checkBoxName;
-
-        const newCheckbox = document.createElement("input");
-        newCheckbox.setAttribute("type", "checkbox");
-        newCheckbox.setAttribute("id", checkBoxName);
-        newCheckbox.setAttribute("checked", true);
-        newCheckbox.setAttribute('value',checkBoxName)
-        const br = document.createElement("br");
-
-        divOfInterest.appendChild(newLabel);
-        divOfInterest.appendChild(newCheckbox);
-        divOfInterest.appendChild(br);
-    });
-
-
-
-
-}
-
-const listenToCheckBoxChanges = (divId,checkBoxIds)=>{
-
-    document.getElementById(divId).addEventListener('change',()=>{
-        const checkedBoxes =checkBoxIds.filter(checkBoxId =>
-            document.getElementById(checkBoxId).checked ==true
-            )
-        return checkedBoxes
-    })
-
-}
-
-
-
-const test = () => {
-    const filtedDailyActivitiesLogs = filterDailyActivitiesForDate(
-        "2022-10-16",
-        "2022-11-09"
-    );
-
-
-    const [uniqueMainActivities, uniqueScaledActivities] =
-        getUniqueScaledAndMainActivities(filtedDailyActivitiesLogs);
-
-    const weekActivtyDateRange = makeWeekActivitiesDataRange(
-        uniqueMainActivities,
-        uniqueScaledActivities
-    );
-    const dateRangeWithLogs = addActivityLogsToWeekDateRange(
-        weekActivtyDateRange,
-        filtedDailyActivitiesLogs
-    );
-    const dateRangeMainActivityTotals =
-        calcWeekMainActivityData(dateRangeWithLogs);
-    const dataRangeScaledAveraveScores = calcWeekScaledActivityData(
-        dateRangeMainActivityTotals
-    );
-    const dateRangeDatasets = generateWeekDatasets(
-        dataRangeScaledAveraveScores
-    );
-
-    const dateRangeLabels = generateWeekActivityLabels(dateRangeDatasets);
-    // console.log(dateRangeLabels)
-    // makeChart(dateRangeLabels[0].labels,dateRangeLabels[0].datasets,"test",10)
-    makeWeekActivityCharts(dateRangeLabels);
-};
-
-//  test();
-
-
-// makeGroupCheckBoxes('mainCheckBoxes',["programeren","lezen","koken"])
-// makeGroupCheckBoxes('scaledCheckBoxes',["pijn","druk","verdrietig"])
-// listenToCheckBoxChanges('mainCheckBoxes',["programeren","lezen","koken"])
-
-const filterDataRangeForCheckBoxes =(weekDatas,mainActivities,scaledActivities)=>{
-
-    const labelsToRemove = [].concat(mainActivities, scaledActivities)
-    weekDatas.forEach((weekData) => {
-        const filtedWeekDatasets = []
-        weekData.datasets.forEach(label => {
-            let keepData = false
-            labelsToRemove.forEach(labelToRemove => {
-                    if(label.label == labelToRemove){
-                        keepData = true
-                    }
-            });
-            if(keepData == true){
-                filtedWeekDatasets.push(label)
-            }
+const testScaledScore = (graphDataRange)=>{
+    let weekData = graphDataRange[0].weekData[0].activitiesLogs
+    let weeksum = 0
+    let weekcount = 0
+    weekData.forEach(week => {
+        let sum=0
+        let count = 0
+        let scores =week.scaled_activities_scores
+        scores.forEach(score => {
+            sum =sum+ score[1]
+            weeksum = weeksum+ score[1]
+            count =count+1
+            weekcount=weekcount+1
         });
-        weekData.filteredDatasets = filtedWeekDatasets
+        console.log("sum and count are ",sum,count)
+
     });
-    makeWeekActivityCharts(weekDatas);
-
-
+    console.log("weeksum weekcount ",weeksum,weekcount)
+    console.log("EEEEEEEEEE")
+    console.log(weekData)
 }
-///
-const generateWeeklyActivitiesGraphs = (startDate,endDate)=>{
 
-    const startDateStr= startDate
-    const endDateStr =endDate
-    console.log("inputed startDateStr ",startDateStr)
+
+const generateDailyActivitiesGraphs = (startDate, endDate) => {
+    console.log(dailyActivities);
+    const startDateStr = startDate;
+    const endDateStr = endDate;
 
     const startDateMoment = moment(startDateStr, "YYYY-[W]WW").weekday(1);
     const endDateMoment = moment(endDateStr, "YYYY-[W]WW").weekday(8);
 
     const filtedDailyActivitiesLogs = filterDailyActivitiesForDate(
         startDateMoment,
-        endDateMoment 
+        endDateMoment
     );
-
- 
-
 
     const [uniqueMainActivities, uniqueScaledActivities] =
         getUniqueScaledAndMainActivities(filtedDailyActivitiesLogs);
 
-        console.log("uniqueMainActivities")
-        console.log(uniqueMainActivities,uniqueScaledActivities)
-
-    const weekActivtyDateRange = makeWeekActivitiesDataRange(
-        uniqueMainActivities,
-        uniqueScaledActivities,
-        startDateStr,
-        endDateStr
-    );
-    console.log("weekActivtyDateRange")
-    console.log(weekActivtyDateRange)
-    const dateRangeWithLogs = addActivityLogsToWeekDateRange(
-        weekActivtyDateRange,
+    const graphDataRange = makeDataRange(startDateMoment, endDateMoment);
+    console.log("graphdatrange");
+    console.log(graphDataRange);
+    const graphDataRangeLogs = addLogsToDataRange(
+        graphDataRange,
         filtedDailyActivitiesLogs
     );
-    const dateRangeMainActivityTotals =
-        calcWeekMainActivityData(dateRangeWithLogs);
-    const dataRangeScaledAveraveScores = calcWeekScaledActivityData(
-        dateRangeMainActivityTotals
-    );
-    const dateRangeDatasets = generateWeekDatasets(
-        dataRangeScaledAveraveScores
-    );
+    console.log("graphDataRangeLogs");
+    console.log(graphDataRangeLogs);
+
+    const calculatedGraphDataRangeMainActivityTotals = calculateGraphDataRangeMainActivityTotals(graphDataRange,uniqueMainActivities)
+    console.log("calculatedGraphDataRangeMainActivityTotals")
+    console.log(calculatedGraphDataRangeMainActivityTotals)
+
+    const calculatedGraphDataRangeScaledActivityAverage= calculateGraphDataRangeScaledActivityAverage(calculatedGraphDataRangeMainActivityTotals,uniqueScaledActivities)
+    console.log("calculatedGraphDataRangeScaledActivityAverage")
+    console.log(calculatedGraphDataRangeScaledActivityAverage)
+    const graphDatasets = generateGraphDatasets(calculatedGraphDataRangeScaledActivityAverage)
+    console.log("graphDatasets")
+    console.log(graphDatasets)
+
+    const graphLabels = generateWeekActivityLabels(graphDatasets)
+    console.log("graphlabels")
+    console.log(graphLabels)
+
+    makeWeekActivityCharts(graphLabels)
+    testScaledScore(graphLabels)
+
+};
+
+export default generateDailyActivitiesGraphs;
 
 
-    const dateRangeLabels = generateWeekActivityLabels(dateRangeDatasets);
-    makeWeekActivityCharts(dateRangeLabels);
-    makeGroupCheckBoxes('mainCheckBoxes',uniqueMainActivities.map(activity => activity !== null ? activity : "niet ingevuld"))
-    makeGroupCheckBoxes('scaledCheckBoxes',uniqueScaledActivities)
-
-    document.getElementById('checkBoxes').addEventListener('change',()=>{
-        const mainActivitiesChecked = uniqueMainActivities.map(activity => activity !== null ? activity : "niet ingevuld").filter(checkBoxId =>
-            document.getElementById(checkBoxId).checked ==true
-            )
-
-            const scaledActivitiesChecked = uniqueScaledActivities.filter(checkBoxId =>
-                document.getElementById(checkBoxId).checked ==true
-                )
-         
-            filterDataRangeForCheckBoxes(dateRangeLabels,mainActivitiesChecked,scaledActivitiesChecked)
-
-    })
-
-}
-
-
-export default generateWeeklyActivitiesGraphs
-
-
-
-///dag en week grafieken, de week is al goed vervolgens deze per week nummer,
-// shit middelen en dan is alles gefixt

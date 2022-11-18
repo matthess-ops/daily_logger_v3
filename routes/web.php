@@ -148,11 +148,11 @@ Route::group(['prefix' => 'logger'], function() {
 });
 
 
-// Route::group(['prefix' => 'overzicht'], function() {
+Route::group(['prefix' => 'overzicht'], function() {
 
-//     Route::get('/{user_id}/index', 'GraphController@index')->name('graph.index')->middleware('auth');
-    
-// });
+    Route::get('/{user_id}/index', 'GraphController@index')->name('graph.index')->middleware('auth');
+
+});
 
 
 
