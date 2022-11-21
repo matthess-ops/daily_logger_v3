@@ -3,6 +3,8 @@ console.log("graphfrontend");
 import moment from "moment";
 import generateDailyActivitiesGraphs from "./dayActivitiesGraph"
 import generateWeeklyActivitiesGraphs from "./weekActivitiesGraph"
+import generateDailyQuestionsGraphs from "./dayQuestionsGraph"
+
 
 
 const getActivitiesStartEndDate = () => {
@@ -164,7 +166,8 @@ const main = () => {
 
 main();
 
-console.log("make weekly activities graphs")
-const startWeek = "2022-W30"
-const endWeek= "2022-W46"
-generateWeeklyActivitiesGraphs(startWeek,endWeek)
+
+const startDate = "2022-W40"
+const endDate="2022-W47"
+
+generateDailyQuestionsGraphs(startDate,endDate)

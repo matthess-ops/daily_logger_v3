@@ -1,7 +1,8 @@
 import moment from "moment";
 import Chart from "chart.js/auto";
 import testexport from "./testexport.js"
-import generateWeeklyActivitiesGraphs from "./dayActivitiesGraph"
+// import generateDailyActivitiesGraphs from "./dayActivitiesGraph"
+// import generateWeeklyActivitiesGraphs from "./weekActivitiesGraph"
 
 //user selects week or monthly data
 // user selects if its wants to generate activity or questions data
@@ -274,16 +275,19 @@ const main = () => {
         document.getElementById('chartDiv').innerHTML =""
 
         if(noErrors){
+            const startDate = document.getElementById("startDate").value;
+            const endDate = document.getElementById("endDate").value;
             if (weekMonthState == "week") {
                 if (activitiesQuestionsState == "activities") {
-                    const startDate = document.getElementById("startDate").value;
-                    const endDate = document.getElementById("endDate").value;
-                    // const startDateMoment = moment(startDate.value, "YYYY-[W]WW");
-                    // const endDateMoment = moment(endDate.value, "YYYY-[W]WW");
-                    generateWeeklyActivitiesGraphs(startDate,endDate)
+               
+                
+                    // generateWeeklyActivitiesGraphs(startDate,endDate)
 
                     console.log("createweek activities graph");
                 } else if (activitiesQuestionsState == "questions") {
+
+                    
+                    // generateWeeklyActivitiesGraphs(startDate,endDate)
                     console.log("create week questions graph");
                 }
             } else if (weekMonthState == "month") {
@@ -300,11 +304,7 @@ const main = () => {
     });
 };
 
-main();
+ main();
 
-// const deleteCharts = ()=>{
-
-//     document.getElementById('testchart').innerHTML =""
-// }
 
 

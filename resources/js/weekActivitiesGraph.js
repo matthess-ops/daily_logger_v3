@@ -58,9 +58,7 @@ const filterDailyActivitiesForDate = (startDate, endDate) => {
             return log;
         }
     });
-    // console.log("nbon filted activities ", dailyActivities.length)
-    // console.log("filted array length activities ",filtered.length)
-    // console.log(filtered)
+  
     return filtered;
 };
 
@@ -82,20 +80,17 @@ const getUniqueScaledAndMainActivities = (dailyActivities) => {
 };
 
 const makeDataRange = (startDate, endDate) => {
-    console.log("makeDataRange ", startDate, endDate);
     let chunkArray = [];
     let graphArray = [];
     let weekStartDate = startDate.clone();
     let weekEndDate = startDate.clone().add(7, "days");
     while (weekStartDate < endDate) {
-        console.log("test while stop");
 
         let newWeek = {
             weekStartDate: weekStartDate.clone(),
             weekEndDate: weekStartDate.clone().add(6, "days").clone(),
         };
-        // console.log("start ",newWeek.weekStartDate.format("YYYY-MM-DD dddd"))
-        // console.log("end ",newWeek.weekEndDate.format("YYYY-MM-DD dddd"))
+   
 
         graphArray.push(newWeek);
         if (graphArray.length >= 8) {
@@ -112,8 +107,7 @@ const makeDataRange = (startDate, endDate) => {
 };
 
 const addLogsToDataRange = (graphDataRange, filteredLogs) => {
-    console.log("filterd logs");
-    console.log(filteredLogs);
+
     graphDataRange.forEach((dataRange) => {
         dataRange.forEach((week) => {
             const activitiesLogs = filteredLogs.filter((log) => {
@@ -146,7 +140,7 @@ const calculateGraphDataRangeMainActivityTotals =(graphDataRange,uniqueMainActiv
                         }
                     });
                 });
-                graphActivityWeekTotals.push(weekActivityTotal*15)
+                graphActivityWeekTotals.push((weekActivityTotal*15)/60)
             });
             mainActCounts.push({
                 activity:mainActivity,
@@ -188,7 +182,6 @@ const calculateGraphDataRangeScaledActivityAverage = (graphDataRange,uniqueScale
                    //find for each log the index position of the scaledActivity in .scaled_activities
                    //then loop through .scaled_activities_scores[index] and add the score
                 });
-                // console.log("scalescore ",weekScaledActivityCount,weekScaledActivityTotal)
                 const scaledActivityWeekScore = weekScaledActivityTotal/weekScaledActivityCount
                 graphScaledAverages.push(scaledActivityWeekScore)
             });
@@ -206,7 +199,6 @@ const calculateGraphDataRangeScaledActivityAverage = (graphDataRange,uniqueScale
 }
 
 const generateGraphDatasets = (dateRange) => {
-    // console.log(dateRange);
     dateRange.forEach((graph) => {
         let colorIndex = 0;
         let stackIndex = 0;
@@ -261,6 +253,16 @@ const generateWeekActivityLabels = (graphDataRange) => {
     return graphDataRange;
 };
 
+// const footer = (tooltipItems) => {
+//     let sum = 0;
+
+//     tooltipItems.forEach(function(tooltipItem) {
+//       sum += tooltipItem.parsed.y;
+//       console.log("tooltip stuff ",tooltipItem)
+//     });
+//     return 'Total: ' + sum;
+//   };
+
 
 const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
     let chartStatus = Chart.getChart(chartName); // <canvas> id
@@ -286,6 +288,11 @@ const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
                     display: true,
                     // text: "Week resultaten :" + weeknr,
                 },
+                // tooltip: {
+                //     callbacks: {
+                //         footer: footer,
+                //     }
+                //   },
             },
             responsive: true,
             scales: {
@@ -335,14 +342,61 @@ const testScaledScore = (graphDataRange)=>{
         console.log("sum and count are ",sum,count)
 
     });
-    console.log("weeksum weekcount ",weeksum,weekcount)
-    console.log("EEEEEEEEEE")
-    console.log(weekData)
+
+}
+
+const makeGroupCheckBoxes =(divId,checkBoxNames)=>{
+    const divOfInterest = document.getElementById(divId)
+    divOfInterest.innerHTML = ""
+
+    checkBoxNames.forEach((checkBoxName,index) => {
+        const newLabel = document.createElement("label");
+        newLabel.setAttribute("for", checkBoxName);
+        newLabel.innerHTML = checkBoxName;
+
+        const newCheckbox = document.createElement("input");
+        newCheckbox.setAttribute("type", "checkbox");
+        newCheckbox.setAttribute("id", checkBoxName);
+        newCheckbox.setAttribute("checked", true);
+        newCheckbox.setAttribute('value',checkBoxName)
+        const br = document.createElement("br");
+
+        divOfInterest.appendChild(newLabel);
+        divOfInterest.appendChild(newCheckbox);
+        divOfInterest.appendChild(br);
+    });
+
+
+
+
+}
+
+const filterDataRangeForCheckBoxes =(weekDatas,mainActivities,scaledActivities)=>{
+
+    const labelsToRemove = [].concat(mainActivities, scaledActivities)
+    weekDatas.forEach((weekData) => {
+        const filtedWeekDatasets = []
+        weekData.datasets.forEach(label => {
+            let keepData = false
+            labelsToRemove.forEach(labelToRemove => {
+                    if(label.label == labelToRemove){
+                        keepData = true
+                    }
+            });
+            if(keepData == true){
+                filtedWeekDatasets.push(label)
+            }
+        });
+        weekData.filteredDatasets = filtedWeekDatasets
+    });
+    makeWeekActivityCharts(weekDatas);
+
+
 }
 
 
-const generateDailyActivitiesGraphs = (startDate, endDate) => {
-    console.log(dailyActivities);
+const generateWeeklyActivitiesGraphs = (startDate, endDate) => {
+    console.log("this should not be lauched")
     const startDateStr = startDate;
     const endDateStr = endDate;
 
@@ -358,35 +412,51 @@ const generateDailyActivitiesGraphs = (startDate, endDate) => {
         getUniqueScaledAndMainActivities(filtedDailyActivitiesLogs);
 
     const graphDataRange = makeDataRange(startDateMoment, endDateMoment);
-    console.log("graphdatrange");
-    console.log(graphDataRange);
+    // console.log("graphdatrange");
+    // console.log(graphDataRange);
     const graphDataRangeLogs = addLogsToDataRange(
         graphDataRange,
         filtedDailyActivitiesLogs
     );
-    console.log("graphDataRangeLogs");
-    console.log(graphDataRangeLogs);
+    // console.log("graphDataRangeLogs");
+    // console.log(graphDataRangeLogs);
 
     const calculatedGraphDataRangeMainActivityTotals = calculateGraphDataRangeMainActivityTotals(graphDataRange,uniqueMainActivities)
-    console.log("calculatedGraphDataRangeMainActivityTotals")
-    console.log(calculatedGraphDataRangeMainActivityTotals)
+    // console.log("calculatedGraphDataRangeMainActivityTotals")
+    // console.log(calculatedGraphDataRangeMainActivityTotals)
 
     const calculatedGraphDataRangeScaledActivityAverage= calculateGraphDataRangeScaledActivityAverage(calculatedGraphDataRangeMainActivityTotals,uniqueScaledActivities)
-    console.log("calculatedGraphDataRangeScaledActivityAverage")
-    console.log(calculatedGraphDataRangeScaledActivityAverage)
+    // console.log("calculatedGraphDataRangeScaledActivityAverage")
+    // console.log(calculatedGraphDataRangeScaledActivityAverage)
     const graphDatasets = generateGraphDatasets(calculatedGraphDataRangeScaledActivityAverage)
-    console.log("graphDatasets")
-    console.log(graphDatasets)
+    // console.log("graphDatasets")
+    // console.log(graphDatasets)
 
     const graphLabels = generateWeekActivityLabels(graphDatasets)
-    console.log("graphlabels")
-    console.log(graphLabels)
+    // console.log("graphlabels")
+    // console.log(graphLabels)
 
     makeWeekActivityCharts(graphLabels)
-    testScaledScore(graphLabels)
+
+    makeGroupCheckBoxes('mainCheckBoxes',uniqueMainActivities.map(activity => activity !== null ? activity : "niet ingevuld"))
+    makeGroupCheckBoxes('scaledCheckBoxes',uniqueScaledActivities)
+
+    document.getElementById('checkBoxes').addEventListener('change',()=>{
+        const mainActivitiesChecked = uniqueMainActivities.map(activity => activity !== null ? activity : "niet ingevuld").filter(checkBoxId =>
+            document.getElementById(checkBoxId).checked ==true
+            )
+
+            const scaledActivitiesChecked = uniqueScaledActivities.filter(checkBoxId =>
+                document.getElementById(checkBoxId).checked ==true
+                )
+
+            filterDataRangeForCheckBoxes(graphLabels,mainActivitiesChecked,scaledActivitiesChecked)
+
+    })
+
 
 };
 
-export default generateDailyActivitiesGraphs;
+export default generateWeeklyActivitiesGraphs;
 
 

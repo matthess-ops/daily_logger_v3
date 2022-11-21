@@ -13,7 +13,7 @@ class DailyQuestionSeeder extends Seeder
     public function run()
     {
         // get all clients
-        $nrOfDaysToGenerateData = 7; // nr of days to generate entries for.
+        $nrOfDaysToGenerateData = 60; // nr of days to generate entries for.
 
         $clients = Client::all();
         foreach ($clients as $client) {

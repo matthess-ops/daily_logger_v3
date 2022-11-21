@@ -57,9 +57,7 @@ const filterDailyActivitiesForDate = (startDate, endDate) => {
             return log;
         }
     });
-    // console.log("nbon filted activities ", dailyActivities.length)
-    // console.log("filted array length activities ",filtered.length)
-    // console.log(filtered)
+  
     return filtered;
 };
 
@@ -347,6 +345,7 @@ const makeWeekActivityCharts = (dateRange) => {
 
 const makeGroupCheckBoxes =(divId,checkBoxNames)=>{
     const divOfInterest = document.getElementById(divId)
+    divOfInterest.innerHTML = ""
     checkBoxNames.forEach((checkBoxName,index) => {
         const newLabel = document.createElement("label");
         newLabel.setAttribute("for", checkBoxName);
@@ -363,10 +362,6 @@ const makeGroupCheckBoxes =(divId,checkBoxNames)=>{
         divOfInterest.appendChild(newCheckbox);
         divOfInterest.appendChild(br);
     });
-
-
-
-
 }
 
 const listenToCheckBoxChanges = (divId,checkBoxIds)=>{
@@ -449,7 +444,7 @@ const generateDailyActivitiesGraphs = (startDate,endDate)=>{
 
     const startDateStr= startDate
     const endDateStr =endDate
-    console.log("inputed startDateStr ",startDateStr)
+    // console.log("inputed startDateStr ",startDateStr)
 
     const startDateMoment = moment(startDateStr, "YYYY-[W]WW").weekday(1);
     const endDateMoment = moment(endDateStr, "YYYY-[W]WW").weekday(8);
@@ -465,8 +460,8 @@ const generateDailyActivitiesGraphs = (startDate,endDate)=>{
     const [uniqueMainActivities, uniqueScaledActivities] =
         getUniqueScaledAndMainActivities(filtedDailyActivitiesLogs);
 
-        console.log("uniqueMainActivities")
-        console.log(uniqueMainActivities,uniqueScaledActivities)
+        // console.log("uniqueMainActivities")
+        // console.log(uniqueMainActivities,uniqueScaledActivities)
 
     const weekActivtyDateRange = makeWeekActivitiesDataRange(
         uniqueMainActivities,
@@ -474,8 +469,8 @@ const generateDailyActivitiesGraphs = (startDate,endDate)=>{
         startDateStr,
         endDateStr
     );
-    console.log("weekActivtyDateRange")
-    console.log(weekActivtyDateRange)
+    // console.log("weekActivtyDateRange")
+    // console.log(weekActivtyDateRange)
     const dateRangeWithLogs = addActivityLogsToWeekDateRange(
         weekActivtyDateRange,
         filtedDailyActivitiesLogs
