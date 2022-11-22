@@ -4,6 +4,7 @@ import moment from "moment";
 import generateDailyActivitiesGraphs from "./dayActivitiesGraph"
 import generateWeeklyActivitiesGraphs from "./weekActivitiesGraph"
 import generateDailyQuestionsGraphs from "./dayQuestionsGraph"
+import generateWeeklyQuestionsGraphs from "./weekQuestionsGraph"
 
 
 
@@ -153,9 +154,12 @@ const main = () => {
             }
             if(activitiesQuestionsState=="questions"){
                 if(dailyWeeklyState == "day"){
+                    generateDailyQuestionsGraphs(startWeek,endWeek)
                     console.log("make daily questions graphs")
                 }
                 if(dailyWeeklyState=="week"){
+                    generateWeeklyQuestionsGraphs(startWeek,endWeek)
+
                     console.log("make weekly questions graphs")
                 }
             }
@@ -167,7 +171,7 @@ const main = () => {
 main();
 
 
-const startDate = "2022-W40"
-const endDate="2022-W47"
+// const startDate = "2022-W37"
+// const endDate="2022-W47"
 
-generateDailyQuestionsGraphs(startDate,endDate)
+// generateWeeklyQuestionsGraphs(startDate,endDate)

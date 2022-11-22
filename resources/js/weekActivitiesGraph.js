@@ -58,7 +58,7 @@ const filterDailyActivitiesForDate = (startDate, endDate) => {
             return log;
         }
     });
-  
+
     return filtered;
 };
 
@@ -90,7 +90,7 @@ const makeDataRange = (startDate, endDate) => {
             weekStartDate: weekStartDate.clone(),
             weekEndDate: weekStartDate.clone().add(6, "days").clone(),
         };
-   
+
 
         graphArray.push(newWeek);
         if (graphArray.length >= 8) {
@@ -345,9 +345,18 @@ const testScaledScore = (graphDataRange)=>{
 
 }
 
-const makeGroupCheckBoxes =(divId,checkBoxNames)=>{
+const makeGroupCheckBoxes =(divId,checkBoxNames,title)=>{
+    const groupDiv =document.createElement("div")
+    groupDiv.id = divId
+    const checkBoxDiv =document.getElementById("checkBoxes")
+    checkBoxDiv.appendChild(groupDiv)
     const divOfInterest = document.getElementById(divId)
-    divOfInterest.innerHTML = ""
+    checkBoxDiv.appendChild(divOfInterest)
+
+    const newTitle = document.createElement("h4");
+    newTitle.innerText = title
+    divOfInterest.appendChild(newTitle);
+
 
     checkBoxNames.forEach((checkBoxName,index) => {
         const newLabel = document.createElement("label");
@@ -365,15 +374,12 @@ const makeGroupCheckBoxes =(divId,checkBoxNames)=>{
         divOfInterest.appendChild(newCheckbox);
         divOfInterest.appendChild(br);
     });
-
-
-
-
 }
 
-const filterDataRangeForCheckBoxes =(weekDatas,mainActivities,scaledActivities)=>{
 
-    const labelsToRemove = [].concat(mainActivities, scaledActivities)
+const filterDataRangeForCheckBoxes =(weekDatas,checkedBoxes)=>{
+
+    const labelsToRemove = checkedBoxes
     weekDatas.forEach((weekData) => {
         const filtedWeekDatasets = []
         weekData.datasets.forEach(label => {
@@ -437,20 +443,18 @@ const generateWeeklyActivitiesGraphs = (startDate, endDate) => {
     // console.log(graphLabels)
 
     makeWeekActivityCharts(graphLabels)
+    document.getElementById("checkBoxes").innerHTML = ""
 
-    makeGroupCheckBoxes('mainCheckBoxes',uniqueMainActivities.map(activity => activity !== null ? activity : "niet ingevuld"))
-    makeGroupCheckBoxes('scaledCheckBoxes',uniqueScaledActivities)
+    makeGroupCheckBoxes('mainCheckBoxes',uniqueMainActivities.map(activity => activity !== null ? activity : "niet ingevuld"),"Filter hoofdactiviteiten")
+    makeGroupCheckBoxes('scaledCheckBoxes',uniqueScaledActivities,"Filter geschaalde activiteiten")
 
     document.getElementById('checkBoxes').addEventListener('change',()=>{
-        const mainActivitiesChecked = uniqueMainActivities.map(activity => activity !== null ? activity : "niet ingevuld").filter(checkBoxId =>
-            document.getElementById(checkBoxId).checked ==true
-            )
 
-            const scaledActivitiesChecked = uniqueScaledActivities.filter(checkBoxId =>
+
+            const checkBoxes = uniqueMainActivities.map(activity => activity !== null ? activity : "niet ingevuld").concat(uniqueScaledActivities).filter(checkBoxId =>
                 document.getElementById(checkBoxId).checked ==true
                 )
-
-            filterDataRangeForCheckBoxes(graphLabels,mainActivitiesChecked,scaledActivitiesChecked)
+            filterDataRangeForCheckBoxes(graphLabels,checkBoxes)
 
     })
 

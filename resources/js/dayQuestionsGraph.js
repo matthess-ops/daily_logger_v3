@@ -246,7 +246,7 @@ const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
                 y: {
                     stacked: false,
                 },
-         
+
             },
         },
     });
@@ -267,9 +267,19 @@ const makeQuestionCharts = (dateRange) => {
 
 
 
-const makeGroupCheckBoxes =(divId,checkBoxNames)=>{
+const makeGroupCheckBoxes =(divId,checkBoxNames,title)=>{
+    const groupDiv =document.createElement("div")
+    groupDiv.id = divId
+    const checkBoxDiv =document.getElementById("checkBoxes")
+    checkBoxDiv.appendChild(groupDiv)
     const divOfInterest = document.getElementById(divId)
-    divOfInterest.innerHTML = ""
+    checkBoxDiv.appendChild(divOfInterest)
+
+    const newTitle = document.createElement("h4");
+    newTitle.innerText = title
+    divOfInterest.appendChild(newTitle);
+
+
     checkBoxNames.forEach((checkBoxName,index) => {
         const newLabel = document.createElement("label");
         newLabel.setAttribute("for", checkBoxName);
@@ -287,6 +297,7 @@ const makeGroupCheckBoxes =(divId,checkBoxNames)=>{
         divOfInterest.appendChild(br);
     });
 }
+
 
 const filterDataRangeForCheckBoxes =(weekDatas,questions)=>{
 
@@ -357,15 +368,21 @@ const generateDailyQuestionsGraphs = (startDate, endDate) => {
     console.log("graphLabels")
     console.log(graphLabels)
 
+    const checkBoxes = document.getElementById("checkBoxes")
+    if(checkBoxes.innerHTML !=""){
+        checkBoxes.innerHTML = ""
+
+    }
+
+    makeGroupCheckBoxes('mainCheckBoxes',uniqueQuestions,"Filter vragen:")
     makeQuestionCharts(graphLabels)
 
-    makeGroupCheckBoxes('mainCheckBoxes',uniqueQuestions)
     document.getElementById('checkBoxes').addEventListener('change',()=>{
         const uniqueQuestionsChecked = uniqueQuestions.filter(checkBoxId =>
             document.getElementById(checkBoxId).checked ==true
             )
 
-       
+
             filterDataRangeForCheckBoxes(graphLabels,uniqueQuestionsChecked)
 
     })

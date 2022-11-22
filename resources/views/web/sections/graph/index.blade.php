@@ -97,16 +97,14 @@
         <button id="makeGraphButton" type="button" class="btn btn-primary ">Maak Grafiek</button>
 
         <div id="checkBoxes">
-            <div id="mainCheckBoxes">
-                <h4>Main activities:</h4>
-            </div>
+            {{-- <div id="mainCheckBoxes">
+            </div> --}}
 
             {{-- <button type="button" class="btn btn-primary"></button> --}}
 
-            <div id="scaledCheckBoxes">
-                <h4>Scaled activities:</h4>
+            {{-- <div id="scaledCheckBoxes">
 
-            </div>
+            </div> --}}
         </div>
         {{-- <h1>Chart JS Stacked Bar example</h1>
         <div class="wrapper">
