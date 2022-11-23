@@ -48,7 +48,7 @@ const colorScheme = [
     "#54a0ff",
     "#01a3a4",
 ];
-
+// filter the daily activities logs for startdate and endDate
 const filterDailyActivitiesForDate = (startDate, endDate) => {
     const filtered = dailyActivities.filter((log) => {
         if (
@@ -62,6 +62,7 @@ const filterDailyActivitiesForDate = (startDate, endDate) => {
     return filtered;
 };
 
+//get the unique scaled and ain activities of the daily activities logs of interest
 const getUniqueScaledAndMainActivities = (dailyActivities) => {
     let allMainActivities = [];
     let allScaledActivities = [];
@@ -79,11 +80,11 @@ const getUniqueScaledAndMainActivities = (dailyActivities) => {
     return [uniqueMainActivities, uniqueScaledActivities];
 };
 
+// create for between startDate and endDate the 8 week per graph objects
 const makeDataRange = (startDate, endDate) => {
     let chunkArray = [];
     let graphArray = [];
     let weekStartDate = startDate.clone();
-    let weekEndDate = startDate.clone().add(7, "days");
     while (weekStartDate < endDate) {
 
         let newWeek = {
@@ -105,10 +106,11 @@ const makeDataRange = (startDate, endDate) => {
     }
     return chunkArray;
 };
+// add for each week in the 8 week graph objects te daily activities log belonging to
+// that week
+const addLogsToDataRange = (graphsDateRange, filteredLogs) => {
 
-const addLogsToDataRange = (graphDataRange, filteredLogs) => {
-
-    graphDataRange.forEach((dataRange) => {
+    graphsDateRange.forEach((dataRange) => {
         dataRange.forEach((week) => {
             const activitiesLogs = filteredLogs.filter((log) => {
                 if (
@@ -122,12 +124,13 @@ const addLogsToDataRange = (graphDataRange, filteredLogs) => {
         });
     });
 
-    return graphDataRange;
+    return graphsDateRange;
 };
-
-const calculateGraphDataRangeMainActivityTotals =(graphDataRange,uniqueMainActivities)=>{
+//calculate for each uniqueMainActivity foreach week in the 8 week graph object 
+//the week total in hours for the uniqueMainActivity.
+const calculateGraphDataRangeMainActivityTotals =(graphDateRange,uniqueMainActivities)=>{
     let formattedData =[]
-    graphDataRange.forEach(graph => {
+    graphDateRange.forEach(graph => {
         let mainActCounts = []
         uniqueMainActivities.forEach(mainActivity => {
         let graphActivityWeekTotals = []
@@ -136,11 +139,11 @@ const calculateGraphDataRangeMainActivityTotals =(graphDataRange,uniqueMainActiv
                 week.activitiesLogs.forEach(log => {
                     log.main_activities.forEach(activity => {
                         if(activity ==mainActivity ){
-                            weekActivityTotal =weekActivityTotal+1
+                            weekActivityTotal =weekActivityTotal+1 //each weekactivity counted is 15 minutes
                         }
                     });
                 });
-                graphActivityWeekTotals.push((weekActivityTotal*15)/60)
+                graphActivityWeekTotals.push((weekActivityTotal*15)/60) // convert the minutes to hours
             });
             mainActCounts.push({
                 activity:mainActivity,
@@ -158,10 +161,11 @@ const calculateGraphDataRangeMainActivityTotals =(graphDataRange,uniqueMainActiv
     });
     return formattedData
 }
+//calculate for each uniqueScaledActivity foreach week in the 8 week graph object 
+//the weekly average score for the uniqueScaledActivity
+const calculateGraphDataRangeScaledActivityAverage = (graphDateRange,uniqueScaledActivities)=>{
 
-const calculateGraphDataRangeScaledActivityAverage = (graphDataRange,uniqueScaledActivities)=>{
-
-    graphDataRange.forEach(graph => {
+    graphDateRange.forEach(graph => {
         let scaledActAverages = []
         uniqueScaledActivities.forEach(scaledActivity => {
         let graphScaledAverages= []
@@ -169,6 +173,8 @@ const calculateGraphDataRangeScaledActivityAverage = (graphDataRange,uniqueScale
                 let weekScaledActivityCount = 0
                 let weekScaledActivityTotal = 0
                 week.activitiesLogs.forEach(log => {
+                    //find the name index of the uniquescaledAcivity in scaledActivityLog name array
+                    //with the index the score for the unqueScaledActivity can be indexed from the scaledActivityLog score array
                     const indexOfScaledActivity = log.scaled_activities[0].findIndex((logScaledActivity)=>{
                         return logScaledActivity ==scaledActivity
                     })
@@ -179,8 +185,7 @@ const calculateGraphDataRangeScaledActivityAverage = (graphDataRange,uniqueScale
                             weekScaledActivityCount = weekScaledActivityCount+1
                         });
                     }
-                   //find for each log the index position of the scaledActivity in .scaled_activities
-                   //then loop through .scaled_activities_scores[index] and add the score
+                   
                 });
                 const scaledActivityWeekScore = weekScaledActivityTotal/weekScaledActivityCount
                 graphScaledAverages.push(scaledActivityWeekScore)
@@ -195,16 +200,16 @@ const calculateGraphDataRangeScaledActivityAverage = (graphDataRange,uniqueScale
         graph.scaledActivitesScores = scaledActAverages
 
     });
-    return graphDataRange
+    return graphDateRange
 }
 
+// convert the unique mainactivity total minutes array to chartjs competabile dataset
+// convert the unique scaledactivity average scores array to chartjs compatible dataset
 const generateGraphDatasets = (dateRange) => {
     dateRange.forEach((graph) => {
         let colorIndex = 0;
         let stackIndex = 0;
         let datasets = [];
-
-
 
         graph.mainActTotals.forEach((mainActTotal, index) => {
             colorIndex += 1;
@@ -236,7 +241,7 @@ const generateGraphDatasets = (dateRange) => {
     return dateRange;
 };
 
-
+//generate for each week column in all 8 week graphs the column label
 const generateWeekActivityLabels = (graphDataRange) => {
     graphDataRange.forEach((graph) => {
         let labels = [];
@@ -253,18 +258,9 @@ const generateWeekActivityLabels = (graphDataRange) => {
     return graphDataRange;
 };
 
-// const footer = (tooltipItems) => {
-//     let sum = 0;
 
-//     tooltipItems.forEach(function(tooltipItem) {
-//       sum += tooltipItem.parsed.y;
-//       console.log("tooltip stuff ",tooltipItem)
-//     });
-//     return 'Total: ' + sum;
-//   };
-
-
-const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
+// create chartjs chart
+const makeChart = (chartLabels, chartDatasets, chartName) => {
     let chartStatus = Chart.getChart(chartName); // <canvas> id
     if (chartStatus != undefined) {
         chartStatus.destroy();
@@ -314,8 +310,10 @@ const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
     myChart.update();
 };
 
-const makeWeekActivityCharts = (graphDataRange) => {
-    graphDataRange.forEach((graph) => {
+
+// create for each 8 week object in graphDateRange an chart
+const makeWeekActivityCharts = (graphDateRange) => {
+    graphDateRange.forEach((graph) => {
         makeChart(
             graph.labels,
             graph.filteredDatasets,
@@ -325,26 +323,7 @@ const makeWeekActivityCharts = (graphDataRange) => {
     });
 };
 
-const testScaledScore = (graphDataRange)=>{
-    let weekData = graphDataRange[0].weekData[0].activitiesLogs
-    let weeksum = 0
-    let weekcount = 0
-    weekData.forEach(week => {
-        let sum=0
-        let count = 0
-        let scores =week.scaled_activities_scores
-        scores.forEach(score => {
-            sum =sum+ score[1]
-            weeksum = weeksum+ score[1]
-            count =count+1
-            weekcount=weekcount+1
-        });
-        console.log("sum and count are ",sum,count)
-
-    });
-
-}
-
+//function used to create uniqueMainActivities and uniqueScaledActivities checkboxes
 const makeGroupCheckBoxes =(divId,checkBoxNames,title)=>{
     const groupDiv =document.createElement("div")
     groupDiv.id = divId
@@ -376,15 +355,15 @@ const makeGroupCheckBoxes =(divId,checkBoxNames,title)=>{
     });
 }
 
+//filter graphDateRange data for the checkedBoxes.
+const filterDataRangeForCheckBoxes =(graphDateRange,checkedBoxes)=>{
 
-const filterDataRangeForCheckBoxes =(weekDatas,checkedBoxes)=>{
-
-    const labelsToRemove = checkedBoxes
-    weekDatas.forEach((weekData) => {
+    const labelsToKeep = checkedBoxes
+    graphDateRange.forEach((weekData) => {
         const filtedWeekDatasets = []
         weekData.datasets.forEach(label => {
             let keepData = false
-            labelsToRemove.forEach(labelToRemove => {
+            labelsToKeep.forEach(labelToRemove => {
                     if(label.label == labelToRemove){
                         keepData = true
                     }
@@ -395,7 +374,7 @@ const filterDataRangeForCheckBoxes =(weekDatas,checkedBoxes)=>{
         });
         weekData.filteredDatasets = filtedWeekDatasets
     });
-    makeWeekActivityCharts(weekDatas);
+    makeWeekActivityCharts(graphDateRange);
 
 
 }
@@ -405,29 +384,31 @@ const generateWeeklyActivitiesGraphs = (startDate, endDate) => {
     console.log("this should not be lauched")
     const startDateStr = startDate;
     const endDateStr = endDate;
-
+    // convert startDate and endDate to moment objects
     const startDateMoment = moment(startDateStr, "YYYY-[W]WW").weekday(1);
     const endDateMoment = moment(endDateStr, "YYYY-[W]WW").weekday(8);
-
-    const filtedDailyActivitiesLogs = filterDailyActivitiesForDate(
+    //filter daily activities logs for startDate and endDate
+    const filteredDailyActivitiesLogs = filterDailyActivitiesForDate(
         startDateMoment,
         endDateMoment
     );
-
+   //get the unique main activities and unique scaled activities
     const [uniqueMainActivities, uniqueScaledActivities] =
-        getUniqueScaledAndMainActivities(filtedDailyActivitiesLogs);
-
+        getUniqueScaledAndMainActivities(filteredDailyActivitiesLogs);
+    
+    //for startDateMoment and between endateMoment create for each 8 weeks an object and 
+    // add these to the daterange array
     const graphDataRange = makeDataRange(startDateMoment, endDateMoment);
     // console.log("graphdatrange");
     // console.log(graphDataRange);
     const graphDataRangeLogs = addLogsToDataRange(
         graphDataRange,
-        filtedDailyActivitiesLogs
+        filteredDailyActivitiesLogs
     );
     // console.log("graphDataRangeLogs");
     // console.log(graphDataRangeLogs);
 
-    const calculatedGraphDataRangeMainActivityTotals = calculateGraphDataRangeMainActivityTotals(graphDataRange,uniqueMainActivities)
+    const calculatedGraphDataRangeMainActivityTotals = calculateGraphDataRangeMainActivityTotals(graphDataRangeLogs,uniqueMainActivities)
     // console.log("calculatedGraphDataRangeMainActivityTotals")
     // console.log(calculatedGraphDataRangeMainActivityTotals)
 
@@ -441,10 +422,10 @@ const generateWeeklyActivitiesGraphs = (startDate, endDate) => {
     const graphLabels = generateWeekActivityLabels(graphDatasets)
     // console.log("graphlabels")
     // console.log(graphLabels)
-
+    //remove all the checkboxes
     makeWeekActivityCharts(graphLabels)
     document.getElementById("checkBoxes").innerHTML = ""
-
+    //create checkboxes
     makeGroupCheckBoxes('mainCheckBoxes',uniqueMainActivities.map(activity => activity !== null ? activity : "niet ingevuld"),"Filter hoofdactiviteiten")
     makeGroupCheckBoxes('scaledCheckBoxes',uniqueScaledActivities,"Filter geschaalde activiteiten")
 

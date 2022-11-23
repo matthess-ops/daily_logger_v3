@@ -47,7 +47,7 @@ const colorScheme = [
     "#54a0ff",
     "#01a3a4",
 ];
-
+//filter the daily questions logs for startdate and enddate
 const filterDailyQuestionsForDate = (startDate, endDate) => {
     const filtered = dailyQuestions.filter((log) => {
         if (
@@ -61,6 +61,7 @@ const filterDailyQuestionsForDate = (startDate, endDate) => {
     return filtered;
 };
 
+// get all unique questions for the daily questions logs of interest
 const getUniqueQuestions = (dailyQuestions) => {
     let allQuestions = [];
 
@@ -72,7 +73,8 @@ const getUniqueQuestions = (dailyQuestions) => {
     const uniqueQuestions = [...new Set(allQuestions)];
     return uniqueQuestions
 };
-
+//make daily datarange. Each graph will consist of 7 days the first one is on
+//monday and the last on sunday.
 const makeDailyDataRange = (
     uniqueDailyQuestions,
     startDate,
@@ -111,7 +113,7 @@ const makeDailyDataRange = (
     }
     return dateRange;
 };
-
+//for each week in dateRange get 7 daily questions logs that are needed
 const addDailyQuestionsLogToDateRange = (dateRange, filteredDailyQuestionLogs) => {
     dateRange.forEach((week) => {
         let logs = [];
@@ -134,16 +136,21 @@ const addDailyQuestionsLogToDateRange = (dateRange, filteredDailyQuestionLogs) =
     return dateRange;
 };
 
+//for each week in dataRange for, get the daily question score for each unique daily
+//question.
 const calcDailyQuestionsAverages = (dataRange) => {
 
-    // console.log(dataRange)
     dataRange.forEach((week) => {
         let weekQuestionScores = []
         week.uniqueDailyQuestions.forEach((uniqueDailyQuestion) => {
             let questionScoreArray = []
             week.dailyQuestionsLogs.forEach(dailyQuestionLog => {
-                // console.log(dailyQuestionLog.log.questions)
                 if (dailyQuestionLog.log != null) {
+                    //since the names of the daily question and the scores of the daily questions
+                    // are in seperate arrays. the sequence of the daily question in the names array might differ 
+                    //between dailyQuestionLogs. Therefor the index of the uniqueQuestion in the names array
+                    //first need to be determined. With this index the correct score of the dailyQuestion name can
+                    // be index from the score array
                     const index = dailyQuestionLog.log.questions.findIndex(question => {
                         return question === uniqueDailyQuestion
                     })
@@ -151,10 +158,10 @@ const calcDailyQuestionsAverages = (dataRange) => {
                         questionScoreArray.push(dailyQuestionLog.log.scores[index])
 
                     } else {
-                        questionScoreArray.push(null)
+                        questionScoreArray.push(0)
                     }
                 } else {
-                    questionScoreArray.push(null)
+                    questionScoreArray.push(0)
 
                 }
 
@@ -162,24 +169,19 @@ const calcDailyQuestionsAverages = (dataRange) => {
             weekQuestionScores.push({
                 question: uniqueDailyQuestion,
                 scores: questionScoreArray,
-
             })
-            // console.log("::",uniqueDailyQuestion,questionScoreArray)
-
 
         });
         week.questionsWeekScores = weekQuestionScores
     });
-
     return dataRange
 }
 
-
-const makeGraphDatasets = (dataRange) => {
-    dataRange.forEach((week) => {
+//convert for each week in dataRange the question scores to chartjs compatible datasets
+const makeGraphDatasets = (dateRange) => {
+    dateRange.forEach((week) => {
         let colorIndex = 0
         let datasets = []
-        console.log(week)
         week.questionsWeekScores.forEach((question, index) => {
             colorIndex += 1;
             const dataset = {
@@ -192,12 +194,13 @@ const makeGraphDatasets = (dataRange) => {
         week.datasets = datasets
         week.filteredDatasets =datasets
     })
-    return dataRange
+    return dateRange
 }
 
-const makeLabels = (dataRange)=>{
+//create for each column (7 columns per week) per week the column label
+const makeLabels = (dateRange)=>{
 
-    dataRange.forEach((week) => {
+    dateRange.forEach((week) => {
         let labels = [];
         week.dailyQuestionsLogs.forEach((dailyQuestionLog) => {
             const date =
@@ -209,10 +212,11 @@ const makeLabels = (dataRange)=>{
         week.labels = labels;
     });
 
-    return dataRange;
+    return dateRange;
 
 }
 
+//creates chartjs charts
 const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
     let chartStatus = Chart.getChart(chartName); // <canvas> id
     if (chartStatus != undefined) {
@@ -254,19 +258,20 @@ const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
     myChart.update();
 };
 
+//create for each week in dateRange an seperate chartjs chart
 const makeQuestionCharts = (dateRange) => {
     dateRange.forEach((week) => {
         makeChart(
             week.labels,
             week.filteredDatasets,
-            "test_" + week.weekNr,
+            "chartname_" + week.weekNr,
             week.weekNr
         );
     });
 };
 
 
-
+//make question checkboxes
 const makeGroupCheckBoxes =(divId,checkBoxNames,title)=>{
     const groupDiv =document.createElement("div")
     groupDiv.id = divId
@@ -280,7 +285,7 @@ const makeGroupCheckBoxes =(divId,checkBoxNames,title)=>{
     divOfInterest.appendChild(newTitle);
 
 
-    checkBoxNames.forEach((checkBoxName,index) => {
+    checkBoxNames.forEach((checkBoxName) => {
         const newLabel = document.createElement("label");
         newLabel.setAttribute("for", checkBoxName);
         newLabel.innerHTML = checkBoxName;
@@ -298,16 +303,16 @@ const makeGroupCheckBoxes =(divId,checkBoxNames,title)=>{
     });
 }
 
+// for each week in dateRange foreach column keep the question data that the user wants to chart
+const filterDataRangeForCheckBoxes =(dateRange,questions)=>{
 
-const filterDataRangeForCheckBoxes =(weekDatas,questions)=>{
-
-    const labelsToRemove = questions
-    weekDatas.forEach((weekData) => {
+    const labelsToKeep = questions
+    dateRange.forEach((week) => {
         const filteredWeekDatasets = []
-        weekData.datasets.forEach(label => {
+        week.datasets.forEach(label => {
             let keepData = false
-            labelsToRemove.forEach(labelToRemove => {
-                    if(label.label == labelToRemove){
+            labelsToKeep.forEach(labelToKeep => {
+                    if(label.label == labelToKeep){
                         keepData = true
                     }
             });
@@ -315,21 +320,21 @@ const filterDataRangeForCheckBoxes =(weekDatas,questions)=>{
                 filteredWeekDatasets.push(label)
             }
         });
-        weekData.filteredDatasets = filteredWeekDatasets
+        week.filteredDatasets = filteredWeekDatasets
     });
-    makeQuestionCharts(weekDatas);
+    makeQuestionCharts(dateRange);
 
 
 }
 
 
-
+//main function - this is called when the user presses on the make graph button
 const generateDailyQuestionsGraphs = (startDate, endDate) => {
 
 
-    console.log("generateDailyQuestionsGraphs called")
-    console.log("daily questions")
-    console.log(dailyQuestions)
+    // console.log("generateDailyQuestionsGraphs called")
+    // console.log("daily questions")
+    // console.log(dailyQuestions)
 
     const startDateStr = startDate
     const endDateStr = endDate
@@ -341,33 +346,35 @@ const generateDailyQuestionsGraphs = (startDate, endDate) => {
         startDateMoment,
         endDateMoment
     );
-    console.log("filteredDailyQuestionsForDate")
-    console.log(filteredDailyQuestionsForDate)
+    // console.log("filteredDailyQuestionsForDate")
+    // console.log(filteredDailyQuestionsForDate)
 
     const uniqueQuestions = getUniqueQuestions(filteredDailyQuestionsForDate)
-    console.log("uniqueQuestions")
-    console.log(uniqueQuestions)
+    // console.log("uniqueQuestions")
+    // console.log(uniqueQuestions)
 
     const dailyDataRange = makeDailyDataRange(uniqueQuestions, startDateStr, endDateStr)
-    console.log("dailyDataRange")
-    console.log(dailyDataRange)
+    // console.log("dailyDataRange")
+    // console.log(dailyDataRange)
 
     const dailyQuestionsLogDataRange = addDailyQuestionsLogToDateRange(dailyDataRange, filteredDailyQuestionsForDate)
-    console.log("dailyQuestionsLogDataRange")
-    console.log(dailyQuestionsLogDataRange)
+    // console.log("dailyQuestionsLogDataRange")
+    // console.log(dailyQuestionsLogDataRange)
 
     const calcedDailyQuestionsAverages = calcDailyQuestionsAverages(dailyQuestionsLogDataRange)
-    console.log("calcedDailyQuestionsAverages")
-    console.log(calcedDailyQuestionsAverages)
+    // console.log("calcedDailyQuestionsAverages")
+    // console.log(calcedDailyQuestionsAverages)
 
     const graphDatasets = makeGraphDatasets(calcedDailyQuestionsAverages)
-    console.log("graphDatasets")
-    console.log(graphDatasets)
+    // console.log("graphDatasets")
+    // console.log(graphDatasets)
 
     const graphLabels = makeLabels(graphDatasets)
-    console.log("graphLabels")
-    console.log(graphLabels)
+    // console.log("graphLabels")
+    // console.log(graphLabels)
 
+    //a new graph needs to be generated therefor the checkboxes might change
+    //therefor the checkboxes need to be deleted
     const checkBoxes = document.getElementById("checkBoxes")
     if(checkBoxes.innerHTML !=""){
         checkBoxes.innerHTML = ""
@@ -376,7 +383,7 @@ const generateDailyQuestionsGraphs = (startDate, endDate) => {
 
     makeGroupCheckBoxes('mainCheckBoxes',uniqueQuestions,"Filter vragen:")
     makeQuestionCharts(graphLabels)
-
+    // a change in the checkboxes is detected, filter the data and remake the charts
     document.getElementById('checkBoxes').addEventListener('change',()=>{
         const uniqueQuestionsChecked = uniqueQuestions.filter(checkBoxId =>
             document.getElementById(checkBoxId).checked ==true
