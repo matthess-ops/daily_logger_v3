@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+// use Illuminate\Support\Facades\Request;
 
 class LoginController extends Controller
 {
@@ -26,7 +30,24 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    // protected $redirectTo = RouteServiceProvider::HOME;
+
+    protected function authenticated(Request $request, $user)
+{
+if ( $user->isClient() ) {// do your magic here
+    return redirect()->route('log.edit',["user_id"=>Auth::id(),'date'=>Carbon::today()]);
+}
+
+if ( $user->isAdmin() ) {// do your magic here
+    return redirect()->route('client.index');
+}
+
+if ( $user->isMentor() ) {// do your magic here
+    return redirect()->route('mentor.dailyquestion.index');
+}
+
+ return redirect()->route('home');
+}
 
     /**
      * Create a new controller instance.

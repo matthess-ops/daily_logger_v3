@@ -64,6 +64,8 @@ class DailyQuestionSeeder extends Seeder
                         'completed'=>rand(0,1),
                         'mentor_started' => rand(0,1),
                         'mentor_completed'=>rand(0,1),
+                        'client_remark'=> "this is a client remark",
+                        'mentor_remark'=>"this a mentor remark"
                     ]);
                 } else {
 
@@ -82,6 +84,8 @@ class DailyQuestionSeeder extends Seeder
                         'date_today' => $startDateTime->format('Y-m-d'),
                         'started' => rand(0,1),
                         'completed'=>rand(0,1),
+                        'client_remark'=> "this is a client remark",
+                        'mentor_remark'=>"this a mentor remark"
                     ]);
                 }
             }

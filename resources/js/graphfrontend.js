@@ -5,6 +5,7 @@ import generateDailyActivitiesGraphs from "./dayActivitiesGraph"
 import generateWeeklyActivitiesGraphs from "./weekActivitiesGraph"
 import generateDailyQuestionsGraphs from "./dayQuestionsGraph"
 import generateWeeklyQuestionsGraphs from "./weekQuestionsGraph"
+import testremarks from "./testremarks"
 
 
 // find in dailyActivities logs the first earliest startdate and latest endDate
@@ -83,7 +84,7 @@ const checkForActivitiesQuestionsRadioChanges = () => {
                 if (activitiesQuestionsState == "questions") {
                     changeDatePickersMinMax("questions");
                 }
-              
+
             });
         });
 
@@ -184,6 +185,10 @@ const main = () => {
 };
 
 main();
+
+generateDailyActivitiesGraphs("2022-W35", "2022-W45")
+
+// testremarks()
 
 
 

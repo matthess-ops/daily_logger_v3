@@ -25,6 +25,7 @@ const mix = require('laravel-mix');
  .js('resources/js/graphfrontend.js', 'public/js')
  .js('resources/js/dayActivitiesGraph.js', 'public/js')
  .js('resources/js/weekActivitiesGraph.js', 'public/js')
+ .js('resources/js/testremarks.js', 'public/js')
 
 
 

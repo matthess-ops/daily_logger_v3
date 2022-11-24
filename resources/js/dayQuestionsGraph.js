@@ -51,8 +51,8 @@ const colorScheme = [
 const filterDailyQuestionsForDate = (startDate, endDate) => {
     const filtered = dailyQuestions.filter((log) => {
         if (
-            moment(log.created_at) >= startDate &&
-            moment(log.created_at) <= endDate
+            moment(log.date_today) >= startDate &&
+            moment(log.date_today) <= endDate
         ) {
             return log;
         }
@@ -147,7 +147,7 @@ const calcDailyQuestionsAverages = (dataRange) => {
             week.dailyQuestionsLogs.forEach(dailyQuestionLog => {
                 if (dailyQuestionLog.log != null) {
                     //since the names of the daily question and the scores of the daily questions
-                    // are in seperate arrays. the sequence of the daily question in the names array might differ 
+                    // are in seperate arrays. the sequence of the daily question in the names array might differ
                     //between dailyQuestionLogs. Therefor the index of the uniqueQuestion in the names array
                     //first need to be determined. With this index the correct score of the dailyQuestion name can
                     // be index from the score array

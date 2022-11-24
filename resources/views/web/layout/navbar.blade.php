@@ -168,43 +168,7 @@
 
                 @can('isClient', App\Testpol::class)
                     <ul class="navbar-nav mr-auto">
-                        {{-- <li class="nav-item dropdown ">
-                            <a class="nav-link dropdown-toggle " href="" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Activiteiten
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item"
-                                    href="{{ route('dailyActivity.index', ['user_id' => Auth::id()]) }}">Logger</a>
-                                <a class="dropdown-item" href="{{ route('clientActivities.index') }}">Instellingen</a>
-                                <a class="dropdown-item" href="{{ route('graph.activities', ['user_id' => Auth::id()])  }}">Grafieken</a>
-                            </div>
-                        </li>
 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Dagelijkse rapportage
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item"
-                                    href="{{ route('dailyQuestion.index', ['user_id' => Auth::id()]) }}">Overzicht</a>
-                                    <a class="dropdown-item" href="{{ route('graph.dailyreportsgraph', ['user_id' => Auth::id()])  }}">Grafieken</a>
-                                </div>
-                        </li>
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Account
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item"
-                                    href="{{ route('client.show', ['client_id' => Auth::user()->client->id]) }}">Gegevens</a>
-                            </div>
-                        </li> --}}
-
-                        {{-- new tabs --}}
 
                         <li class="nav-item active">
                             <a class="nav-link" href="{{ route('log.edit', ['user_id' => Auth::id(),'date'=>Carbon\Carbon::today()]) }}">Vandaag </a>
@@ -233,9 +197,9 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item"
-                                    href="">Activiteiten aanpassen</a>
+                                    href="{{route('clientActivities.index')}}">Activiteiten aanpassen</a>
                                     <a class="dropdown-item"
-                                    href="">Persoonlijke informatie aanpassen</a>
+                                    href="{{route('client.show',['client_id'=>Auth::id()])}}">Persoonlijke informatie aanpassen</a>
                             </div>
 
                         </li>

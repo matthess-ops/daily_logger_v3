@@ -1,5 +1,10 @@
 import moment from "moment";
 import Chart from "chart.js/auto";
+import { forEach } from "lodash";
+
+
+// huge error detected because stuff is saved as an object, the object
+//doestn have to be return after modification
 
 //colours array
 const colorScheme = [
@@ -355,15 +360,35 @@ const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
 // make for each week in dateRange an seperate chart
 const makeWeekActivityCharts = (dateRange) => {
     dateRange.forEach((week) => {
+        console.log("graph weeknr ",week.weekNr)
+        console.log("addd remarks stuff in here")
         makeChart(
             week.labels,
             week.filteredDatasets,
             "test_" + week.weekNr,
             week.weekNr
         );
+        makeRemarks(week)
     });
 };
 
+const makeRemarks = (week)=>{
+    const weekRemarksDiv = document.createElement('div')
+    weekRemarksDiv.id = week.weekNr
+    week.questionRemarks.forEach(remark => {
+        if(remark.remark != ""){
+            const remarkP = document.createElement('p')
+            remarkP.classList.add('text-left')
+            remarkP.innerText = remark.date.locale("nl").format("dddd DD-MM-YYYY") +
+            ": " + remark.remark
+            weekRemarksDiv.appendChild(remarkP)
+        }
+
+    });
+    document.getElementById("chartDiv").appendChild(weekRemarksDiv)
+
+
+}
 // create the scaled activities and main activities checkboxes
 const makeGroupCheckBoxes = (divId, checkBoxNames, title) => {
     const groupDiv = document.createElement("div");
@@ -418,6 +443,35 @@ const filterDataRangeForCheckBoxes = (
     });
     makeWeekActivityCharts(weekDatas);
 };
+
+const addRemarks = (dateRange)=>{
+
+    dateRange.forEach(week => {
+        const fullQuestionLogs = dailyQuestions.filter((log) => {
+            if (
+                moment(log.date_today) >= week.mondayDate &&
+                moment(log.date_today) <= week.sundayDate
+            ) {
+                return log;
+            }
+        });
+        const questionRemarks = fullQuestionLogs.map((log)=>{
+            return {
+                date:moment(log.date_today),
+                remark: log.client_remark
+
+            }
+
+        })
+        // console.log("questionLogs")
+        // console.log(questionRemarks)
+        week.questionRemarks = questionRemarks
+    });
+
+    // return dateRange
+
+}
+
 ///main function that execute all the needed functions
 const generateDailyActivitiesGraphs = (startDate, endDate) => {
     const startDateStr = startDate;
@@ -460,7 +514,9 @@ const generateDailyActivitiesGraphs = (startDate, endDate) => {
     );
 
     const dateRangeLabels = generateWeekActivityLabels(dateRangeDatasets);
+    addRemarks(dateRangeLabels)
     makeWeekActivityCharts(dateRangeLabels);
+
     document.getElementById("checkBoxes").innerHTML = "";
     makeGroupCheckBoxes(
         "mainCheckBoxes",
@@ -474,6 +530,7 @@ const generateDailyActivitiesGraphs = (startDate, endDate) => {
         uniqueScaledActivities,
         "Filter geschaalde activiteiten"
     );
+
 
     document.getElementById("checkBoxes").addEventListener("change", () => {
         const checkBoxes = uniqueMainActivities

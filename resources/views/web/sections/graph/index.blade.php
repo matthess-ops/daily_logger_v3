@@ -7,7 +7,7 @@
         const dailyActivities = @json($dailyActivities);
     </script>
     <ul>
-        <li>hoe willen we de opmerkingen van de logger showen, onder terugkijken een tab bouwen?</li>
+        <li>de Remarks collasable makeken dus een button toevoegen om de remarks van eze week/8 weken te showen?</li>
     </ul>
 
     <h3>web.sections.graph.index</h3>
