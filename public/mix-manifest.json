@@ -4,9 +4,15 @@
     "/js/checkHourBoxes.js": "/js/checkHourBoxes.js",
     "/js/dailyquestionsgraph.js": "/js/dailyquestionsgraph.js",
     "/js/dayActivitiesGraph.js": "/js/dayActivitiesGraph.js",
+    "/js/dayQuestionsGraph.js": "/js/dayQuestionsGraph.js",
+    "/js/dayQuestionsGraphMentor.js": "/js/dayQuestionsGraphMentor.js",
     "/js/graphactivities.js": "/js/graphactivities.js",
     "/js/graphfrontend.js": "/js/graphfrontend.js",
+    "/js/graphfrontendMentor.js": "/js/graphfrontendMentor.js",
     "/js/indexDailyActivitiesGraph.js": "/js/indexDailyActivitiesGraph.js",
     "/js/mentordailyquestionsgraph.js": "/js/mentordailyquestionsgraph.js",
-    "/js/weekActivitiesGraph.js": "/js/weekActivitiesGraph.js"
+    "/js/testremarks.js": "/js/testremarks.js",
+    "/js/weekActivitiesGraph.js": "/js/weekActivitiesGraph.js",
+    "/js/weekQuestionsGraph.js": "/js/weekQuestionsGraph.js",
+    "/js/weekQuestionsGraphMentor.js": "/js/weekQuestionsGraphMentor.js"
 }

@@ -20,6 +20,7 @@
                 <th>Account aangemaakt</th>
 
                 <th>Account status</th>
+
             </tr>
         </thead>
         <tbody>

@@ -210,25 +210,52 @@ const calcWeekScaledActivityData = (dateRange) => {
                     if (arrayIndexOfuniqueScaledActivity != -1) {
                         let hits = 0;
                         let zeroHits = 0;
+                        let nullHits = 0;
                         let totalScore = 0;
                         activityLog.log.scaled_activities_scores.forEach(
                             (activityScores) => {
-                                if (
-                                    activityScores[
-                                        arrayIndexOfuniqueScaledActivity
-                                    ] != 0
-                                ) {
+                                if(activityScores[arrayIndexOfuniqueScaledActivity] === 0){
+                                    zeroHits +=1
+                                }
+                                if(activityScores[arrayIndexOfuniqueScaledActivity] === null){
+                                    nullHits +=1
+                                }
+
+                                if(activityScores[arrayIndexOfuniqueScaledActivity] !== 0 && activityScores[arrayIndexOfuniqueScaledActivity] !== null){
                                     hits = hits + 1;
                                     totalScore =
                                         totalScore +
                                         activityScores[
                                             arrayIndexOfuniqueScaledActivity
                                         ];
-                                } else {
-                                    zeroHits = zeroHits + 1;
                                 }
+
+
+
+
+                                // if (
+                                //     activityScores[
+                                //         arrayIndexOfuniqueScaledActivity
+                                //     ] == 0 ||  activityScores[
+                                //         arrayIndexOfuniqueScaledActivity
+                                //     ] == null
+                                // ) {
+                                //     zeroHits = zeroHits + 1;
+
+                                // }else{
+                                    // hits = hits + 1;
+                                    // totalScore =
+                                    //     totalScore +
+                                    //     activityScores[
+                                    //         arrayIndexOfuniqueScaledActivity
+                                    //     ];
+                                // }
+
+
+
                             }
                         );
+                        console.log(uniqueScaledActivity," hits ",hits," zerohits ",zeroHits," nullhits ",nullHits, " totalscore ",totalScore, " ave ",totalScore/hits)
                         //because of the check zerohits can not be zero, but for ease of mind i added this
                         if (hits == 0) {
                             dayScaledData.push(0);

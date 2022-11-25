@@ -155,7 +155,12 @@ const calcDailyQuestionsAverages = (dataRange) => {
                         return question === uniqueDailyQuestion
                     })
                     if (index != -1) {
-                        questionScoreArray.push(dailyQuestionLog.log.scores[index])
+                        if(dailyQuestionLog.log.scores[index] == null){
+                            questionScoreArray.push(0)
+                        }else{
+                            questionScoreArray.push(dailyQuestionLog.log.scores[index])
+
+                        }
 
                     } else {
                         questionScoreArray.push(0)
@@ -333,8 +338,8 @@ const generateDailyQuestionsGraphs = (startDate, endDate) => {
 
 
     // console.log("generateDailyQuestionsGraphs called")
-    // console.log("daily questions")
-    // console.log(dailyQuestions)
+    console.log("daily questions")
+    console.log(dailyQuestions)
 
     const startDateStr = startDate
     const endDateStr = endDate

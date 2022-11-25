@@ -246,7 +246,7 @@
 
                 @can('isMentor', App\Testpol::class)
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item dropdown ">
+                        {{-- <li class="nav-item dropdown ">
                             <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Clienten
@@ -254,9 +254,18 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ route('client.index') }}">Zoeken</a>
                             </div>
-                        </li>
+                        </li> --}}
 
-                        <li class="nav-item dropdown">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ route('client.index') }}">Clienten </a>
+                          </li>
+
+
+                          <li class="nav-item active">
+                            <a class="nav-link" href="{{ route('mentor.dailyquestion.index')  }}">Rapportages </a>
+                          </li>
+
+                        {{-- <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Rapportages
@@ -266,7 +275,7 @@
 
 
                             </div>
-                        </li>
+                        </li> --}}
 
                     </ul>
                 @endcan

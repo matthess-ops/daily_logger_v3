@@ -9,6 +9,8 @@
 <li>op het moment staan hier ook al de niet ingevulde dag rapportage. Zo houden of alleen limiteren tot een aantal dagen?</li>
 </ul>
 
+<h4>Dagelijkse waardering rapporten die nog open staan.</h4>
+
     <form action="{{ route('mentor.dailyquestion.index')}}" method="GET">
         <input type="text" name="search"
             @isset($searchQuery) value= "{{ $searchQuery }}" @endisset />
@@ -24,7 +26,7 @@
                 <th>Email</th>
                 <th>Raport datum</th>
 
-                <th>Client filled</th>
+                {{-- <th>Client filled</th> --}}
 
             </tr>
         </thead>
@@ -38,12 +40,11 @@
             <td>{{ $dailyQuestion->client->user->email }}</td>
             <td>{{ $dailyQuestion->created_at->format('M d Y') }}</td>
 
-            {{-- <td>{{$client->user->active}}</td> --}}
-            <td>        @if ($dailyQuestion->filled == true)
+            {{-- <td>        @if ($dailyQuestion->filled == true)
                 filled
             @else
                 non-filled
-            @endif</td>
+            @endif</td> --}}
 
             </tr>
         @endforeach

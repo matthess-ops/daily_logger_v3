@@ -126,7 +126,7 @@ const addLogsToDataRange = (graphsDateRange, filteredLogs) => {
 
     return graphsDateRange;
 };
-//calculate for each uniqueMainActivity foreach week in the 8 week graph object 
+//calculate for each uniqueMainActivity foreach week in the 8 week graph object
 //the week total in hours for the uniqueMainActivity.
 const calculateGraphDataRangeMainActivityTotals =(graphDateRange,uniqueMainActivities)=>{
     let formattedData =[]
@@ -161,7 +161,7 @@ const calculateGraphDataRangeMainActivityTotals =(graphDateRange,uniqueMainActiv
     });
     return formattedData
 }
-//calculate for each uniqueScaledActivity foreach week in the 8 week graph object 
+//calculate for each uniqueScaledActivity foreach week in the 8 week graph object
 //the weekly average score for the uniqueScaledActivity
 const calculateGraphDataRangeScaledActivityAverage = (graphDateRange,uniqueScaledActivities)=>{
 
@@ -172,6 +172,10 @@ const calculateGraphDataRangeScaledActivityAverage = (graphDateRange,uniqueScale
         graph.weekData.forEach(week => {
                 let weekScaledActivityCount = 0
                 let weekScaledActivityTotal = 0
+                let hits = 0;
+                let zeroHits = 0;
+                let nullHits = 0;
+                let totalScore = 0;
                 week.activitiesLogs.forEach(log => {
                     //find the name index of the uniquescaledAcivity in scaledActivityLog name array
                     //with the index the score for the unqueScaledActivity can be indexed from the scaledActivityLog score array
@@ -181,13 +185,31 @@ const calculateGraphDataRangeScaledActivityAverage = (graphDateRange,uniqueScale
 
                     if(indexOfScaledActivity != -1){
                         log.scaled_activities_scores.forEach(scoreArray => {
+
+                            if(scoreArray[indexOfScaledActivity] === 0){
+                                zeroHits +=1
+                            }
+                            if(scoreArray[indexOfScaledActivity] === null){
+                                nullHits +=1
+                            }
+
+                            if(scoreArray[indexOfScaledActivity] !== 0 && scoreArray[indexOfScaledActivity] !== null){
+                                hits = hits + 1;
+                                totalScore =
+                                    totalScore +
+                                    scoreArray[indexOfScaledActivity]
+                            }
+
+
                             weekScaledActivityTotal =weekScaledActivityTotal+ scoreArray[indexOfScaledActivity]
                             weekScaledActivityCount = weekScaledActivityCount+1
                         });
                     }
-                   
+
                 });
-                const scaledActivityWeekScore = weekScaledActivityTotal/weekScaledActivityCount
+                const scaledActivityWeekScore = totalScore/hits
+
+                // const scaledActivityWeekScore = weekScaledActivityTotal/weekScaledActivityCount
                 graphScaledAverages.push(scaledActivityWeekScore)
             });
             scaledActAverages.push({
@@ -395,8 +417,8 @@ const generateWeeklyActivitiesGraphs = (startDate, endDate) => {
    //get the unique main activities and unique scaled activities
     const [uniqueMainActivities, uniqueScaledActivities] =
         getUniqueScaledAndMainActivities(filteredDailyActivitiesLogs);
-    
-    //for startDateMoment and between endateMoment create for each 8 weeks an object and 
+
+    //for startDateMoment and between endateMoment create for each 8 weeks an object and
     // add these to the daterange array
     const graphDataRange = makeDataRange(startDateMoment, endDateMoment);
     // console.log("graphdatrange");

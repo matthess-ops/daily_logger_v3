@@ -79,9 +79,8 @@ class GraphController extends Controller
 
         error_log("called mentordailyreportsgraph " . $user_id);
         $this->authorize('isMentor');
+        $dailyActivities = DailyActivity::where('user_id', $user_id)->get();
         $dailyQuestions = DailyQuestion::where('user_id', $user_id)->get();
-
-
-        return view('web.sections.graph.mentordailygraph', ['dailyQuestions' => $dailyQuestions]);
+        return view('web.sections.graph.mentordailygraph', ['dailyQuestions' => $dailyQuestions,'dailyActivities'=>$dailyActivities]);
     }
 }

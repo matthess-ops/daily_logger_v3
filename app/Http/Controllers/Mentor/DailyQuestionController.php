@@ -99,19 +99,20 @@ class DailyQuestionController extends Controller
 
         error_log('Mentor.DailyQuestions@update called');
         $validatedData = $request->validate([
-            'scores' => 'required|array',
+            'mentorScores' => 'required|array',
 
         ]);
         $dailyQuestion = DailyQuestion::findOrFail($question_id);
-        $dailyQuestion->mentor_scores = array_map('intval', $request->input('scores'));
+        $dailyQuestion->mentor_scores = array_map('intval', $request->input('mentorScores'));
         $dailyQuestion->mentor_filled = true;
         $dailyQuestion->mentor_filled_at = Carbon::now();
         $dailyQuestion->mentor_id = Auth::id();
-
+        $dailyQuestion->mentor_remark= $request->input('mentorRemark');
+        // error_log($request->input('mentor_remark'))
 
         // $dailyQuestion->scores = $request->input('scores');
         $dailyQuestion->save();
-        return redirect()->route('mentor.dailyquestion.index');
+        return redirect()->back();
     }
 
     /**
