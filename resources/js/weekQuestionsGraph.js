@@ -124,6 +124,49 @@ const addLogsToDataRange = (graphDateRange, filteredLogs) => {
     return graphDateRange;
 };
 
+const makeRemarks = (week8Graph,index)=>{
+    const week8GraphRemarksDiv = document.createElement('div')
+
+    week8GraphRemarksDiv.id = index
+    let remarksString  =""
+    week8Graph.questionRemarks.forEach(remark => {
+        if(remark.remark != ""){
+            const remarkString = remark.date.locale("nl").format("dddd DD-MM-YYYY") +
+            ": " + remark.remark
+            remarksString +='<p>'+remarkString+'</p>'
+        }
+
+    });
+
+    const htmlCodeBlock =
+
+    '<div id="accordion">'+
+    '<div class="card">'+
+    '<div class="card-header" id="headingOne">'+
+    '<h5 class="mb-0">'+
+    ' <button class="btn btn-link" data-toggle="collapse" data-target="#collapse' +index+'" aria-expanded="true"'+
+    'aria-controls="collapseOne">'+
+    'Clienten opmerkingen:'+
+    '</button>'+
+    '</h5>'+
+    '</div>'+
+
+    '<div id="collapse' +index+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
+    '<div class="card-body">'+
+  
+    remarksString+
+    '</div>'+
+    '</div>'+
+    '</div>'+
+    
+    '</div>'
+    week8GraphRemarksDiv.innerHTML =  htmlCodeBlock
+
+    document.getElementById("chartDiv").appendChild(week8GraphRemarksDiv)
+
+}
+
+
 //get for each unique question foreach 8 week graph in graphDateRange. The average
 // scores (for full 8 week graph, 8 average scores) of the unique question for the 8 week graph.
 const calculateGraphDataRangeQuestionAverages = (
@@ -150,9 +193,12 @@ const calculateGraphDataRangeQuestionAverages = (
                             return question === uniqueQuestion;
                         });
                         if (index != -1) {
-                            weekQuestionTotal =
+                            if(log.scores[index] != null){
+                                weekQuestionTotal =
                                 weekQuestionTotal + log.scores[index];
                             weekQuestionCount = weekQuestionCount + 1;
+                            }
+                           
                         }
                     }
                 });
@@ -303,6 +349,8 @@ const makeQuestionCharts = (dateRange) => {
             "chart_" + index,
             index
         );
+        makeRemarks(graph,index)
+
     });
 };
 
@@ -330,6 +378,37 @@ const filterDataRangeForCheckBoxes =(graphs,questions)=>{
 
 
 }
+
+const addRemarks = (dateRange)=>{
+ 
+    dateRange.forEach(week8graph => {
+        const firstWeekMonday = moment(week8graph.labels[0],"YYYY-WW")
+        const lastWeekSunday = moment(week8graph.labels[week8graph.labels.length-1],"YYYY-WW").day(7)
+
+        // console.log(firstWeekMonday,lastWeekMonday)
+        const fullQuestionLogs = dailyQuestions.filter((log) => {
+            if (
+                moment(log.date_today) >= firstWeekMonday &&
+                moment(log.date_today) <= lastWeekSunday
+            ) {
+                return log;
+            }
+        });
+        const questionRemarks = fullQuestionLogs.map((log)=>{
+            return {
+                date:moment(log.date_today),
+                remark: log.client_remark
+
+            }
+
+        })
+  
+        week8graph.questionRemarks = questionRemarks
+    });
+
+
+}
+
 
 //main function
 const generateWeeklyQuestionsGraphs = (startDate, endDate) => {
@@ -379,6 +458,10 @@ const generateWeeklyQuestionsGraphs = (startDate, endDate) => {
     const graphLabels = makeLabels(graphDatasets)
     // console.log("graphLabels")
     // console.log(graphLabels)
+
+    addRemarks(graphLabels)
+    console.log("remarks added")
+    console.log(graphLabels)
 
     const checkBoxes = document.getElementById("checkBoxes")
         if(checkBoxes.innerHTML !=""){

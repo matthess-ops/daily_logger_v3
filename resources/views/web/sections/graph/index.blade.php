@@ -116,22 +116,46 @@
 
         </div>
 
+        {{-- <div id="accordion">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                            aria-controls="collapseOne">
+                            Clienten opmerkingen:
+                        </button>
+                    </h5>
+                </div>
 
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                        had een slechte dag vandaag
+                    </div>
+                </div>
+            </div>
 
+            <div id='accordion'>
+                <div class='card'>
+                    <div class='card-header' id='headingOne'>
+                        <h5 class='mb-0'>
+                            <button class='btn btn-link' data-toggle='collapse' data-target='#collapseOne' aria-expanded='true'
+                                aria-controls='collapseOne'>
+                                Clienten opmerkingen:
+                            </button>
+                        </h5>
+                    </div>
+            
+                    <div id='collapseOne' class='collapse' aria-labelledby='headingOne' data-parent='#accordion'>
+                        <div class='card-body'>
+                            had een slechte dag vandaag
+                        </div>
+                    </div>
+                </div> --}}
 
-
-
-        {{--
-        <input type="week" min="2022-W01" max="2022-W07">
-
-        <input type="month" min="2022-01" max="2022-07"> --}}
-
-
-
-        {{-- //////////////////////////// --}}
-    @else
-        <div class="alert alert-warning">
-            <strong>Sorry!</strong> Geen logs gevonden.
-        </div>
+      
+        @else
+            <div class="alert alert-warning">
+                <strong>Sorry!</strong> Geen logs gevonden.
+            </div>
     @endif
 @endsection

@@ -161,6 +161,50 @@ const calculateGraphDataRangeMainActivityTotals =(graphDateRange,uniqueMainActiv
     });
     return formattedData
 }
+
+const makeRemarks = (week8Graph,index)=>{
+    const week8GraphRemarksDiv = document.createElement('div')
+
+    week8GraphRemarksDiv.id = index
+    let remarksString  =""
+    week8Graph.questionRemarks.forEach(remark => {
+        if(remark.remark != ""){
+            const remarkString = remark.date.locale("nl").format("dddd DD-MM-YYYY") +
+            ": " + remark.remark
+            remarksString +='<p>'+remarkString+'</p>'
+        }
+
+    });
+
+    const htmlCodeBlock =
+
+    '<div id="accordion">'+
+    '<div class="card">'+
+    '<div class="card-header" id="headingOne">'+
+    '<h5 class="mb-0">'+
+    ' <button class="btn btn-link" data-toggle="collapse" data-target="#collapse' +index+'" aria-expanded="true"'+
+    'aria-controls="collapseOne">'+
+    'Clienten opmerkingen:'+
+    '</button>'+
+    '</h5>'+
+    '</div>'+
+
+    '<div id="collapse' +index+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
+    '<div class="card-body">'+
+  
+    remarksString+
+    '</div>'+
+    '</div>'+
+    '</div>'+
+    
+    '</div>'
+    week8GraphRemarksDiv.innerHTML =  htmlCodeBlock
+
+    document.getElementById("chartDiv").appendChild(week8GraphRemarksDiv)
+
+}
+
+
 //calculate for each uniqueScaledActivity foreach week in the 8 week graph object
 //the weekly average score for the uniqueScaledActivity
 const calculateGraphDataRangeScaledActivityAverage = (graphDateRange,uniqueScaledActivities)=>{
@@ -335,13 +379,15 @@ const makeChart = (chartLabels, chartDatasets, chartName) => {
 
 // create for each 8 week object in graphDateRange an chart
 const makeWeekActivityCharts = (graphDateRange) => {
-    graphDateRange.forEach((graph) => {
+    graphDateRange.forEach((graph,index) => {
         makeChart(
             graph.labels,
             graph.filteredDatasets,
             "test_" + graph.labels,
             graph.labels
         );
+        makeRemarks(graph,index)
+
     });
 };
 
@@ -401,6 +447,37 @@ const filterDataRangeForCheckBoxes =(graphDateRange,checkedBoxes)=>{
 
 }
 
+const addRemarks = (dateRange)=>{
+    console.log("this sis the daterange")
+    console.log(dateRange)
+    dateRange.forEach(week8graph => {
+        const firstWeekMonday = moment(week8graph.labels[0],"YYYY-WW")
+        const lastWeekSunday = moment(week8graph.labels[week8graph.labels.length-1],"YYYY-WW").day(7)
+
+        // console.log(firstWeekMonday,lastWeekMonday)
+        const fullQuestionLogs = dailyQuestions.filter((log) => {
+            if (
+                moment(log.date_today) >= firstWeekMonday &&
+                moment(log.date_today) <= lastWeekSunday
+            ) {
+                return log;
+            }
+        });
+        const questionRemarks = fullQuestionLogs.map((log)=>{
+            return {
+                date:moment(log.date_today),
+                remark: log.client_remark
+
+            }
+
+        })
+  
+        week8graph.questionRemarks = questionRemarks
+    });
+
+
+}
+
 
 const generateWeeklyActivitiesGraphs = (startDate, endDate) => {
     console.log("this should not be lauched")
@@ -442,6 +519,7 @@ const generateWeeklyActivitiesGraphs = (startDate, endDate) => {
     // console.log(graphDatasets)
 
     const graphLabels = generateWeekActivityLabels(graphDatasets)
+    addRemarks(graphLabels)
     // console.log("graphlabels")
     // console.log(graphLabels)
     //remove all the checkboxes

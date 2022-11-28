@@ -221,6 +221,51 @@ const makeLabels = (dateRange)=>{
 
 }
 
+const makeRemarks = (week)=>{
+    const weekRemarksDiv = document.createElement('div')
+
+    weekRemarksDiv.id = week.weekNr
+    let remarksString  =""
+    let testconcat = ""
+    week.questionRemarks.forEach(remark => {
+        if(remark.remark != ""){
+            const remarkString = remark.date.locale("nl").format("dddd DD-MM-YYYY") +
+            ": " + remark.remark
+            remarksString +='<p>'+remarkString+'</p>'
+        }
+
+    });
+
+    const htmlCodeBlock =
+
+    '<div id="accordion">'+
+    '<div class="card">'+
+    '<div class="card-header" id="headingOne">'+
+    '<h5 class="mb-0">'+
+    ' <button class="btn btn-link" data-toggle="collapse" data-target="#collapse' +week.weekNr+'" aria-expanded="true"'+
+    'aria-controls="collapseOne">'+
+    'Clienten opmerkingen:'+
+    '</button>'+
+    '</h5>'+
+    '</div>'+
+
+    '<div id="collapse' +week.weekNr+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
+    '<div class="card-body">'+
+  
+    remarksString+
+    '</div>'+
+    '</div>'+
+    '</div>'+
+    
+    '</div>'
+    weekRemarksDiv.innerHTML =  htmlCodeBlock
+
+    document.getElementById("chartDiv").appendChild(weekRemarksDiv)
+
+}
+
+
+
 //creates chartjs charts
 const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
     let chartStatus = Chart.getChart(chartName); // <canvas> id
@@ -272,6 +317,8 @@ const makeQuestionCharts = (dateRange) => {
             "chartname_" + week.weekNr,
             week.weekNr
         );
+        makeRemarks(week)
+
     });
 };
 
@@ -332,6 +379,32 @@ const filterDataRangeForCheckBoxes =(dateRange,questions)=>{
 
 }
 
+const addRemarks = (dateRange)=>{
+
+    dateRange.forEach(week => {
+        const fullQuestionLogs = dailyQuestions.filter((log) => {
+            if (
+                moment(log.date_today) >= week.mondayDate &&
+                moment(log.date_today) <= week.sundayDate
+            ) {
+                return log;
+            }
+        });
+        const questionRemarks = fullQuestionLogs.map((log)=>{
+            return {
+                date:moment(log.date_today),
+                remark: log.client_remark
+
+            }
+
+        })
+  
+        week.questionRemarks = questionRemarks
+    });
+
+
+}
+
 
 //main function - this is called when the user presses on the make graph button
 const generateDailyQuestionsGraphs = (startDate, endDate) => {
@@ -377,6 +450,9 @@ const generateDailyQuestionsGraphs = (startDate, endDate) => {
     const graphLabels = makeLabels(graphDatasets)
     // console.log("graphLabels")
     // console.log(graphLabels)
+
+    addRemarks(graphLabels)
+    console.log(graphLabels)
 
     //a new graph needs to be generated therefor the checkboxes might change
     //therefor the checkboxes need to be deleted

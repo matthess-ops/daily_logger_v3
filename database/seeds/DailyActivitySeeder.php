@@ -80,6 +80,8 @@ class DailyActivitySeeder extends Seeder
                             // if timeslot has an main activity the the scorearray should contain random values 0-10
                             foreach ($scoreArray as $score) {
                                 $randomScore = rand(0, 10);
+                                // $randomScore = 5;
+
                                 array_push($randScoreArray, $randomScore);
                             }
                             array_push($newScaledActivitiesScores, $randScoreArray);
@@ -117,6 +119,7 @@ class DailyActivitySeeder extends Seeder
                             // if timeslot has an main activity the the scorearray should contain random values 0-10
                             foreach ($scoreArray as $score) {
                                 $randomScore = rand(0, 10);
+                                // $randomScore = 5;
                                 array_push($randScoreArray, $randomScore);
                             }
                             array_push($newScaledActivitiesScores, $randScoreArray);

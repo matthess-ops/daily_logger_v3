@@ -399,21 +399,49 @@ const makeWeekActivityCharts = (dateRange) => {
     });
 };
 
+
+
+
 const makeRemarks = (week)=>{
     const weekRemarksDiv = document.createElement('div')
+
     weekRemarksDiv.id = week.weekNr
+    let remarksString  =""
+    let testconcat = ""
     week.questionRemarks.forEach(remark => {
         if(remark.remark != ""){
-            const remarkP = document.createElement('p')
-            remarkP.classList.add('text-left')
-            remarkP.innerText = remark.date.locale("nl").format("dddd DD-MM-YYYY") +
+            const remarkString = remark.date.locale("nl").format("dddd DD-MM-YYYY") +
             ": " + remark.remark
-            weekRemarksDiv.appendChild(remarkP)
+            remarksString +='<p>'+remarkString+'</p>'
         }
 
     });
-    document.getElementById("chartDiv").appendChild(weekRemarksDiv)
 
+    const htmlCodeBlock =
+
+    '<div id="accordion">'+
+    '<div class="card">'+
+    '<div class="card-header" id="headingOne">'+
+    '<h5 class="mb-0">'+
+    ' <button class="btn btn-link" data-toggle="collapse" data-target="#collapse' +week.weekNr+'" aria-expanded="true"'+
+    'aria-controls="collapseOne">'+
+    'Clienten opmerkingen:'+
+    '</button>'+
+    '</h5>'+
+    '</div>'+
+
+    '<div id="collapse' +week.weekNr+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
+    '<div class="card-body">'+
+  
+    remarksString+
+    '</div>'+
+    '</div>'+
+    '</div>'+
+    
+    '</div>'
+    weekRemarksDiv.innerHTML =  htmlCodeBlock
+
+    document.getElementById("chartDiv").appendChild(weekRemarksDiv)
 
 }
 // create the scaled activities and main activities checkboxes
@@ -490,12 +518,10 @@ const addRemarks = (dateRange)=>{
             }
 
         })
-        // console.log("questionLogs")
-        // console.log(questionRemarks)
+  
         week.questionRemarks = questionRemarks
     });
 
-    // return dateRange
 
 }
 
