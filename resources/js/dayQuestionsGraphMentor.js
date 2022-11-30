@@ -108,6 +108,7 @@ const makeDailyDataRange = (
             datasets: null,
             labels: null,
             filteredDatasets: null,
+            
         };
         dateRange.push(newWeek);
     }
@@ -142,9 +143,11 @@ const calcDailyQuestionsAverages = (dataRange) => {
 
     dataRange.forEach((week) => {
         let weekQuestionScores = []
+        let weekQuestionScoresMentor = []
         week.uniqueDailyQuestions.forEach((uniqueDailyQuestion) => {
             let questionScoreArray = []
             let questionScoreArrayMentor = []
+
             week.dailyQuestionsLogs.forEach(dailyQuestionLog => {
                 if (dailyQuestionLog.log != null) {
                     //since the names of the daily question and the scores of the daily questions
@@ -156,13 +159,30 @@ const calcDailyQuestionsAverages = (dataRange) => {
                         return question === uniqueDailyQuestion
                     })
                     if (index != -1) {
-                        questionScoreArray.push(dailyQuestionLog.log.scores[index])
-                        questionScoreArrayMentor.push(dailyQuestionLog.log.mentor_scores[index])
+                        if(dailyQuestionLog.log.scores[index] == null){
+                            questionScoreArray.push(0)
+                        }else{
+                            questionScoreArray.push(dailyQuestionLog.log.scores[index])
+
+                        }
+
+                        if(dailyQuestionLog.log.mentor_scores[index] == null){
+                            questionScoreArrayMentor.push(0)
+                            // questionScoreArray.push(0)
+                        }else{
+                            // questionScoreArray.push(dailyQuestionLog.log.scores[index])
+                            questionScoreArrayMentor.push(dailyQuestionLog.log.mentor_scores[index])
+
+                        }
+
                     } else {
                         questionScoreArray.push(0)
+                        questionScoreArrayMentor.push(0)
+
                     }
                 } else {
                     questionScoreArray.push(0)
+                    questionScoreArrayMentor.push(0)
 
                 }
 
@@ -171,9 +191,14 @@ const calcDailyQuestionsAverages = (dataRange) => {
                 question: uniqueDailyQuestion,
                 scores: questionScoreArray,
             })
+            weekQuestionScoresMentor.push({
+                question: uniqueDailyQuestion,
+                scores: questionScoreArrayMentor,
+            })
 
         });
         week.questionsWeekScores = weekQuestionScores
+        week.questionsWeekScoresMentor = weekQuestionScoresMentor
     });
     return dataRange
 }
@@ -181,19 +206,33 @@ const calcDailyQuestionsAverages = (dataRange) => {
 //convert for each week in dataRange the question scores to chartjs compatible datasets
 const makeGraphDatasets = (dateRange) => {
     dateRange.forEach((week) => {
-        let colorIndex = 0
+        let colorIndexClient = 0
+        let colorIndexMentor = 0
         let datasets = []
+        let datasetsMentor =[]
         week.questionsWeekScores.forEach((question, index) => {
-            colorIndex += 1;
+            colorIndexClient += 1;
             const dataset = {
                 label: question.question ,
-                backgroundColor: colorScheme[colorIndex],
+                backgroundColor: colorScheme[colorIndexClient],
                 data: question.scores,
             };
             datasets.push(dataset);
         });
+
+        week.questionsWeekScoresMentor.forEach((question, index) => {
+            colorIndexMentor += 1;
+            const dataset = {
+                label: question.question ,
+                backgroundColor: colorScheme[colorIndexMentor],
+                data: question.scores,
+            };
+            datasetsMentor.push(dataset);
+        });
         week.datasets = datasets
         week.filteredDatasets =datasets
+        week.datasetsMentor = datasetsMentor
+        week.filteredDatasetsMentor = datasetsMentor
     })
     return dateRange
 }
@@ -217,8 +256,63 @@ const makeLabels = (dateRange)=>{
 
 }
 
+const makeRemarks = (week,title,graphNumber,clientOrMentor)=>{
+    const weekRemarksDiv = document.createElement('div')
+
+    weekRemarksDiv.id = graphNumber
+    let remarksString  =""
+    week.questionRemarks.forEach(remark => {
+        if(clientOrMentor == "client"){
+            if(remark.remark != ""){
+                const remarkString = remark.date.locale("nl").format("dddd DD-MM-YYYY") +
+                ": " + remark.remark
+                remarksString +='<p>'+remarkString+'</p>'
+            }
+        }
+
+        if(clientOrMentor == "mentor"){
+            if(remark.remarkMentor!= ""){
+                const remarkString = remark.date.locale("nl").format("dddd DD-MM-YYYY") +
+                ": " + remark.remarkMentor
+                remarksString +='<p>'+remarkString+'</p>'
+            }
+        }
+     
+
+    });
+
+    const htmlCodeBlock =
+
+    '<div id="accordion">'+
+    '<div class="card">'+
+    '<div class="card-header" id="headingOne">'+
+    '<h5 class="mb-0">'+
+    ' <button class="btn btn-link" data-toggle="collapse" data-target="#collapse' +graphNumber+'" aria-expanded="true"'+
+    'aria-controls="collapseOne">'+
+    title+
+    '</button>'+
+    '</h5>'+
+    '</div>'+
+
+    '<div id="collapse' +graphNumber+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
+    '<div class="card-body">'+
+  
+    remarksString+
+    '</div>'+
+    '</div>'+
+    '</div>'+
+    
+    '</div>'
+    weekRemarksDiv.innerHTML =  htmlCodeBlock
+
+    document.getElementById("chartDiv").appendChild(weekRemarksDiv)
+
+}
+
+
+
 //creates chartjs charts
-const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
+const makeChart = (chartLabels, chartDatasets, chartName, title) => {
     let chartStatus = Chart.getChart(chartName); // <canvas> id
     if (chartStatus != undefined) {
         chartStatus.destroy();
@@ -240,7 +334,7 @@ const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
             plugins: {
                 title: {
                     display: true,
-                    text: "Week resultaten :" + weeknr,
+                    text: title,
                 },
             },
             responsive: true,
@@ -261,13 +355,24 @@ const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
 
 //create for each week in dateRange an seperate chartjs chart
 const makeQuestionCharts = (dateRange) => {
-    dateRange.forEach((week) => {
+    dateRange.forEach((week,index) => {
+        //client chars plus remarks
         makeChart(
             week.labels,
             week.filteredDatasets,
-            "chartname_" + week.weekNr,
-            week.weekNr
+            "client_chart_" + index,
+            "clienten week resultaten voor week: "+week.weekNr
         );
+        makeRemarks(week,"Client week opmerkingen","client_chart_" + index,"client")
+        /////mentor charts plus remarks
+        makeChart(
+            week.labels,
+            week.filteredDatasetsMentor,
+            "mentor_chart_" + index,
+            "Mentor week resultaten voor week: "+week.weekNr
+        );
+        makeRemarks(week,"Mentor week opmerkingen","mentor_chart_" + index,"mentor")
+
     });
 };
 
@@ -328,12 +433,41 @@ const filterDataRangeForCheckBoxes =(dateRange,questions)=>{
 
 }
 
+const addRemarks = (dateRange)=>{
+
+    dateRange.forEach(week => {
+        const fullQuestionLogs = dailyQuestions.filter((log) => {
+            if (
+                moment(log.date_today) >= week.mondayDate &&
+                moment(log.date_today) <= week.sundayDate
+            ) {
+                return log;
+            }
+        });
+        const questionRemarks = fullQuestionLogs.map((log)=>{
+            return {
+                date:moment(log.date_today),
+                remark: log.client_remark,
+                remarkMentor:log.mentor_remark
+            }
+
+        })
+  
+        week.questionRemarks = questionRemarks
+    });
+
+
+}
+
 
 //main function - this is called when the user presses on the make graph button
-const generateDailyQuestionsGraphs = (startDate, endDate) => {
+const generateDailyQuestionsGraphsMentor = (startDate, endDate) => {
+    console.log("daily quesetions graph mentor")
+    // console.log("daily question logs")
+    // console.log(dailyQuestions)
 
 
-    // console.log("generateDailyQuestionsGraphs called")
+    // // console.log("generateDailyQuestionsGraphs called")
     // console.log("daily questions")
     // console.log(dailyQuestions)
 
@@ -363,10 +497,8 @@ const generateDailyQuestionsGraphs = (startDate, endDate) => {
     // console.log(dailyQuestionsLogDataRange)
 
     const calcedDailyQuestionsAverages = calcDailyQuestionsAverages(dailyQuestionsLogDataRange)
-
-
-    // console.log("calcedDailyQuestionsAverages")
-    // console.log(calcedDailyQuestionsAverages)
+    console.log("calcedDailyQuestionsAverages")
+    console.log(calcedDailyQuestionsAverages)
 
     const graphDatasets = makeGraphDatasets(calcedDailyQuestionsAverages)
     // console.log("graphDatasets")
@@ -375,6 +507,10 @@ const generateDailyQuestionsGraphs = (startDate, endDate) => {
     const graphLabels = makeLabels(graphDatasets)
     // console.log("graphLabels")
     // console.log(graphLabels)
+
+    addRemarks(graphLabels)
+    console.log("graphlabels")
+    console.log(graphLabels)
 
     //a new graph needs to be generated therefor the checkboxes might change
     //therefor the checkboxes need to be deleted
@@ -400,5 +536,4 @@ const generateDailyQuestionsGraphs = (startDate, endDate) => {
 
 
 }
-
-export default generateDailyQuestionsGraphs
+export default generateDailyQuestionsGraphsMentor

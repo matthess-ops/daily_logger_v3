@@ -6,8 +6,8 @@ import generateWeeklyActivitiesGraphs from "./weekActivitiesGraph"
 import generateDailyQuestionsGraphs from "./dayQuestionsGraph"
 import generateWeeklyQuestionsGraphs from "./weekQuestionsGraph"
 
-import generateMentorDailyQuestionsGraphs from "./dayQuestionsGraphMentor"
-
+import generateDailyQuestionsGraphsMentor from "./dayQuestionsGraphMentor"
+import generateWeeklyQuestionsGraphsMentor from "./weekQuestionsGraphMentor"
 import testremarks from "./testremarks"
 
 
@@ -194,5 +194,5 @@ main();
 //  generateDailyActivitiesGraphs("2022-W45", "2022-W47")
 // generateWeeklyActivitiesGraphs("2022-W39", "2022-W47")
 //generateWeeklyQuestionsGraphs("2022-W35", "2022-W47")
-generateMentorDailyQuestionsGraphs("2022-W35", "2022-W45")
-
+// generateDailyQuestionsGraphsMentor("2022-W35", "2022-W45")
+generateWeeklyQuestionsGraphsMentor("2022-W35", "2022-W45")

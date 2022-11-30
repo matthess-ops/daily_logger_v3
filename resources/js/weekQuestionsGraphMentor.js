@@ -124,6 +124,61 @@ const addLogsToDataRange = (graphDateRange, filteredLogs) => {
     return graphDateRange;
 };
 
+const makeRemarks = (week,title,graphNumber,clientOrMentor)=>{
+    const weekRemarksDiv = document.createElement('div')
+
+    weekRemarksDiv.id = graphNumber
+    let remarksString  =""
+    week.questionRemarks.forEach(remark => {
+        if(clientOrMentor == "client"){
+            if(remark.remark != ""){
+                const remarkString = remark.date.locale("nl").format("dddd DD-MM-YYYY") +
+                ": " + remark.remark
+                remarksString +='<p>'+remarkString+'</p>'
+            }
+        }
+
+        if(clientOrMentor == "mentor"){
+            if(remark.remarkMentor!= ""){
+                const remarkString = remark.date.locale("nl").format("dddd DD-MM-YYYY") +
+                ": " + remark.remarkMentor
+                remarksString +='<p>'+remarkString+'</p>'
+            }
+        }
+     
+
+    });
+
+    const htmlCodeBlock =
+
+    '<div id="accordion">'+
+    '<div class="card">'+
+    '<div class="card-header" id="headingOne">'+
+    '<h5 class="mb-0">'+
+    ' <button class="btn btn-link" data-toggle="collapse" data-target="#collapse' +graphNumber+'" aria-expanded="true"'+
+    'aria-controls="collapseOne">'+
+    title+
+    '</button>'+
+    '</h5>'+
+    '</div>'+
+
+    '<div id="collapse' +graphNumber+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
+    '<div class="card-body">'+
+  
+    remarksString+
+    '</div>'+
+    '</div>'+
+    '</div>'+
+    
+    '</div>'
+    weekRemarksDiv.innerHTML =  htmlCodeBlock
+
+    document.getElementById("chartDiv").appendChild(weekRemarksDiv)
+
+}
+
+
+
 //get for each unique question foreach 8 week graph in graphDateRange. The average
 // scores (for full 8 week graph, 8 average scores) of the unique question for the 8 week graph.
 const calculateGraphDataRangeQuestionAverages = (
@@ -131,28 +186,43 @@ const calculateGraphDataRangeQuestionAverages = (
     uniqueQuestions
 ) => {
     let formattedData = [];
+    // let formattedDataMentor = [];
     graphDateRange.forEach((graph, index) => {
         let graphQuestionResults = [];
+        let graphQuestionResultsMentor = [];
+
         uniqueQuestions.forEach((uniqueQuestion) => {
             let graphQuestionWeekTotals = [];
+            let graphQuestionWeekTotalsMentor = [];
             graph.forEach((week) => {
                 let weekQuestionTotal = 0;
                 let weekQuestionCount = 0;
+                let weekQuestionTotalMentor = 0;
+                let weekQuestionCountMentor = 0;
                 week.questionsLogs.forEach((log) => {
                     if (log != null) {
 
                         //since the names of the daily question and the scores of the daily questions
-                    // are in seperate arrays. the sequence of the daily question in the names array might differ
-                    //between dailyQuestionLogs. Therefor the index of the uniqueQuestion in the names array
-                    //first need to be determined. With this index the correct score of the dailyQuestion name can
-                    // be index from the score array
+                        // are in seperate arrays. the sequence of the daily question in the names array might differ
+                        //between dailyQuestionLogs. Therefor the index of the uniqueQuestion in the names array
+                        //first need to be determined. With this index the correct score of the dailyQuestion name can
+                        // be index from the score array
                         const index = log.questions.findIndex((question) => {
                             return question === uniqueQuestion;
                         });
                         if (index != -1) {
-                            weekQuestionTotal =
-                                weekQuestionTotal + log.scores[index];
-                            weekQuestionCount = weekQuestionCount + 1;
+                            if (log.scores[index] != null) {
+                                weekQuestionTotal =
+                                    weekQuestionTotal + log.scores[index];
+                                weekQuestionCount = weekQuestionCount + 1;
+                            }
+
+                            if (log.mentor_scores[index] != null) {
+                                weekQuestionTotalMentor =
+                                    weekQuestionTotalMentor + log.mentor_scores[index];
+                                weekQuestionCountMentor = weekQuestionCountMentor + 1;
+                            }
+
                         }
                     }
                 });
@@ -165,14 +235,28 @@ const calculateGraphDataRangeQuestionAverages = (
                     const averageWeekScore = 0;
                     graphQuestionWeekTotals.push(averageWeekScore);
                 }
+                ////////mentor calc
+                if (weekQuestionCountMentor > 0) {
+                    const averageWeekScoreMentor =
+                        weekQuestionTotalMentor / weekQuestionCountMentor;
+                    graphQuestionWeekTotalsMentor.push(averageWeekScoreMentor);
+                } else { //needed because else an division by zero error can occur
+                    const averageWeekScoreMentor = 0;
+                    graphQuestionWeekTotalsMentor.push(averageWeekScoreMentor);
+                }
             });
             graphQuestionResults.push({
                 question: uniqueQuestion,
                 questionGraphScores: graphQuestionWeekTotals,
             });
+            graphQuestionResultsMentor.push({
+                questionMentor: uniqueQuestion,
+                questionGraphScoresMentor: graphQuestionWeekTotalsMentor,
+            });
         });
 
         const formatData = {
+            graphQuestionAveragesMentor: graphQuestionResultsMentor,
             graphQuestionAverages: graphQuestionResults,
             weekData: graph,
         };
@@ -184,20 +268,39 @@ const calculateGraphDataRangeQuestionAverages = (
 //convert all 8 week graph question averages to chartjs compatable datasets
 const makeGraphDatasets = (dateRange) => {
     dateRange.forEach((graph) => {
-        let colorIndex = 0;
+        let colorIndexClient = 0;
+        let colorIndexMentor = 0;
+
         let datasets = [];
+        let datasetsMentor = [];
         graph.graphQuestionAverages.forEach((graphQuestion) => {
 
-            colorIndex += 1;
+            colorIndexClient += 1;
             const dataset = {
                 label: graphQuestion.question,
-                backgroundColor: colorScheme[colorIndex],
+                backgroundColor: colorScheme[colorIndexClient],
                 data: graphQuestion.questionGraphScores,
             };
             datasets.push(dataset);
         });
+
+    
         graph.datasets = datasets;
         graph.filteredDatasets = datasets;
+
+        graph.graphQuestionAveragesMentor.forEach((graphQuestion) => {
+
+            colorIndexMentor += 1;
+            const dataset = {
+                label: graphQuestion.question,
+                backgroundColor: colorScheme[colorIndexMentor],
+                data: graphQuestion.questionGraphScores,
+            };
+            datasetsMentor.push(dataset);
+        });
+
+        graph.datasetsMentor = datasets;
+        graph.filteredDatasetsMentor = datasets;
     });
 
     return dateRange;
@@ -221,10 +324,10 @@ const makeLabels = (graphDataRange) => {
 };
 
 //make the question checkboxes
-const makeGroupCheckBoxes =(divId,checkBoxNames,title)=>{
-    const groupDiv =document.createElement("div")
+const makeGroupCheckBoxes = (divId, checkBoxNames, title) => {
+    const groupDiv = document.createElement("div")
     groupDiv.id = divId
-    const checkBoxDiv =document.getElementById("checkBoxes")
+    const checkBoxDiv = document.getElementById("checkBoxes")
     checkBoxDiv.appendChild(groupDiv)
     const divOfInterest = document.getElementById(divId)
     checkBoxDiv.appendChild(divOfInterest)
@@ -234,7 +337,7 @@ const makeGroupCheckBoxes =(divId,checkBoxNames,title)=>{
     divOfInterest.appendChild(newTitle);
 
 
-    checkBoxNames.forEach((checkBoxName,index) => {
+    checkBoxNames.forEach((checkBoxName, index) => {
         const newLabel = document.createElement("label");
         newLabel.setAttribute("for", checkBoxName);
         newLabel.innerHTML = checkBoxName;
@@ -243,7 +346,7 @@ const makeGroupCheckBoxes =(divId,checkBoxNames,title)=>{
         newCheckbox.setAttribute("type", "checkbox");
         newCheckbox.setAttribute("id", checkBoxName);
         newCheckbox.setAttribute("checked", true);
-        newCheckbox.setAttribute('value',checkBoxName)
+        newCheckbox.setAttribute('value', checkBoxName)
         const br = document.createElement("br");
 
         divOfInterest.appendChild(newLabel);
@@ -253,7 +356,7 @@ const makeGroupCheckBoxes =(divId,checkBoxNames,title)=>{
 }
 
 //makes the chart
-const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
+const makeChart = (chartLabels, chartDatasets, chartName, title) => {
     let chartStatus = Chart.getChart(chartName); // <canvas> id
     if (chartStatus != undefined) {
         chartStatus.destroy();
@@ -275,7 +378,7 @@ const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
             plugins: {
                 title: {
                     display: true,
-                    text: "Week resultaten :" + weeknr,
+                    text: title,
                 },
             },
             responsive: true,
@@ -296,19 +399,29 @@ const makeChart = (chartLabels, chartDatasets, chartName, weeknr) => {
 
 //create for each 8 week graph in dateRange a seperate chart
 const makeQuestionCharts = (dateRange) => {
-    dateRange.forEach((graph,index) => {
+    dateRange.forEach((graph, index) => {
         makeChart(
             graph.labels,
             graph.filteredDatasets,
-            "chart_" + index,
-            index
+            "client_chart_" + index,
+            "client 8 weken grafiek"
         );
+        makeRemarks(graph,"Client 8 week opmerkingen","client_chart_" + index,"client")
+
+        makeChart(
+            graph.labels,
+            graph.filteredDatasetsMentor,
+            "mentor_chart_" + index,
+            "mentor 8 weken grafiek"
+        );
+        makeRemarks(graph,"Mentor 8 week opmerkingen","mentor_chart_" + index,"mentor")
+
     });
 };
 
 
 //foreach graph keep the question data of interest
-const filterDataRangeForCheckBoxes =(graphs,questions)=>{
+const filterDataRangeForCheckBoxes = (graphs, questions) => {
 
     const labelsToRemove = questions
     graphs.forEach((graph) => {
@@ -316,11 +429,11 @@ const filterDataRangeForCheckBoxes =(graphs,questions)=>{
         graph.datasets.forEach(label => {
             let keepData = false
             labelsToRemove.forEach(labelToRemove => {
-                    if(label.label == labelToRemove){
-                        keepData = true
-                    }
+                if (label.label == labelToRemove) {
+                    keepData = true
+                }
             });
-            if(keepData == true){
+            if (keepData == true) {
                 filteredGraphDatasets.push(label)
             }
         });
@@ -331,8 +444,40 @@ const filterDataRangeForCheckBoxes =(graphs,questions)=>{
 
 }
 
+const addRemarks = (dateRange) => {
+
+    dateRange.forEach(week8graph => {
+        const firstWeekMonday = moment(week8graph.labels[0], "YYYY-WW")
+        const lastWeekSunday = moment(week8graph.labels[week8graph.labels.length - 1], "YYYY-WW").day(7)
+
+        // console.log(firstWeekMonday,lastWeekMonday)
+        const fullQuestionLogs = dailyQuestions.filter((log) => {
+            if (
+                moment(log.date_today) >= firstWeekMonday &&
+                moment(log.date_today) <= lastWeekSunday
+            ) {
+                return log;
+            }
+        });
+        const questionRemarks = fullQuestionLogs.map((log) => {
+            return {
+                date: moment(log.date_today),
+                remark: log.client_remark,
+                remarkMentor: log.mentor_remark
+
+            }
+
+        })
+
+        week8graph.questionRemarks = questionRemarks
+    });
+
+
+}
+
+
 //main function
-const generateWeeklyQuestionsGraphs = (startDate, endDate) => {
+const generateWeeklyQuestionsGraphsMentor = (startDate, endDate) => {
     console.log("generateWeeklyQuestionsGraphs called");
     const startDateStr = startDate;
     const endDateStr = endDate;
@@ -366,8 +511,8 @@ const generateWeeklyQuestionsGraphs = (startDate, endDate) => {
             graphDataRangeLogs,
             uniqueQuestions
         );
-    // console.log("calculatedGraphDataRangeQuestionsAverage");
-    // console.log(calculatedGraphDataRangeQuestionsAverage);
+    console.log("calculatedGraphDataRangeQuestionsAverage");
+    console.log(calculatedGraphDataRangeQuestionsAverage);
 
     const graphDatasets = makeGraphDatasets(
         calculatedGraphDataRangeQuestionsAverage,
@@ -380,23 +525,27 @@ const generateWeeklyQuestionsGraphs = (startDate, endDate) => {
     // console.log("graphLabels")
     // console.log(graphLabels)
 
+    addRemarks(graphLabels)
+    console.log("remarks added")
+    console.log(graphLabels)
+
     const checkBoxes = document.getElementById("checkBoxes")
-        if(checkBoxes.innerHTML !=""){
-            checkBoxes.innerHTML = ""
+    if (checkBoxes.innerHTML != "") {
+        checkBoxes.innerHTML = ""
 
-        }
+    }
 
-    makeGroupCheckBoxes('questionCheckBoxes',uniqueQuestions,"Filter vragen:")
+    makeGroupCheckBoxes('questionCheckBoxes', uniqueQuestions, "Filter vragen:")
     makeQuestionCharts(graphLabels)
-    document.getElementById('checkBoxes').addEventListener('change',()=>{
+    document.getElementById('checkBoxes').addEventListener('change', () => {
 
         const checkedBoxes = uniqueQuestions.filter(checkBoxId =>
-            document.getElementById(checkBoxId).checked ==true
-            )
+            document.getElementById(checkBoxId).checked == true
+        )
 
-            filterDataRangeForCheckBoxes(graphLabels,checkedBoxes)
+        filterDataRangeForCheckBoxes(graphLabels, checkedBoxes)
 
     })
 };
 
-export default generateWeeklyQuestionsGraphs;
+export default generateWeeklyQuestionsGraphsMentor;
