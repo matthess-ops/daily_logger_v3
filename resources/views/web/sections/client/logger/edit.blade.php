@@ -1,12 +1,9 @@
 @extends('web.layout.navbar')
 
 @section('content')
-    <h3>web.client.logger.edit.blade.php test</h3>
+    <h3>web.client.logger.edit.blade.php</h3>
+    <h3>Rapportage vandaag:</h3>
 
-    {{-- <h2>daily questions</h2>
-    {{ json_encode($dailyQuestions) }}
-    <h2>daily activities</h2>
-    {{ json_encode($dailyActivityResults) }} --}}
     <script src="{{ asset('js/checkHourBoxes.js') }}" defer></script>
 
 

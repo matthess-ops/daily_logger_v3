@@ -154,7 +154,7 @@ Route::group(['prefix' => 'overzicht'], function() {
 
 });
 
-
+Route::patch('worktime/{client_id}/update', 'ClientWorkTimeController@update')->name('clientWorkTime.update')->middleware('auth');
 
 
 
