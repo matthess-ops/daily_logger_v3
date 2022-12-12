@@ -25,3 +25,12 @@ const checkHourButtons = ()=>{
     });
 }
 checkHourButtons()
+
+const textstuff = ()=>{
+
+    console.log("textstuff called")
+}
+
+
+function test() {
+    console.log("werkt")    }

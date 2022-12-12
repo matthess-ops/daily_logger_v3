@@ -1,12 +1,19 @@
 @extends('web.layout.navbar')
 
 @section('content')
+<ul>
+    <li>waarde duplicaties uit de frontend halen om de layout rustiger te maken</li>
+    <li>Wanneer een uurblok in is gevuld deze minimizen</li>
+    <li>gehele uur selecteren knop anders makens cleaner</li>
+    <li>dagelijkse rapportage vragen buttons van maken ipv een drop down</li>
+</ul>
     <h3>web.client.logger.edit.blade.php</h3>
     <h3>Rapportage vandaag:</h3>
 
+ 
+
     <script src="{{ asset('js/checkHourBoxes.js') }}" defer></script>
-
-
+ 
     @if ($dailyQuestions == null or $dailyActivityResults == null)
         <h2>Looks like that there arent any entries</h2>
     @else
@@ -223,3 +230,9 @@
 
 
 @endsection
+
+
+<script>
+    function myFunction() {
+console.log("werkt")    }
+    </script>

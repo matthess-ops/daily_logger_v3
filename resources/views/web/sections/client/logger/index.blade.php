@@ -2,6 +2,9 @@
 
 @section('content')
     <h3>web.client.logger.index.blade.php</h3>
+    <ul>
+        <li>werkt dit</li>
+    </ul>
     @foreach ($dailyQuestions as $dailyQuestion)
         <div class="row">
             {{ 'dailyquest s/c ' . json_encode($dailyQuestion->started).json_encode($dailyQuestion->completed) }}
