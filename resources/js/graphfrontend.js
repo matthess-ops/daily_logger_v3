@@ -188,7 +188,7 @@ main();
 
 // generateDailyQuestionsGraphs("2022-W35", "2022-W45")
 //  generateDailyActivitiesGraphs("2022-W45", "2022-W47")
-generateWeeklyActivitiesGraphs("2022-W39", "2022-W47")
+// generateWeeklyActivitiesGraphs("2022-W39", "2022-W47")
 //generateWeeklyQuestionsGraphs("2022-W35", "2022-W47")
 
 
