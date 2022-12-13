@@ -104,7 +104,7 @@ eval("console.log(\"check hour boxes function called\");\n\nvar checkHourButtons
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\matthijn\Desktop\daily_logger_v3\daily_logger_v3\resources\js\checkHourBoxes.js */"./resources/js/checkHourBoxes.js");
+module.exports = __webpack_require__(/*! C:\Users\desktop\Desktop\daily_logger_v3\daily_logger_v3\resources\js\checkHourBoxes.js */"./resources/js/checkHourBoxes.js");
 
 
 /***/ })

@@ -1,19 +1,27 @@
 @extends('web.layout.navbar')
 
 @section('content')
-<ul>
+    {{-- <ul>
     <li>waarde duplicaties uit de frontend halen om de layout rustiger te maken</li>
     <li>Wanneer een uurblok in is gevuld deze minimizen</li>
     <li>gehele uur selecteren knop anders makens cleaner</li>
     <li>dagelijkse rapportage vragen buttons van maken ipv een drop down</li>
 </ul>
-    <h3>web.client.logger.edit.blade.php</h3>
-    <h3>Rapportage vandaag:</h3>
+    <h3>web.client.logger.edit.blade.php</h3> --}}
+    {{-- <h3>Activiteiten logger:</h3> --}}
+    <ul>
+        <li>Ymko vragen als hij de tijd per blokje wil of alleen aangeven als block vakn 10:00-11:00</li>
+    <li>columns fixen voor smartphone en desktop</li>
+    </ul>
 
- 
+
 
     <script src="{{ asset('js/checkHourBoxes.js') }}" defer></script>
- 
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> --}}
+
+    {{-- find correct cdn link later --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+
     @if ($dailyQuestions == null or $dailyActivityResults == null)
         <h2>Looks like that there arent any entries</h2>
     @else
@@ -25,23 +33,30 @@
             <input name="dailyActivityId" type="hidden" value="{{ $dailyActivityResults->id }}">
 
 
-            <button class="btn btn-primary m-1" type="submit" name="action" value="update">Opslaan</button>
 
-            <div class="form-group row">
-                <label>Main activity</label>
-                <select class="form-control" name="main">
-                    @foreach ($activities as $activity)
-                        @if ($activity->type == 'main')
-                            <option value="{{ $activity->id }}">{{ $activity->value }}</option>
-                        @endif
-                    @endforeach
-                </select>
+            <div class="row">
+                <div class="col-12">
+                    <h5>Activiteiten logger</h5>
+
+                </div>
+
             </div>
 
             <div class="row">
-                <h3>Scaled values</h3>
+                <div class="col-12">
+                    <label for="main">Activiteiten</label>
+                    <select class="form-control" name="main">
+                        @foreach ($activities as $activity)
+                            @if ($activity->type == 'main')
+                                <option value="{{ $activity->id }}">{{ $activity->value }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
 
             </div>
+
+
             @foreach ($activities as $activity)
                 @if ($activity->type == 'scaled')
                     <div class="row">
@@ -49,7 +64,8 @@
                         <div class="col-12">
 
                             <div class="form-group">
-                                <label for="{{ $activity->id }}">{{ $activity->value }}</label>
+                                <label for=" {{ $activity->id }}">Score tijdens activiteit voor:
+                                    {{ $activity->value }}</label>
                                 <select class="form-control" id="{{ $activity->id }}" name="scaled[]">
                                     <option value="0">n.v.t</option>
 
@@ -76,15 +92,16 @@
                 @endif
             @endforeach
 
+
             <div class="row">
                 <div class="col-1">
-                    index
+                    {{-- index --}}
                 </div>
                 <div class="col-2">
-                    time slot
+                    {{-- time slot --}}
                 </div>
                 <div class="col-2">
-                    main activity
+                    Activitieit
                 </div>
                 <div class="col-6">
                     @foreach ($dailyActivityResults->scaled_activities[0] as $scaledActivity)
@@ -102,24 +119,51 @@
                 @foreach ($dailyActivityResults->time_slots as $time_slot)
                     @if ($loop->index % 4 == 0)
                         <div class="row">
-                            {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->format('H:i') }} -
-                            {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->addHour()->format('H:i') }}
-
-                            {{-- {{ $moduloCounter - 1 }}:00 - {{ $moduloCounter }}:00 --}}
+                            <br>
                         </div>
-                        <div>
-                            <button type="button" class="btn btn-secondary btn-sm" name='hourButton'
-                                value='{{ $moduloCounter }}'> Selecteer alle {{ $moduloCounter - 1 }}:00 -
-                                {{ $moduloCounter }}:00 boxes
-                            </button>
-                            {{-- <div class="form-check">
-                          <label class="form-check-label">
+                        <div class="row">
+                            <div class="col-2">
+                                <button type="button" class="btn" name='hourButton' value='{{ $moduloCounter }}'><i
+                                        class="fa-solid fa-plus"
+                                        title='Selecteer alle checkboxes van: {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->format('H:i') }}-{{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->addHour()->format('H:i') }}'></i></button>
+                            </div>
+                            <div class="col-2">
+                            </div>
+                            <div class="col-4">
+                                Activiteit
+                            </div>
+                            <div class="col-4"
+                                title="{{implode(',',$dailyActivityResults->scaled_activities[0])   }}">
+                             {{-- @foreach ($dailyActivityResults->scaled_activities[0] as $scaledActivity)
+                                $sca;e @endforeach"> --}}
+                                 Scores <i class="fa-solid fa-book"></i>
+                            </div>
+                            {{-- <div class="col-3">
+                                {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->format('H:i') }}
+                                -
+                                {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->addHour()->format('H:i') }}
+                                tijdblok:
+                            </div> --}}
 
-                            <input type="checkbox" class="form-check-input" name="hourBoxesOn" id="hourBoxesOn" value="{{$moduloCounter}}" >
-                            Selecteer alle {{ $moduloCounter - 1 }}:00 - {{ $moduloCounter }}:00 boxes
-                          </label>
+                            {{-- <div class="col-3">
+                                <button type="button" class="btn btn-secondary btn-sm" name='hourButton'
+                                    value='{{ $moduloCounter }}'> Selecteer alle {{ $moduloCounter - 1 }}:00 -
+                                    {{ $moduloCounter }}:00 boxes
+                                </button>
+
+                            </div> --}}
+
+
+                        </div>
+                        {{-- <div class="row">
+
+                            <div>
+                                <button class="btn"><i class="fa-solid fa-plus"></i></button>
+
+                            </div>
                         </div> --}}
-                        </div>
+
+
 
 
                         @php
@@ -127,43 +171,96 @@
                         @endphp
                     @endif
                     <div class="row">
-                        <div class="col-1">
-                            {{ $loop->index }}
+                        <div class="col-2">
+                            {{-- {{ $loop->index }} --}}
+                            {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->format('H:i') }}
+
 
                         </div>
 
-                        <div class="col-2">
+                        <div class="col-2 ">
                             <label class="customCheckbox">
 
                                 <input type="checkbox" name="boxOn[]" id="boxOn_{{ $loop->index }}"
                                     value="{{ $loop->index }}">
                                 @if ($dailyActivityResults->colors[$loop->index] == null)
-                                    <span style="background-color:chartreuse" class="checkmark"></span>
+                                    <span style="background-color:chartreuse" class="checkmark  ml-1"></span>
                                 @else
                                     <span style="background-color:{{ $dailyActivityResults->colors[$loop->index] }}"
-                                        class="checkmark"></span>
+                                        class="checkmark ml-1"></span>
                                 @endif
 
                             </label>
                         </div>
 
-                        <div class="col-2">
-                            @if ($dailyActivityResults->main_activities[$loop->index] == null)
+
+                        <div class="col-4">
+                            @if ($loop->index > 0)
+                                @if ($dailyActivityResults->main_activities[$loop->index] ==
+                                    $dailyActivityResults->main_activities[$loop->index - 1])
+                                    -
+                                @else
+                                    @if ($dailyActivityResults->main_activities[$loop->index] == null)
+                                        Leeg
+                                    @else
+                                        {{ $dailyActivityResults->main_activities[$loop->index] }}
+                                    @endif
+                                @endif
+                            @endif
+                            @if ($loop->index == 0)
+                                @if ($dailyActivityResults->main_activities[$loop->index] == null)
+                                    Leeg
+                                @else
+                                    {{ $dailyActivityResults->main_activities[$loop->index] }}
+                                @endif
+                            @endif
+
+
+
+                            {{-- @if ($dailyActivityResults->main_activities[$loop->index] == null)
                                 Leeg
                             @else
                                 {{ $dailyActivityResults->main_activities[$loop->index] }}
-                            @endif
+                            @endif --}}
 
                         </div>
 
-                        <div class="col-7">
-                            @if ($dailyActivityResults->main_activities[$loop->index] == null)
+
+
+
+
+                        <div class="col-4">
+
+                            {{-- @if ($dailyActivityResults->main_activities[$loop->index] == null)
                                 @foreach ($dailyActivityResults->scaled_activities_scores[$loop->index] as $scores)
                                     Nan
                                 @endforeach
                             @else
                                 @foreach ($dailyActivityResults->scaled_activities_scores[$loop->index] as $scores)
-                                    {{-- {{ $scores }} --}}
+                                    @if ($scores == 0)
+                                        n.v.t
+                                    @else
+                                        {{ $scores }}
+                                    @endif
+                                @endforeach
+                            @endif --}}
+
+                            @if ($loop->index > 0)
+                                @if ($dailyActivityResults->scaled_activities_scores[$loop->index] ==
+                                    $dailyActivityResults->scaled_activities_scores[$loop->index - 1])
+                                    ----
+                                @else
+                                    @foreach ($dailyActivityResults->scaled_activities_scores[$loop->index] as $scores)
+                                        @if ($scores == 0)
+                                            n.v.t
+                                        @else
+                                            {{ $scores }}
+                                        @endif
+                                    @endforeach
+                                @endif
+                            @endif
+                            @if ($loop->index == 0)
+                                @foreach ($dailyActivityResults->scaled_activities_scores[$loop->index] as $scores)
                                     @if ($scores == 0)
                                         n.v.t
                                     @else
@@ -183,6 +280,14 @@
                     </div>
                 @endforeach
             </div>
+            <div class="row">
+                <div class="col-12">
+                    <button class="btn btn-primary m-1 mt-2" type="submit" name="action" value="update">Opslaan</button>
+
+                </div>
+
+            </div>
+
             <h3>Waardering</h3>
             @php
                 $dailyQuestionsValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -234,5 +339,6 @@
 
 <script>
     function myFunction() {
-console.log("werkt")    }
-    </script>
+        console.log("werkt")
+    }
+</script>
