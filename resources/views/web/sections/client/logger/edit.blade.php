@@ -9,11 +9,49 @@
 </ul>
     <h3>web.client.logger.edit.blade.php</h3> --}}
     {{-- <h3>Activiteiten logger:</h3> --}}
-    <ul>
+    {{-- <ul>
         <li>Ymko vragen als hij de tijd per blokje wil of alleen aangeven als block vakn 10:00-11:00</li>
-    <li>columns fixen voor smartphone en desktop</li>
-    </ul>
+        <li>columns fixen voor smartphone en desktop</li>
+    </ul> --}}
+    {{-- <div class="row">
 
+        <div class="form-check form-check-inline col-1">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+        </div>
+        <div class="form-check form-check-inline col-1">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+        </div>
+        <div class="form-check form-check-inline col-1">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+        </div>
+        <div class="form-check form-check-inline col-1">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+        </div>
+        <div class="form-check form-check-inline col-1">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+        </div>
+        <div class="form-check form-check-inline col-1">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+        </div>
+        <div class="form-check form-check-inline col-1">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+        </div>
+        <div class="form-check form-check-inline col-1">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+        </div>
+        <div class="form-check form-check-inline col-1">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+        </div>
+        <div class="form-check form-check-inline col-1">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+        </div>
+        <div class="form-check form-check-inline col-1">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+        </div>
+
+    </div> --}}
+
+  
 
 
     <script src="{{ asset('js/checkHourBoxes.js') }}" defer></script>
@@ -68,7 +106,6 @@
                                     {{ $activity->value }}</label>
                                 <select class="form-control" id="{{ $activity->id }}" name="scaled[]">
                                     <option value="0">n.v.t</option>
-
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -79,12 +116,10 @@
                                     <option value="8">8</option>
                                     <option value="9">9</option>
                                     <option value="10">10</option>
-
-
-
-
                                 </select>
                             </div>
+
+
                         </div>
 
 
@@ -101,12 +136,12 @@
                     {{-- time slot --}}
                 </div>
                 <div class="col-2">
-                    Activitieit
+                    {{-- Activitieit --}}
                 </div>
                 <div class="col-6">
-                    @foreach ($dailyActivityResults->scaled_activities[0] as $scaledActivity)
+                    {{-- @foreach ($dailyActivityResults->scaled_activities[0] as $scaledActivity)
                         {{ $scaledActivity }}
-                    @endforeach
+                    @endforeach --}}
 
                 </div>
 
@@ -122,21 +157,43 @@
                             <br>
                         </div>
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-12">
+
+
+                                <div class="collapse multi-collapse" id="scoreCollapse{{ $loop->index }}">
+                                    <div style="width:100%" class="card card-body mb-2">
+                                        @foreach ($dailyActivityResults->scaled_activities[0] as $scaledActivity)
+                                            {{ $loop->index }}: {{ $scaledActivity }}
+                                            <br>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-1 col-2">
+                                {{-- <button type="button" class="btn" name='hourButton' value='{{ $moduloCounter }}'><i
+                                        class="fa-solid fa-plus"
+                                        title='Selecteer alle checkboxes van: {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->format('H:i') }}-{{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->addHour()->format('H:i') }}'></i></button> --}}
+                            </div>
+                            <div class="col-sm-1 col-2">
                                 <button type="button" class="btn" name='hourButton' value='{{ $moduloCounter }}'><i
                                         class="fa-solid fa-plus"
                                         title='Selecteer alle checkboxes van: {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->format('H:i') }}-{{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->addHour()->format('H:i') }}'></i></button>
                             </div>
-                            <div class="col-2">
-                            </div>
-                            <div class="col-4">
+                            <div class="col-sm-2 col-4">
                                 Activiteit
                             </div>
-                            <div class="col-4"
-                                title="{{implode(',',$dailyActivityResults->scaled_activities[0])   }}">
-                             {{-- @foreach ($dailyActivityResults->scaled_activities[0] as $scaledActivity)
-                                $sca;e @endforeach"> --}}
-                                 Scores <i class="fa-solid fa-book"></i>
+                            <div class="col-4" title="{{ implode(',', $dailyActivityResults->scaled_activities[0]) }}">
+
+                                {{-- Scores <i class="fa-solid fa-book"></i> --}}
+
+                                Scores
+                                {{-- <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Toggle first element</a> --}}
+                                <button type="button" class="btn" data-toggle="collapse" href="#scoreCollapse{{ $loop->index }}"
+                                    role="button" aria-expanded="false" aria-controls="scoreCollapse{{ $loop->index }}"><i
+                                        class="fa-solid fa-book"></i></button>
+
                             </div>
                             {{-- <div class="col-3">
                                 {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->format('H:i') }}
@@ -171,14 +228,14 @@
                         @endphp
                     @endif
                     <div class="row">
-                        <div class="col-2">
+                        <div class="col-sm-1 col-2">
                             {{-- {{ $loop->index }} --}}
                             {{ \Carbon\Carbon::parse($dailyActivityResults->time_values[$loop->index])->format('H:i') }}
 
 
                         </div>
 
-                        <div class="col-2 ">
+                        <div class="col-sm-1 col-2">
                             <label class="customCheckbox">
 
                                 <input type="checkbox" name="boxOn[]" id="boxOn_{{ $loop->index }}"
@@ -194,7 +251,7 @@
                         </div>
 
 
-                        <div class="col-4">
+                        <div class="col-sm-2 col-4">
                             @if ($loop->index > 0)
                                 @if ($dailyActivityResults->main_activities[$loop->index] ==
                                     $dailyActivityResults->main_activities[$loop->index - 1])
@@ -217,11 +274,7 @@
 
 
 
-                            {{-- @if ($dailyActivityResults->main_activities[$loop->index] == null)
-                                Leeg
-                            @else
-                                {{ $dailyActivityResults->main_activities[$loop->index] }}
-                            @endif --}}
+                        
 
                         </div>
 
@@ -248,11 +301,11 @@
                             @if ($loop->index > 0)
                                 @if ($dailyActivityResults->scaled_activities_scores[$loop->index] ==
                                     $dailyActivityResults->scaled_activities_scores[$loop->index - 1])
-                                    ----
+                                    -
                                 @else
                                     @foreach ($dailyActivityResults->scaled_activities_scores[$loop->index] as $scores)
                                         @if ($scores == 0)
-                                            n.v.t
+                                            n
                                         @else
                                             {{ $scores }}
                                         @endif
@@ -262,7 +315,7 @@
                             @if ($loop->index == 0)
                                 @foreach ($dailyActivityResults->scaled_activities_scores[$loop->index] as $scores)
                                     @if ($scores == 0)
-                                        n.v.t
+                                        n
                                     @else
                                         {{ $scores }}
                                     @endif
@@ -280,23 +333,28 @@
                     </div>
                 @endforeach
             </div>
-            <div class="row">
+            <div class="row mt-2">
                 <div class="col-12">
                     <button class="btn btn-primary m-1 mt-2" type="submit" name="action" value="update">Opslaan</button>
 
                 </div>
 
             </div>
+            <hr />
 
-            <h3>Waardering</h3>
-            @php
+
+            <div class="row">
+                <div class="col-12">
+                    <h5>Dag evaluatie</h5>
+
+                </div>
+
+            </div> @php
                 $dailyQuestionsValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
+                
             @endphp
-            {{ json_encode($dailyQuestions->scores) }}
             @foreach ($dailyQuestions->questions as $question)
                 <div class="form-group">
-                    {{ $loop->index }}
                     <label for="">{{ $question }}</label>
 
                     <select class="form-control" name="scores[]" id="">
