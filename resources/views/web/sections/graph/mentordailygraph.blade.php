@@ -14,16 +14,19 @@
     <ul>
         <li>de Remarks collasable makeken dus een button toevoegen om de remarks van eze week/8 weken te showen?</li>
     </ul>
-    <h3>web.sections.graph.mentordailygraph</h3>
+    <div class="row mb-1">
+        <div class="col-12">
+            <h5>Overzicht</h5>
 
-    <h3>Mentor graphing</h3>
+        </div>
 
-    {{ json_encode(isset($dailyActivities)) }}
-    {{ json_encode(!empty($dailyActivities)) }}
+    </div>
+
+
 
     @if (isset($dailyActivities) && !empty($dailyActivities))
         <div id="weekMonthRadio">
-            <h3>Dagelijkse of wekelijkse output:</h3>
+            <h5>Selecteer dagelijkse of wekelijkse grafieken</h5>
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="dayWeekRadio" id="dayRadio" value="day" checked>
                 <label class="form-check-label" for="dayRadio">
@@ -39,8 +42,8 @@
         </div>
 
 
-        <div id="weekMonthRadio">
-            <h3>Selecteer Activiteiten logger of dagelijkse raporten grafieken:</h3>
+        <div id="weekMonthRadio" class="mt-2">
+            <h5>Selecteer activiteiten of dag rapportage visualisatie:</h5>
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="activitiesQuestionsRadio" id="activitiesRadio"
                     value="activities" checked>
@@ -57,8 +60,8 @@
             </div>
         </div>
 
-        <div id="datePicker">
-            <h3>Selecteer een start en eind week:</h3>
+        <div id="datePicker" class="mt-2">
+            <h5>Selecteer start en eind week</h5>
 
             <label for="startWeek">Start week:</label>
 
@@ -67,74 +70,31 @@
             <label for="endWeek">Eind week:</label>
             <input class="form-control mr-sm-2 " type="week" aria-label="Search" name="endWeek" id="endWeek">
         </div>
-        <div id="datePickerErrors">
-            {{-- <div id="startEndWeekError" class="alert alert-danger">Eind week voor of gelijk aan start week</div> --}}
+        <div id="datePickerErrors" class="mt-2">
 
         </div>
 
 
-        {{-- <div class="" id="weekpicker">
-            <label for="startWeek">Start week:</label>
-            <h3>Selecteer een start en eind week:</h3>
+        <div class="row">
+            <div class="col-lg-3 col-sm-12">
+                <button id="makeGraphButton" type="button" class="btn btn-primary w-100">Maak Grafiek</button>
 
-            <input class="form-control mr-sm-2 " type="week" aria-label="Search" name="startWeek" id="startWeek"
-                value="">
-            <label for="endWeek">Eind week:</label>
-            <input class="form-control mr-sm-2 " type="week" aria-label="Search" name="endWeek" id="endWeek"
-                >
-            {{-- <div id="startEndWeekError" class="alert alert-danger d-none">Eind week voor of gelijk aan start week</div> --}}
-        {{-- <div id="startEndWeekEmpty" class="alert alert-danger d-none">Eind en start week moeten een week bevatten</div>
-        </div> --}}
+            </div>
 
+        </div>
 
-        {{-- <div class="d-none" id="monthpicker">
-            <label for="startMonth">Start maand:</label>
-            <h3>Selecteer een start en eind maand:</h3>
+        <hr>
 
-            <input class="form-control mr-sm-2 " type="month" aria-label="Search" name="startMonth" id="startMonth"
-                value="">
-            <label for="endMonth">Eind maand:</label>
-            <input class="form-control mr-sm-2 " type="month" aria-label="Search" name="endMonth" id="endMonth"
-                value="">
-            <div id="startEndMonthEmpty" class="alert alert-danger d-none">Eind en start maand moeten een week bevatten</div>
-        </div> --}}
-
-
-        <button id="makeGraphButton" type="button" class="btn btn-primary ">Maak Grafiek</button>
 
         <div id="checkBoxes">
-            {{-- <div id="mainCheckBoxes">
-            </div> --}}
 
-            {{-- <button type="button" class="btn btn-primary"></button> --}}
-
-            {{-- <div id="scaledCheckBoxes">
-
-            </div> --}}
         </div>
-        {{-- <h1>Chart JS Stacked Bar example</h1>
-        <div class="wrapper">
-        <canvas id="testchart"></canvas>
-        </div> --}}
+
 
 
         <div class="wrapper" id="chartDiv">
 
         </div>
-
-
-
-
-
-
-        {{--
-        <input type="week" min="2022-W01" max="2022-W07">
-
-        <input type="month" min="2022-01" max="2022-07"> --}}
-
-
-
-        {{-- //////////////////////////// --}}
     @else
         <div class="alert alert-warning">
             <strong>Sorry!</strong> Geen logs gevonden.

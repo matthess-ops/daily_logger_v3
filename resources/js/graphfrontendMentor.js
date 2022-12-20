@@ -3,8 +3,8 @@ console.log("graphfrontend");
 import moment from "moment";
 import generateDailyActivitiesGraphs from "./dayActivitiesGraph"
 import generateWeeklyActivitiesGraphs from "./weekActivitiesGraph"
-import generateDailyQuestionsGraphs from "./dayQuestionsGraph"
-import generateWeeklyQuestionsGraphs from "./weekQuestionsGraph"
+// import generateDailyQuestionsGraphs from "./dayQuestionsGraph"
+// import generateWeeklyQuestionsGraphs from "./weekQuestionsGraph"
 
 import generateDailyQuestionsGraphsMentor from "./dayQuestionsGraphMentor"
 import generateWeeklyQuestionsGraphsMentor from "./weekQuestionsGraphMentor"
@@ -173,12 +173,14 @@ const main = () => {
             }
             if (activitiesQuestionsState == "questions") {
                 if (dailyWeeklyState == "day") {
-                    generateDailyQuestionsGraphs(startWeek, endWeek)
+                    // generateDailyQuestionsGraphs(startWeek, endWeek)
                     console.log("make daily questions graphs")
+                    generateDailyQuestionsGraphsMentor(startWeek, endWeek)
+
                 }
                 if (dailyWeeklyState == "week") {
-                    generateWeeklyQuestionsGraphs(startWeek, endWeek)
-
+                    generateWeeklyQuestionsGraphsMentor(startWeek, endWeek)
+                    // generateWeeklyQuestionsGraphs(startWeek, endWeek)
                     console.log("make weekly questions graphs")
                 }
             }
@@ -194,5 +196,5 @@ main();
 //  generateDailyActivitiesGraphs("2022-W45", "2022-W47")
 // generateWeeklyActivitiesGraphs("2022-W39", "2022-W47")
 //generateWeeklyQuestionsGraphs("2022-W35", "2022-W47")
-generateDailyQuestionsGraphsMentor("2022-W35", "2022-W45")
+// generateDailyQuestionsGraphsMentor("2022-W35", "2022-W45")
 // generateWeeklyQuestionsGraphsMentor("2022-W35", "2022-W45")

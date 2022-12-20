@@ -432,12 +432,12 @@ const makeRemarks = (week)=>{
 
     '<div id="collapse' +week.weekNr+'" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">'+
     '<div class="card-body">'+
-  
+
     remarksString+
     '</div>'+
     '</div>'+
     '</div>'+
-    
+
     '</div>'
     weekRemarksDiv.innerHTML =  htmlCodeBlock
 
@@ -452,7 +452,7 @@ const makeGroupCheckBoxes = (divId, checkBoxNames, title) => {
     checkBoxDiv.appendChild(groupDiv);
     const divOfInterest = document.getElementById(divId);
     checkBoxDiv.appendChild(divOfInterest);
-    const newTitle = document.createElement("h4");
+    const newTitle = document.createElement("h6");
     newTitle.innerText = title;
     divOfInterest.appendChild(newTitle);
     checkBoxNames.forEach((checkBoxName, index) => {
@@ -518,7 +518,7 @@ const addRemarks = (dateRange)=>{
             }
 
         })
-  
+
         week.questionRemarks = questionRemarks
     });
 
@@ -576,12 +576,12 @@ const generateDailyActivitiesGraphs = (startDate, endDate) => {
         uniqueMainActivities.map((activity) =>
             activity !== null ? activity : "niet ingevuld"
         ),
-        "Filter Main Activities"
+        "Filter activiteiten:"
     );
     makeGroupCheckBoxes(
         "scaledCheckBoxes",
         uniqueScaledActivities,
-        "Filter geschaalde activiteiten"
+        "Filter score activiteiten"
     );
 
 

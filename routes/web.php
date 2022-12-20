@@ -24,7 +24,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // Route::get('client/{id}/show', 'ClientController@show')->name('client.show');
 
-
+Route::get('/testgates',function(){
+    return view("web.sections.test.gatetext");
+})->middleware('can:clientNotAllowed');
 
 Route::group(['prefix' => 'client'], function() {
 
@@ -116,13 +118,11 @@ Route::group(['prefix' => 'question'], function() {
 
 Route::group(['prefix' => 'defaultquestion'], function() {
 
-    // Route::get('/', 'DefaultQuestionController@index')->name('defaultquestion.index')->middleware('auth');
-    // Route::get('/create', 'DefaultQuestionController@create')->name('defaultquestion.create')->middleware('auth');
-    Route::post('/create', 'DefaultQuestionController@store')->name('defaultquestion.store')->middleware('auth');
-    // Route::get('/{DefaultQuestion_id}/show', 'DefaultQuestionController@show')->name('defaultquestion.show')->middleware('auth');
-    // Route::patch('/{user_id}/update', 'DefaultQuestionController@update')->name('defaultquestion.update')->middleware('auth');
-    Route::delete('/{defaulquestion_id}/delete', 'DefaultQuestionController@destroy')->name('defaultquestion.destroy')->middleware('auth');
-    Route::get('/edit', 'DefaultQuestionController@edit')->name('defaultquestion.edit')->middleware('auth');
+
+    Route::post('/create', 'DefaultQuestionController@store')->name('defaultquestion.store')->middleware('auth')->middleware('can:isAdmin');
+
+    Route::delete('/{defaulquestion_id}/delete', 'DefaultQuestionController@destroy')->name('defaultquestion.destroy')->middleware('auth')->middleware('can:isAdmin');
+    Route::get('/edit', 'DefaultQuestionController@edit')->name('defaultquestion.edit')->middleware('auth')->middleware('can:isAdmin');
 });
 
 

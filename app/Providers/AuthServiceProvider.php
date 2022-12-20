@@ -9,7 +9,6 @@ use App\Activity;
 use App\Policies\ClientActivitiesPolicy;
 use app\DailyActivity;
 use App\DailyQuestion;
-
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -33,7 +32,19 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        Gate::define('clientNotAllowed', function (User $user) {
+
+            if($user->role ==='client'){
+                error_log("client not allowed");
+                return false;
+            }else{
+                error_log("continue");
+                return true;
+            }
+        });
+
         Gate::define('isClient', function (User $user) {
+
             return $user->role ==='client';
         });
         Gate::define('isAdmin', function (User $user) {

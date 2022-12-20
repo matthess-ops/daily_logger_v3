@@ -1,64 +1,72 @@
 @extends('web.layout.navbar')
 
 @section('content')
-    <h3>web.client.logger.index.blade.php</h3>
-    <ul>
-        <li>werkt dit</li>
-    </ul>
-    @foreach ($dailyQuestions as $dailyQuestion)
-        <div class="row">
-            {{ 'dailyquest s/c ' . json_encode($dailyQuestion->started).json_encode($dailyQuestion->completed) }}
-            {{ 'dailyact s/c ' . json_encode($dailyActivities[$loop->index]->started).json_encode($dailyActivities[$loop->index]->completed) }}
-            {{-- {{ 'dailyquest completed ' . json_encode($dailyQuestion->completed) }}
-            {{ 'dailyact completed ' . json_encode($dailyActivities[$loop->index]->completed) }} --}}
-            <div class="col-2">
-                {{ $dailyQuestion->created_at->locale('nl')->format('d-m-Y') }}
-            </div>
-            <div class="col-2">
-                @if ($dailyQuestion->created_at->isToday())
-                    Vandaag
-                @else
-                    {{ $dailyQuestion->created_at->locale('nl')->dayName }}
-                @endif
+    {{-- <h3>web.client.logger.index.blade.php</h3> --}}
+    <div class="container">
 
-            </div>
-            <div class="col-2">
-                @if ($dailyQuestion->started ==false and $dailyActivities[$loop->index]->started ==false)
-                    Nog invullen
-                @else
-                    @if ($dailyQuestion->completed and $dailyActivities[$loop->index]->completed)
-                        Compleet
-                    @else
-                        @if ($dailyQuestion->completed == false or $dailyActivities[$loop->index]->completed == false)
-                            Verder afmaken
-                        @else
-                        @endif
-                    @endif
-                @endif
+    <div class="row mb-1">
+        <div class="col-12">
+            <h5>Overzicht van dagelijkse activiteiten/dag rapportages</h5>
 
-                {{-- {{$dailyQuestion->date_today}}
-                {{$dailyActivities[$loop->index]->date_today}} --}}
-            </div>
-            {{-- <div class="col-2">
-                @if ($dailyQuestion->created_at == $dailyQuestion->updated_at)
-                    nog niet ingevuld
-                @else
-                    @if ($dailyQuestion->filled == false)
-                        nog niet compleet
-                    @else
-                        compleet
-                    @endif
-                @endif
+        </div>
 
-            </div> --}}
+    </div>
+    @if ($dailyQuestions == null or $dailyActivities == null)
+        <div class="row  mb-1">
+            <div class="col-12">
+                <h5>Er zijn voor deze week geen activiteiten en dag rapportages aangemaakt. Indien u denkt dat dit niet
+                    klopt, neem dan contact op met uw begeleider.</h5>
 
-            <div class="col-2">
-                <a name="" id="" class="btn btn-primary"
-                    href="{{ route('log.edit', ['user_id' => Auth::id(), 'date' => $dailyQuestion->created_at]) }}"
-                    role="button">Ga naar</a>
             </div>
         </div>
-    @endforeach
+    @else
+            @foreach ($dailyQuestions as $dailyQuestion)
+            <div class="row">
+                <div class="col-lg-6 ">
+                    <div class="row">
+                        <div class="col-6 ">
+                            {{ $dailyQuestion->created_at->locale('nl')->format('d-m-Y') }}
+                        </div>
+                        <div class="col-6">
+                            @if ($dailyQuestion->created_at->isToday())
+                                Vandaag
+                            @else
+                                {{ $dailyQuestion->created_at->locale('nl')->dayName }}
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 ">
+                    <div class="row">
+
+                        <div class="col-6 ">
+                            @if ($dailyQuestion->started == false and $dailyActivities[$loop->index]->started == false)
+                                Nog invullen
+                            @else
+                                @if ($dailyQuestion->completed and $dailyActivities[$loop->index]->completed)
+                                    Compleet
+                                @else
+                                    @if ($dailyQuestion->completed == false or $dailyActivities[$loop->index]->completed == false)
+                                        Verder afmaken
+                                    @endif
+                                @endif
+                            @endif
+                        </div>
+                        <div class="col-6 ">
+                            <a name="" id="" class="btn btn-primary btn-sm"
+                                href="{{ route('log.edit', ['user_id' => Auth::id(), 'date' => $dailyQuestion->created_at]) }}"
+                                role="button">Open logger</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <hr />
+
+        @endforeach
+
+    @endif
+</div>
 
 
 @endsection

@@ -1,15 +1,29 @@
 @extends('web.layout.navbar')
 
 @section('content')
-    <h3>
-        web.admin.mentor.index.blade.php</h3>
+    <div class="row mb-2">
+        <div class="col">
+            <h5 class="font-weight-bold">Begeleiders</h5>
+        </div>
+    </div>
 
 
 
 
     <form action="{{ route('mentor.index') }}" method="GET">
-        <input type="text" name="search" @isset($searchQuery) value= "{{ $searchQuery }}" @endisset />
-        <button type="submit" class="btn btn-primary">Zoek</button>
+        {{-- <input type="text" name="search" @isset($searchQuery) value= "{{ $searchQuery }}" @endisset />
+        <button type="submit" class="btn btn-primary">Zoek</button> --}}
+        <div class="row ">
+            <div class="col-lg-3 col-sm-12 mb-1">
+                <input class="w-100"type="text" name="search"
+                />
+
+            </div>
+            <div class="col-lg-2 col-sm-12 mb-1">
+                <button type="submit" class="btn btn-primary w-100 btn-sm">Zoek</button>
+
+            </div>
+        </div>
     </form>
 
     <table class="table table-hover">
@@ -17,8 +31,9 @@
             <tr>
                 <th>Voornaam</th>
                 <th>Achternaam</th>
-                <th>Email</th>
-                <th>Account aangemaakt</th>
+                <th class="d-none d-md-table-cell">Email</th>
+                <th class="d-none d-md-table-cell">Account aangemaakt</th>
+
                 <th>Account status</th>
             </tr>
         </thead>
@@ -29,10 +44,9 @@
 
                     <td>{{ $mentor->firstname }}</td>
                     <td>{{ $mentor->lastname }}</td>
-                    <td>{{ $mentor->user->email }}</td>
-                    <td>{{ $mentor->user->created_at->format('M d Y') }}</td>
+                    <td  class="d-none d-md-table-cell">{{ $mentor->user->email }}</td>
+                    <td  class="d-none d-md-table-cell">{{ $mentor->user->created_at->format('M d Y') }}</td>
 
-                    {{-- <td>{{$client->user->active}}</td> --}}
                     <td>
                         @if ($mentor->user->active == true)
                             active

@@ -25,136 +25,6 @@
 
 
 
-
-
-    {{-- <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-                @can('isClient', App\Testpol::class)
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item dropdown ">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Activiteiten
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item"
-                                    href="{{ route('dailyActivity.index', ['user_id' => Auth::id()]) }}">Logger</a>
-                                <a class="dropdown-item" href="{{ route('clientActivities.index') }}">Instellingen</a>
-                                <a class="dropdown-item" href="">Grafieken</a>
-                            </div>
-                        </li>
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Dagelijkse rapportage
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item"
-                                    href="{{ route('dailyQuestion.index', ['user_id' => Auth::id()]) }}">Overzicht</a>
-                                <a class="dropdown-item" href="">Grafieken</a>
-                            </div>
-                        </li>
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Account
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item"
-                                    href="{{ route('client.show', ['client_id' => Auth::user()->client->id]) }}">Gegevens</a>
-                            </div>
-                        </li>
-                        <li>
-                        </li>
-                    </ul>
-                @endcan
-
-                @can('isAdmin', App\Testpol::class)
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item dropdown ">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Clienten
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('client.index') }}">Zoeken</a>
-                                <a class="dropdown-item" href="{{ route('client.create') }}">Toevoegen</a>
-                            </div>
-                        </li>
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Begeleiders
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('mentor.index') }}">Zoeken</a>
-                                <a class="dropdown-item" href="{{ route('mentor.create') }}">Toevoegen</a>
-                            </div>
-                        </li>
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Rapportage
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('defaultquestion.edit') }}">config</a>
-                            </div>
-                        </li>
-                    </ul>
-                @endcan
-
-                @can('isMentor', App\Testpol::class)
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item dropdown ">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Clienten
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('client.index') }}">Zoeken</a>
-                            </div>
-                        </li>
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Rapportages
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('mentor.dailyquestion.index') }}">Open</a>
-
-
-                            </div>
-                        </li>
-
-                    </ul>
-                @endcan
-
-                <a class="nav-item nav-link justify-content-end text-light" href="{{ route('logout') }}"
-                    onclick="event.preventDefault();
-          document.getElementById('logout-form').submit();">
-                    {{ __('Logout') }}
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                    @csrf
-                </form>
-            </div>
-        </div>
-    </nav>
-
-
-    <div class="container">
-        <main class="py-4">
-            @yield('content')
-        </main>
-    </div> --}}
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
 
@@ -166,18 +36,19 @@
             <div id="my-nav" class="collapse navbar-collapse">
 
 
-                @can('isClient', App\Testpol::class)
+                @can('isClient')
                     <ul class="navbar-nav mr-auto">
 
 
-                        <li class="nav-item active">
+                        <li class="nav-item {{ Route::is('log.edit') ? 'active' : '' }}
+                        ">
                             <a class="nav-link" href="{{ route('log.edit', ['user_id' => Auth::id(),'date'=>Carbon\Carbon::today()]) }}">Vandaag </a>
                           </li>
 
 
 
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
+                            <a class="nav-link dropdown-toggle {{ Route::is('graph.index') ? 'active' : '' }} {{ Route::is('log.index') ? 'active' : '' }}" href="" id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Terugkijken
                             </a>
@@ -191,7 +62,7 @@
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
+                            <a class="nav-link dropdown-toggle{{ Route::is('client.show') ? 'active' : '' }} {{ Route::is('clientActivities.index') ? 'active' : '' }}" href="" id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Account
                             </a>
@@ -207,10 +78,27 @@
                     </ul>
                 @endcan
 
-                @can('isAdmin', App\Testpol::class)
+                @can('isMentor')
+                <ul class="navbar-nav mr-auto">
+
+
+                    <li class="nav-item {{ Route::is('client.index') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('client.index') }}">Clienten </a>
+                      </li>
+
+
+                      <li class="nav-item {{ Route::is('mentor.dailyquestion.index') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('mentor.dailyquestion.index')  }}">Rapportages </a>
+                      </li>
+
+
+                </ul>
+            @endcan
+
+                @can('isAdmin')
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item dropdown ">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
+                            <a class="nav-link dropdown-toggle {{ Route::is('client.create') ? 'active' : '' }} {{ Route::is('client.index') ? 'active' : '' }}" href="" id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Clienten
                             </a>
@@ -221,7 +109,7 @@
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
+                            <a class="nav-link dropdown-toggle {{ Route::is('mentor.create') ? 'active' : '' }} {{ Route::is('mentor.index') ? 'active' : '' }}" href="" id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Begeleiders
                             </a>
@@ -231,54 +119,16 @@
                             </div>
                         </li>
 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Rapportage
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('defaultquestion.edit') }}">config</a>
-                            </div>
-                        </li>
+                        <li class="nav-item {{ Route::is('defaultquestion.edit') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('defaultquestion.edit') }}">Standaard vragen </a>
+                          </li>
+
+
                     </ul>
                 @endcan
 
 
-                @can('isMentor', App\Testpol::class)
-                    <ul class="navbar-nav mr-auto">
-                        {{-- <li class="nav-item dropdown ">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Clienten
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('client.index') }}">Zoeken</a>
-                            </div>
-                        </li> --}}
 
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{{ route('client.index') }}">Clienten </a>
-                          </li>
-
-
-                          <li class="nav-item active">
-                            <a class="nav-link" href="{{ route('mentor.dailyquestion.index')  }}">Rapportages </a>
-                          </li>
-
-                        {{-- <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Rapportages
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('mentor.dailyquestion.index') }}">Open</a>
-
-
-                            </div>
-                        </li> --}}
-
-                    </ul>
-                @endcan
                 <a class="nav-item nav-link text-light" href="{{ route('logout') }}"
                     onclick="event.preventDefault();
           document.getElementById('logout-form').submit();">

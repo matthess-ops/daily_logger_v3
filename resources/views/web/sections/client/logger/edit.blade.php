@@ -51,7 +51,7 @@
 
     </div> --}}
 
-  
+
 
 
     <script src="{{ asset('js/checkHourBoxes.js') }}" defer></script>
@@ -61,7 +61,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 
     @if ($dailyQuestions == null or $dailyActivityResults == null)
-        <h2>Looks like that there arent any entries</h2>
+    <div>
+        <h5>U hoeft vandaag geen data bij te houden. Indien u denkt dat dit niet klopt, neem dan contact op met uw begeleider.</h5>
+
+    </div>
     @else
         <form action="{{ route('log.update', ['user_id' => Auth::id()]) }}" method="POST">
             {{ method_field('patch') }}
@@ -186,13 +189,11 @@
                             </div>
                             <div class="col-4" title="{{ implode(',', $dailyActivityResults->scaled_activities[0]) }}">
 
-                                {{-- Scores <i class="fa-solid fa-book"></i> --}}
 
                                 Scores
-                                {{-- <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Toggle first element</a> --}}
-                                <button type="button" class="btn" data-toggle="collapse" href="#scoreCollapse{{ $loop->index }}"
+                                <button type="button" class="btn p-0" data-toggle="collapse" href="#scoreCollapse{{ $loop->index }}"
                                     role="button" aria-expanded="false" aria-controls="scoreCollapse{{ $loop->index }}"><i
-                                        class="fa-solid fa-book"></i></button>
+                                        style=""class="fa-solid fa-book"></i></button>
 
                             </div>
                             {{-- <div class="col-3">
@@ -274,7 +275,7 @@
 
 
 
-                        
+
 
                         </div>
 
@@ -334,8 +335,8 @@
                 @endforeach
             </div>
             <div class="row mt-2">
-                <div class="col-12">
-                    <button class="btn btn-primary m-1 mt-2" type="submit" name="action" value="update">Opslaan</button>
+                <div class="col-lg-3 col-sm-12">
+                    <button class="btn btn-primary m-1 mt-2 w-100" type="submit" name="action" value="update">Opslaan</button>
 
                 </div>
 
@@ -351,7 +352,7 @@
 
             </div> @php
                 $dailyQuestionsValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-                
+
             @endphp
             @foreach ($dailyQuestions->questions as $question)
                 <div class="form-group">
@@ -384,8 +385,13 @@
             </div>
 
 
-            <button type="submit" class="btn btn-primary">Opslaan</button>
+            <div class="row mt-2">
+                <div class="col-lg-3 col-sm-12">
+                    <button class="btn btn-primary m-1 mt-2 w-100" type="submit" name="action" value="update">Opslaan</button>
 
+                </div>
+
+            </div>
         </form>
     @endif
 
@@ -395,8 +401,3 @@
 @endsection
 
 
-<script>
-    function myFunction() {
-        console.log("werkt")
-    }
-</script>

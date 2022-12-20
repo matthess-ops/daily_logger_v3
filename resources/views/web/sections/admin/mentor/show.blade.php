@@ -2,16 +2,47 @@
 
 @section('content')
 
-    <h3>web.admin.mentor.show.blade.php</h3>
+<div class="row mb-2">
+    <div class="col">
+        <h5 class="font-weight-bold">Mentor config</h5>
+    </div>
+</div>
+<hr>
 
+<div class="row">
+    <div class="col">
+        <h6 class="">Account gegevens begeleider</h6>
+    </div>
+</div>
 
     <span>{{ $mentor->firstname }} {{ $mentor->lastname }}</span> <br>
     <span>{{ $mentor->street }} {{ $mentor->street_nr }} </span> <br>
     <span>{{ $mentor->postcode }} {{ $mentor->city }} </span> <br>
     <span>{{ $mentor->user->email }} </span> <br>
-    <span>{{ $mentor->phone_number }} </span> <br><br>
+    <span>{{ $mentor->phone_number }} </span>
 
-    @if ($mentor->user->active)
+    <hr>
+    <div class="row">
+        <div class="col">
+            <h6 class="">Verander account status</h6>
+        </div>
+    </div>
+
+    <form action="{{ route('mentor.update', ['mentor_id' => $mentor->id]) }}" method="POST">
+        @csrf
+        {{ method_field('patch') }}
+        <div class="row">
+            <div class="col-lg-3 col-sm-12">
+                @if ($mentor->user->active)
+                    <button type="submit" class="btn btn-primary w-100">Deactiveer account</button>
+                @else
+                    <button type="submit" class="btn btn-primary w-100">Activeer account</button>
+                @endif
+            </div>
+        </div>
+    </form>
+
+    {{-- @if ($mentor->user->active)
     <form action="{{route('mentor.update',['mentor_id'=>$mentor->id])}}" method="POST">
        @csrf
        {{ method_field('patch') }}
@@ -25,7 +56,7 @@
         {{ method_field('patch') }}
         <button type="submit" class="btn btn-primary">Activeer account</button>
      </form>
-    @endif
+    @endif --}}
 
 
 
