@@ -71,6 +71,11 @@ class AuthServiceProvider extends ServiceProvider
             return $user->id ==$dailyQuestion->user_id;
         });
 
+        Gate::define('isClientActivitiesOwner', function (User $user, Activity $activity) {
+            error_log('isClientActivitiesOwner gate called');
+            return $user->id ==$activity->user_id;
+        });
+
 
     }
 }

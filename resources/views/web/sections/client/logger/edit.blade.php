@@ -59,8 +59,11 @@
 
     {{-- find correct cdn link later --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  
 
-    @if ($dailyQuestions == null or $dailyActivityResults == null)
+
+
+    @if ($dailyQuestions == null and $dailyActivityResults == null)
     <div>
         <h5>U hoeft vandaag geen data bij te houden. Indien u denkt dat dit niet klopt, neem dan contact op met uw begeleider.</h5>
 

@@ -9,16 +9,15 @@ use App\DailyQuestion;
 use Carbon\Carbon;
 use App\Activity;
 use app\User;
+use Illuminate\Support\Facades\Gate;
 
 class LogController extends Controller
 {
 
 
-
+    //only used by client
     public function index($user_id)
     {
-
-
 
         $dailyQuestions = DailyQuestion::where('user_id', $user_id)->whereBetween(
             'created_at',
@@ -27,16 +26,19 @@ class LogController extends Controller
             ->orderBy('created_at', 'DESC')
             ->get();
 
-        $dialyActivities = DailyActivity::where('user_id', $user_id)->whereBetween(
+        $dailyActivities = DailyActivity::where('user_id', $user_id)->whereBetween(
             'created_at',
             [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]
         )
             ->orderBy('created_at', 'DESC')
             ->get();
 
-        error_log('logcontroller@index called');
-        // dd($dailyQuestions,$dialyActivities);
-        return view('web.sections.client.logger.index', ['dailyQuestions' => $dailyQuestions, 'dailyActivities' => $dialyActivities]);
+        $this->authorize('isClientDailyQuestionOwner', $dailyQuestions[0]);
+        $this->authorize('isClientDailyActivityOwner', $dailyActivities[0]);
+
+
+
+        return view('web.sections.client.logger.index', ['dailyQuestions' => $dailyQuestions, 'dailyActivities' => $dailyActivities]);
     }
 
 
@@ -75,11 +77,12 @@ class LogController extends Controller
     //get today daily_activities and daily_questions and return these
     public function edit($user_id, $date)
     {
-        //add authorization
-        error_log('date is ' . $date);
         $dailyActivity = DailyActivity::where('user_id', $user_id)->where('date_today', Carbon::parse($date)->format('Y-m-d'))->first();
         $dailyQuestions = DailyQuestion::where('user_id', $user_id)->where('date_today', Carbon::parse($date)->format('Y-m-d'))->first();
         $activities = User::find($user_id)->client->activities;
+        $this->authorize('isClientDailyQuestionOwner', $dailyQuestions);
+        $this->authorize('isClientDailyActivityOwner', $dailyActivity);
+        $this->authorize('isClientActivitiesOwner', $activities[0]);
         return view('web.sections.client.logger.edit', ['dailyActivityResults' => $dailyActivity, 'dailyQuestions' => $dailyQuestions, 'activities' => $activities]);
     }
 
@@ -98,10 +101,28 @@ class LogController extends Controller
         error_log("logcontroller@update called");
         error_log(json_encode($request->all()));
 
+        //validation
+        // $validatedData = $request->validate([
+        //     'dailyQuestionId' => 'required',
+        //     'dailyActivityId' => 'required',
+        //     'main' => 'required',
+         
+        //     'scaled' => 'required',
+        //     'action' => 'required',
+
+        //     'postcode' => 'required',
+        //     'phone_number' => 'required',
+        //     'city' => 'required',
+        //     'password' => 'required',
+        // ]);
         //Activity logger update
-        $mainActivityValue = Activity::find($request->input('main'))->value;
-        $mainActivityColor = Activity::find($request->input('main'))->color;
+        $activity = Activity::find($request->input('main'));
+        $mainActivityValue = $activity->value;
+        $mainActivityColor = $activity->color;
         $dailyActivity = DailyActivity::find($request->input('dailyActivityId'));
+        $this->authorize('isClientDailyActivityOwner', $dailyActivity);
+        $this->authorize('isClientActivitiesOwner', $activity);
+
         // implement authorization here
         //    $this->authorize('update', $dailyActivity);
 
@@ -147,7 +168,7 @@ class LogController extends Controller
 
 
         $dailyQuestion = DailyQuestion::find($request->input('dailyQuestionId'));
-        //    $this->authorize('update', $dailyQuestion);
+        $this->authorize('isClientDailyQuestionOwner', $dailyQuestion);
         $dailyQuestion->scores = array_map('intval', $request->input('scores'));
         if ($request->input('clientRemark') !=  null) {
             $dailyQuestion->client_remark = $request->input('clientRemark');
@@ -171,11 +192,6 @@ class LogController extends Controller
 
         $dailyQuestion->started = $isStarted;
         $dailyQuestion->completed = $isComplete;
-
-
-
-
-
         $dailyQuestion->save();
 
         return redirect()->back();

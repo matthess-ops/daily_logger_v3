@@ -18,6 +18,7 @@ class GraphController extends Controller
         public function index($user_id){
         $dailyActivities = DailyActivity::where('user_id', $user_id)->get();
         $dailyQuestions = DailyQuestion::where('user_id', $user_id)->get();
+
         return view('web.sections.graph.index', ['dailyQuestions' => $dailyQuestions,'dailyActivities'=>$dailyActivities]);
     }
 
