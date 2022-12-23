@@ -1,6 +1,15 @@
 @extends('web.layout.navbar')
 
 @section('content')
+<h1>persoonlijke data encrypten met crypt library en triats</h1>
+<ul>
+    <li>
+        https://www.positronx.io/laravel-traits-example/
+    </li>
+    <li>
+        https://laracasts.com/discuss/channels/laravel/encrypting-model-data
+    </li>
+</ul>
     {{-- <ul>
     <li>waarde duplicaties uit de frontend halen om de layout rustiger te maken</li>
     <li>Wanneer een uurblok in is gevuld deze minimizen</li>
@@ -59,15 +68,15 @@
 
     {{-- find correct cdn link later --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-  
 
 
 
     @if ($dailyQuestions == null and $dailyActivityResults == null)
-    <div>
-        <h5>U hoeft vandaag geen data bij te houden. Indien u denkt dat dit niet klopt, neem dan contact op met uw begeleider.</h5>
+        <div>
+            <h5>U hoeft vandaag geen data bij te houden. Indien u denkt dat dit niet klopt, neem dan contact op met uw
+                begeleider.</h5>
 
-    </div>
+        </div>
     @else
         <form action="{{ route('log.update', ['user_id' => Auth::id()]) }}" method="POST">
             {{ method_field('patch') }}
@@ -194,8 +203,9 @@
 
 
                                 Scores
-                                <button type="button" class="btn p-0" data-toggle="collapse" href="#scoreCollapse{{ $loop->index }}"
-                                    role="button" aria-expanded="false" aria-controls="scoreCollapse{{ $loop->index }}"><i
+                                <button type="button" class="btn p-0" data-toggle="collapse"
+                                    href="#scoreCollapse{{ $loop->index }}" role="button" aria-expanded="false"
+                                    aria-controls="scoreCollapse{{ $loop->index }}"><i
                                         style=""class="fa-solid fa-book"></i></button>
 
                             </div>
@@ -339,7 +349,8 @@
             </div>
             <div class="row mt-2">
                 <div class="col-lg-3 col-sm-12">
-                    <button class="btn btn-primary m-1 mt-2 w-100" type="submit" name="action" value="update">Opslaan</button>
+                    <button class="btn btn-primary m-1 mt-2 w-100" type="submit" name="action"
+                        value="update">Opslaan</button>
 
                 </div>
 
@@ -384,15 +395,25 @@
             @endforeach
             <div class="form-group">
                 <label for="clientRemark">Opmerking</label>
-                <textarea class="form-control" name="clientRemark" id="clientRemark" rows="3">{{ $dailyQuestions->client_remark }}</textarea>
+                <textarea class="form-control @error('clientRemark') is-invalid @enderror"  name="clientRemark" id="clientRemark" rows="3">{{ old('clientRemark', $dailyQuestions->client_remark) }}</textarea>
+                @error('clientRemark')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
+
+            {{-- <input class="form-control @error('city') is-invalid @enderror" type="text" name="city"
+                value="{{ old('city', $client->city) }} " placeholder="Plaats"> --}}
+
 
 
             <div class="row mt-2">
                 <div class="col-lg-3 col-sm-12">
-                    <button class="btn btn-primary m-1 mt-2 w-100" type="submit" name="action" value="update">Opslaan</button>
+                    <button class="btn btn-primary m-1 mt-2 w-100" type="submit" name="action"
+                        value="update">Opslaan</button>
 
                 </div>
+
+
 
             </div>
         </form>
@@ -402,5 +423,3 @@
 
 
 @endsection
-
-

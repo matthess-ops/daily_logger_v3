@@ -15,7 +15,7 @@ class DefaultQuestionController extends Controller
     //store a new default question.
     public function store(Request $request)
     {
-        error_log('DefaultQuestionController@store');
+        // error_log('DefaultQuestionController@store');
         $this->authorize('isAdmin');
 
         $validatedData = $request->validate([

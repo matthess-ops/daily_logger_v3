@@ -6,6 +6,7 @@ use App\Client;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
@@ -16,8 +17,15 @@ class ClientController extends Controller
     // only admin accessable.
     public function index(Request $request)
     {
-        error_log('ClientController@index called');
-        $this->authorize('viewAny',Client::class);
+        if(Auth::user()->isAdmin()){
+            $this->authorize('isAdmin');
+
+        }
+
+        if(Auth::user()->isMentor()){
+            $this->authorize('isMentor');
+
+        }
         $search = $request->input('search');
         $clients = Client::paginate(10);
         $clients = Client::with('user')
@@ -25,6 +33,8 @@ class ClientController extends Controller
             ->orWhere('lastname', 'LIKE', "%{$search}%")
             ->paginate(10);
         return view('web.sections.admin.client.index', compact('clients'));
+
+
     }
 
     /**
@@ -36,7 +46,7 @@ class ClientController extends Controller
     //only admin
     public function create()
     {
-        $this->authorize('create',Client::class);
+        $this->authorize('isAdmin');
 
         return view('web.sections.admin.client.create');
     }
@@ -51,7 +61,7 @@ class ClientController extends Controller
     //only admin access
     public function store(Request $request)
     {
-        $this->authorize('create',Client::class);
+        $this->authorize('isAdmin');
 
         error_log('ClientController@store called');
         $validatedData = $request->validate([
@@ -73,6 +83,8 @@ class ClientController extends Controller
 
         $user = new User();
         $user->name = $request->input('firstname');
+
+        // $user->name = Crypt::encryptString($request->input('firstname'));
         $user->password = Hash::make($request->input('password'));
         $user->email = $request->input('email');
         $user->role = 'client';
@@ -107,16 +119,24 @@ class ClientController extends Controller
     //only user and admin
     public function show($id)
     {
-        error_log("client.show called");
-        $client = Client::find($id);
-        $this->authorize('view', $client);
+        $client = User::find($id)->client;
+        $clienttest = User::find($id);
+        // dd($client);
+        // $client = Client::find($user->client)
+        // dd($client);
+
         if (Auth::user()->isAdmin()) {
+            $this->authorize('isAdmin');
+
             return view('web.sections.admin.client.show', compact('client'));
         } elseif (Auth::user()->isClient()) {
-            return view('web.sections.client.show', compact('client'));
-        }elseif(Auth::user()->isMentor()){
-            return view('web.sections.mentor.client.show', compact('client'));
+            $this->authorize('isClientUser', $client);
 
+            return view('web.sections.client.show', compact('client'));
+        } elseif (Auth::user()->isMentor()) {
+            $this->authorize('isMentor');
+
+            return view('web.sections.mentor.client.show', compact('client'));
         }
     }
 
@@ -132,7 +152,7 @@ class ClientController extends Controller
     {
         error_log("client.edit called");
         $client = Client::find($id);
-        $this->authorize('update', $client);
+        $this->authorize('isClientUser', $client);
 
         return view('web.sections.client.edit', compact('client'));
     }
@@ -149,11 +169,12 @@ class ClientController extends Controller
     {
         error_log('client.update called');
         $client = Client::find($client_id);
-        $this->authorize('update', $client);
         //user data is needed because this model contains the email address.
         $user = User::find($client->user_id);
 
         if (Auth::user()->isClient()) {
+            $this->authorize('isClientUser', $client);
+
             $validatedData = $request->validate([
                 'firstname' => 'required',
                 'lastname' => 'required',
@@ -183,8 +204,10 @@ class ClientController extends Controller
             $user->email = $request->input('email');
 
             $user->save();
-            return redirect()->back();
+            return view('web.sections.client.show', compact('client'));
         } elseif (Auth::user()->isAdmin()) {
+            $this->authorize('isAdmin', $client);
+
             if ($user->active == true) {
                 $user->active = false;
             } else {
@@ -192,10 +215,8 @@ class ClientController extends Controller
             }
             $user->save();
 
-            // error_log('admin is logged in');
-            return redirect()->back();
+            return view('web.sections.admin.client.show', compact('client'));
+            ;
         }
     }
-
-
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Route;
+use App\DailyActivity;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,8 +26,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 // Route::get('client/{id}/show', 'ClientController@show')->name('client.show');
 
 Route::get('/testgates',function(){
-    return view("web.sections.test.gatetext");
-})->middleware('can:clientNotAllowed');
+    $dailyActivity = collect(DailyActivity::find(1));
+    $new =  $dailyActivity->forget('started');
+
+    return view("web.sections.test.gatetext",['dailyActivity'=>$new]);
+});
 
 Route::group(['prefix' => 'client'], function() {
 

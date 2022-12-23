@@ -11,9 +11,9 @@
         const dailyQuestions = @json($dailyQuestions);
         const dailyActivities = @json($dailyActivities);
     </script>
-    <ul>
+    {{-- <ul>
         <li>de Remarks collasable makeken dus een button toevoegen om de remarks van eze week/8 weken te showen?</li>
-    </ul>
+    </ul> --}}
     <div class="row mb-1">
         <div class="col-12">
             <h5>Overzicht</h5>

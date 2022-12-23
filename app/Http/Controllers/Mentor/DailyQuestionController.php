@@ -17,8 +17,7 @@ class DailyQuestionController extends Controller
      */
     public function index(Request $request)
     {
-        error_log(json_encode($request->all()));
-
+        $this->authorize('isMentor', Client::class);
         $search = $request->input('search');
 
         $dailyQuestions = DailyQuestion::where('mentor_filled', false)
@@ -78,6 +77,7 @@ class DailyQuestionController extends Controller
      */
     public function edit($question_id)
     {
+        $this->authorize('isMentor');
 
         $dailyQuestions = DailyQuestion::findOrFail($question_id);
 
@@ -93,13 +93,13 @@ class DailyQuestionController extends Controller
      */
     public function update(Request $request, $question_id)
     {
-        // dd($request->all());
+        $this->authorize('isMentor');
 
-        // dd($request->all());
-
-        error_log('Mentor.DailyQuestions@update called');
         $validatedData = $request->validate([
             'mentorScores' => 'required|array',
+            'mentorScores.*' => 'int',
+            'mentorRemark'=> 'nullable|string|max:500',
+
 
         ]);
         $dailyQuestion = DailyQuestion::findOrFail($question_id);
@@ -112,7 +112,7 @@ class DailyQuestionController extends Controller
 
         // $dailyQuestion->scores = $request->input('scores');
         $dailyQuestion->save();
-        return redirect()->back();
+        return redirect()->route('mentor.dailyquestion.index');
     }
 
     /**

@@ -120,7 +120,7 @@
         </div>
         <div class="row">
             <div class="col-lg-3 col-sm-12">
-                <button class="btn btn-primary w-100" type="submit">Verwijder</button>
+                <button class="btn btn-primary w-100" type="submit">Toevoegen</button>
             </div>
         </div>
     </form>

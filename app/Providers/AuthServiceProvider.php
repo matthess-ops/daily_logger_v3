@@ -6,6 +6,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Gate;
 use App\User;
 use App\Activity;
+use App\Client;
 use App\Policies\ClientActivitiesPolicy;
 use app\DailyActivity;
 use App\DailyQuestion;
@@ -32,16 +33,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('clientNotAllowed', function (User $user) {
 
-            if($user->role ==='client'){
-                error_log("client not allowed");
-                return false;
-            }else{
-                error_log("continue");
-                return true;
-            }
-        });
 
         Gate::define('isClient', function (User $user) {
 
@@ -75,6 +67,13 @@ class AuthServiceProvider extends ServiceProvider
             error_log('isClientActivitiesOwner gate called');
             return $user->id ==$activity->user_id;
         });
+
+        Gate::define('isClientUser', function (User $user, Client $client) {
+            error_log('isClientActivitiesOwner gate called');
+            return $user->id ==$client->user_id;
+        });
+
+
 
 
     }

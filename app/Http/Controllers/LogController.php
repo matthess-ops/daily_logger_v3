@@ -10,6 +10,8 @@ use Carbon\Carbon;
 use App\Activity;
 use app\User;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Collection;
+
 
 class LogController extends Controller
 {
@@ -33,10 +35,10 @@ class LogController extends Controller
             ->orderBy('created_at', 'DESC')
             ->get();
 
-        $this->authorize('isClientDailyQuestionOwner', $dailyQuestions[0]);
-        $this->authorize('isClientDailyActivityOwner', $dailyActivities[0]);
-
-
+        if ($dailyQuestions != null && $dailyActivities != null) {
+            $this->authorize('isClientDailyQuestionOwner', $dailyQuestions[0]);
+            $this->authorize('isClientDailyActivityOwner', $dailyActivities[0]);
+        }
 
         return view('web.sections.client.logger.index', ['dailyQuestions' => $dailyQuestions, 'dailyActivities' => $dailyActivities]);
     }
@@ -78,11 +80,23 @@ class LogController extends Controller
     public function edit($user_id, $date)
     {
         $dailyActivity = DailyActivity::where('user_id', $user_id)->where('date_today', Carbon::parse($date)->format('Y-m-d'))->first();
+        // dd($dailyActivity);
+        // $makeCollection = collect($dailyActivity)->forget('started');
+        // dd($makeCollection);
+        // error_log("daily collection = ",gettype($dailyActivity));
+        // if($makeCollection instanceof Collection) {
+        //     error_log("is a collection");
+        //    }else{
+        //     error_log("not a collection");
+        //    }
         $dailyQuestions = DailyQuestion::where('user_id', $user_id)->where('date_today', Carbon::parse($date)->format('Y-m-d'))->first();
         $activities = User::find($user_id)->client->activities;
-        $this->authorize('isClientDailyQuestionOwner', $dailyQuestions);
-        $this->authorize('isClientDailyActivityOwner', $dailyActivity);
-        $this->authorize('isClientActivitiesOwner', $activities[0]);
+        // $dailyActivity =$dailyActivity->forget('started');
+        if ($dailyActivity != null && $dailyQuestions != null) {
+            $this->authorize('isClientDailyQuestionOwner', $dailyQuestions);
+            $this->authorize('isClientDailyActivityOwner', $dailyActivity);
+        }
+        // $this->authorize('isClientActivitiesOwner', $activities[0]);
         return view('web.sections.client.logger.edit', ['dailyActivityResults' => $dailyActivity, 'dailyQuestions' => $dailyQuestions, 'activities' => $activities]);
     }
 
@@ -102,19 +116,19 @@ class LogController extends Controller
         error_log(json_encode($request->all()));
 
         //validation
-        // $validatedData = $request->validate([
-        //     'dailyQuestionId' => 'required',
-        //     'dailyActivityId' => 'required',
-        //     'main' => 'required',
-         
-        //     'scaled' => 'required',
-        //     'action' => 'required',
+        $validatedData = $request->validate([
 
-        //     'postcode' => 'required',
-        //     'phone_number' => 'required',
-        //     'city' => 'required',
-        //     'password' => 'required',
-        // ]);
+            'main' => 'required', //string number
+
+            'scaled' => 'array', //array of string numbers
+            'scaled.*' => 'int',
+
+
+            'scores' => 'array', //array of string numbers
+            'scores.*' => 'int',
+            'clientRemark' => 'nullable|string|max:500', // empty or string
+
+        ]);
         //Activity logger update
         $activity = Activity::find($request->input('main'));
         $mainActivityValue = $activity->value;
@@ -159,13 +173,6 @@ class LogController extends Controller
         $dailyActivity->completed = $isComplete;
         $dailyActivity->started = $isStarted;
         $dailyActivity->save();
-
-
-
-
-
-        // save daily question stuff
-
 
         $dailyQuestion = DailyQuestion::find($request->input('dailyQuestionId'));
         $this->authorize('isClientDailyQuestionOwner', $dailyQuestion);

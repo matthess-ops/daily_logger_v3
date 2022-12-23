@@ -46,7 +46,7 @@ class ClientActivitiesController extends Controller
         if ($request->has('mainActivity')) {
             // validate the mainAcitivit input
             $validatedData = $request->validate([
-                'mainActivity' => 'required',
+                'mainActivity' => 'required|string',
 
             ]);
             Activity::create([
@@ -61,7 +61,7 @@ class ClientActivitiesController extends Controller
         if ($request->has('scaledActivity')) {
 
             $validatedData = $request->validate([
-                'scaledActivity' => 'required',
+                'scaledActivity' => 'required|string',
 
             ]);
             Activity::create([
@@ -122,7 +122,7 @@ class ClientActivitiesController extends Controller
 
         $activityToRemove = $request->input('removeActivity');
         $activity = Activity::find($activityToRemove);
-        $this->authorize('delete-activity', $activity);
+        $this->authorize('isClientActivitiesOwner', $activity);
         $activity->delete();
         return redirect()->back();
     }

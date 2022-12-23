@@ -39,7 +39,7 @@
         @csrf
         <div class="form-group">
             <label class="font-weight-bold" for="">Nieuwe standaard dagelijkse vraag</label>
-            <input name="question" type="text" class="form-control @error('defaultQuestion') is-invalid @enderror"
+            <input name="defaultQuestion" type="text" class="form-control @error('defaultQuestion') is-invalid @enderror"
                 id="" aria-describedby="helpId" placeholder="">
             @error('defaultQuestion')
                 <div class="alert alert-danger">{{ $message }}</div>

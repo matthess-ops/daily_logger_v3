@@ -21,12 +21,12 @@ class MentorController extends Controller
      */
     public function index(Request $request)
     {
-        error_log('MentorController@index');
-        error_log(json_encode($request->all()));
+        // error_log('MentorController@index');
+        // error_log(json_encode($request->all()));
         $this->authorize('isAdmin');
 
 
-        error_log("check search " . $request->input('search'));
+        // error_log("check search " . $request->input('search'));
         $search = $request->input('search');
         $mentors = Mentor::paginate(10);
         $mentors = Mentor::with('user')
@@ -57,9 +57,8 @@ class MentorController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create',Mentor::class);
+        $this->authorize('isAdmin');
 
-        error_log('MentorController@store called');
         $validatedData = $request->validate([
             'firstname' => 'required',
             'lastname' => 'required',
@@ -113,10 +112,13 @@ class MentorController extends Controller
         error_log('MentorController@show');
 
         $mentor = Mentor::find($mentor_id);
-        $this->authorize('view', $mentor);
         if (Auth::user()->isAdmin()) {
+            $this->authorize('isAdmin');
+
             return view('web.sections.admin.mentor.show', compact('mentor'));
         } elseif (Auth::user()->ismentor()) {
+            $this->authorize('isMentor');
+
             return view('web.sections.mentor.show', compact('mentor'));
         }
 
@@ -147,11 +149,12 @@ class MentorController extends Controller
     {
         error_log('mentor.update called');
         $mentor = Mentor::find($mentor_id);
-        $this->authorize('update', $mentor);
         //user data is needed because this model contains the email address.
         $user = User::find($mentor->user_id);
 
         if (Auth::user()->ismentor()) {
+            $this->authorize('isMentor');
+
             $validatedData = $request->validate([
                 'firstname' => 'required',
                 'lastname' => 'required',
@@ -183,6 +186,8 @@ class MentorController extends Controller
             $user->save();
             return redirect()->back();
         } elseif (Auth::user()->isAdmin()) {
+            $this->authorize('isAdmin');
+
             if ($user->active == true) {
                 $user->active = false;
             } else {
@@ -190,7 +195,6 @@ class MentorController extends Controller
             }
             $user->save();
 
-            // error_log('admin is logged in');
             return redirect()->back();
         }
     }
