@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Encryptable;
+
 
 /**
  * App\Mentor
@@ -26,6 +28,18 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Mentor extends Model
 {
+    use Encryptable;
+
+    protected $encryptable = [
+        'firstname',
+        'lastname',
+        'street',
+        'street_nr',
+        'postcode',
+        'phone_number',
+        'city'
+       
+    ];
     public function user(){
         return $this->hasOne(User::class,'id','user_id');
     }

@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Encryptable;
+
 
 /**
  * App\Client
@@ -30,6 +32,21 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Client extends Model
 {
+
+    use Encryptable;
+
+    protected $encryptable = [
+        // 'firstname',
+        'lastname',
+        'street',
+        'street_nr',
+        'postcode',
+        'phone_number',
+        'city'
+       
+    ];
+
+
     public function questions(){
         return $this->hasMany(Question::class,'user_id','user_id');
     }

@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Traits\Encryptable;
 
 /**
  * App\User
@@ -49,6 +50,15 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    // use Encryptable;
+
+    // protected $encryptable = [
+    //     // 'email',
+    //     'name',
+   
+       
+    // ];
 
     /**
      * The attributes that should be cast to native types.

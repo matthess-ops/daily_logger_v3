@@ -55,7 +55,7 @@
             <td>{{ $dailyQuestion->client->firstname}}</td>
             <td>{{ $dailyQuestion->client->lastname}}</td>
             <td class="d-none d-md-table-cell">{{ $dailyQuestion->client->user->email }}</td>
-            <td>{{ $dailyQuestion->created_at->format('M d Y') }}</td>
+            <td>{{ $dailyQuestion->created_at->locale('nl')->translatedFormat('l d M Y') }}</td>
 
             {{-- <td>        @if ($dailyQuestion->filled == true)
                 filled

@@ -104,8 +104,9 @@ class ClientController extends Controller
         $client->phone_number = $request->input('phone_number');
 
         $client->save();
-        return Redirect::route('client.show', ['client_id' => $client->id]);
-        // return view('web.sections.admin.client.show', compact('client'));
+        
+        // return Redirect::route('client.show', ['client_id' => $user->id]);
+        return view('web.sections.admin.client.show', compact('client'));
     }
 
     /**
@@ -119,14 +120,13 @@ class ClientController extends Controller
     //only user and admin
     public function show($id)
     {
-        $client = User::find($id)->client;
-        $clienttest = User::find($id);
-        // dd($client);
-        // $client = Client::find($user->client)
-        // dd($client);
+        $client = Client::find($id);
+      
 
         if (Auth::user()->isAdmin()) {
             $this->authorize('isAdmin');
+            error_log("clientcontroller isadmin");
+            // return Redirect::route('client.show', ['client_id' => $id]);
 
             return view('web.sections.admin.client.show', compact('client'));
         } elseif (Auth::user()->isClient()) {

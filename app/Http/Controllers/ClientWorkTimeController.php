@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Client;
+use Symfony\Component\VarDumper\Caster\RedisCaster;
 
 class ClientWorkTimeController extends Controller
 {
@@ -28,6 +29,7 @@ class ClientWorkTimeController extends Controller
 
         } 
         
-        return redirect()->back();    
+        // return redirect()->back();   
+        return redirect()->route('client.show',["client_id"=>$client_id] );
     }
 }
