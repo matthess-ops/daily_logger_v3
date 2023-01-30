@@ -17,8 +17,8 @@ class DatabaseSeeder extends Seeder
         $this->call(AdminSeeder::class);
         $this->call(ActivitySeeder::class);
         $this->call(QuestionSeeder::class);
-        $this->call(DailyQuestionSeeder::class);
-        $this->call(DailyActivitySeeder::class);
+        // $this->call(DailyQuestionSeeder::class);
+        // $this->call(DailyActivitySeeder::class);
 
     }
 }

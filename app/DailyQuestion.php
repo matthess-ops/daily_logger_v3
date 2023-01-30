@@ -27,9 +27,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class DailyQuestion extends Model
 {
-    protected $fillable = [
-        'user_id', 'questions', 'scores','filled','filled_at'
-    ];
+    // protected $fillable = [
+    //     'user_id', 'questions', 'scores','filled','filled_at','date_today'
+    // ];
 
 
     protected $casts = [

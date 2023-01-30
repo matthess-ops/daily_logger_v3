@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CreateDailyQuestionLogger;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,7 +16,11 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         // Commands\DailyQuestionCron::class,
         Commands\DemoCron::class,
-        Commands\DailyActivityCron::class,
+        // Commands\DailyActivityCron::class,
+        Commands\CreateDailyActivityLogger::class,
+        Commands\CreateDailyQuestionLogger::class,
+
+        
 
 
     ];
@@ -32,7 +37,10 @@ class Kernel extends ConsoleKernel
         // $schedule->command('dailyQuestion:cron')->everyMinute();
         // $schedule->command('dailyActivity:cron')->everyTwoMinutes();
 
-        $schedule->command('demo:cron')->everyTwoMinutes();
+        // $schedule->command('demo:cron')->everyTwoMinutes();
+        $schedule->command('CreateDailyActivityLogger:cron')->everyMinute();
+        $schedule->command('CreateDailyQuestionLogger:cron')->everyMinute();
+
     }
 
     /**

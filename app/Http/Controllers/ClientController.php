@@ -121,6 +121,7 @@ class ClientController extends Controller
     public function show($id)
     {
         $client = Client::find($id);
+        // dd($id);
       
 
         if (Auth::user()->isAdmin()) {
@@ -130,7 +131,9 @@ class ClientController extends Controller
 
             return view('web.sections.admin.client.show', compact('client'));
         } elseif (Auth::user()->isClient()) {
-            $this->authorize('isClientUser', $client);
+            $client =Auth::user()->client;
+            // dd($client);
+            // $this->authorize('isClientUser', $client);
 
             return view('web.sections.client.show', compact('client'));
         } elseif (Auth::user()->isMentor()) {

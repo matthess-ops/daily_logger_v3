@@ -26,7 +26,7 @@ class DailyActivity extends Model
 {
 
     protected $fillable = [
-        'user_id', 'time_slots', 'main_activities','scaled_activities','scaled_activities_scores','colors','date_today',
+        'user_id', 'time_slots', 'main_activities','scaled_activities','scaled_activities_scores','colors','date_today','time_values',
     ];
 
 
