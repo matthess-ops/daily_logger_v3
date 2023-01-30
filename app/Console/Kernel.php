@@ -30,10 +30,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->everyMinute();
         // $schedule->command('dailyQuestion:cron')->everyMinute();
-        $schedule->command('dailyActivity:cron')->everyMinute();
+        // $schedule->command('dailyActivity:cron')->everyTwoMinutes();
 
-        // $schedule->command('demo:cron')
-        // ->everyTwoMinutes();
+        $schedule->command('demo:cron')->everyTwoMinutes();
     }
 
     /**

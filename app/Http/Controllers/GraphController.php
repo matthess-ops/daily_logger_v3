@@ -19,8 +19,12 @@ class GraphController extends Controller
     {
         $dailyActivities = DailyActivity::where('user_id', $user_id)->get();
         $dailyQuestions = DailyQuestion::where('user_id', $user_id)->get();
-        $this->authorize('isClientDailyQuestionOwner', $dailyQuestions[0]);
-        $this->authorize('isClientDailyActivityOwner', $dailyActivities[0]);
+        if ($dailyQuestions->isNotEmpty() && $dailyActivities->isNotEmpty()) {
+            $this->authorize('isClientDailyQuestionOwner', $dailyQuestions[0]);
+            $this->authorize('isClientDailyActivityOwner', $dailyActivities[0]);
+        }
+
+
         return view('web.sections.graph.index', ['dailyQuestions' => $dailyQuestions, 'dailyActivities' => $dailyActivities]);
     }
 

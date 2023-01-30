@@ -5,6 +5,7 @@
 
     <h4>Wijzigen van activiteiten</h4> --}}
     {{-- <div class="container"> --}}
+        {{-- {{$activities->where('type', 'scaled')}} --}}
     <div class="row mb-2">
         <div class="col">
             <h5 class="font-weight-bold">Activiteiten aanpassen</h5>
@@ -14,34 +15,44 @@
     <form action="{{ route('clientActivities.destroy') }}"method="POST">
         @csrf
         @method('DELETE')
-        <div class="row">
-            <div class="col">
-                <h6 class="">Score Activiteiten</h6>
+            <div class="row">
+                <div class="col">
+                    <h6 class="">Score Activiteiten</h6>
+                </div>
             </div>
-        </div>
-        <div class="form-group row">
-            <div class="col">
+            @if ($activities->where('type', 'scaled')->isNotEmpty())
 
-                <label>Selecteer te verwijderen score activiteit:</label>
-                <select class="form-control" name="removeActivity">
-                    @foreach ($activities as $activity)
-                        @if ($activity->type == 'scaled')
-                            <option value="{{ $activity->id }}">{{ $activity->value }}</option>
-                        @endif
-                    @endforeach
-                </select>
-            </div>
+            <div class="form-group row">
+                <div class="col">
 
-        </div>
-        <div class="row">
-            <div class="col-lg-3 col-sm-12">
-                <button class="btn btn-primary w-100" type="submit">Verwijder</button>
+                    <label>Selecteer te verwijderen score activiteit:</label>
+                    <select class="form-control" name="removeActivity">
+                        @foreach ($activities as $activity)
+                            @if ($activity->type == 'scaled')
+                                <option value="{{ $activity->id }}">{{ $activity->value }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
 
             </div>
+            <div class="row">
+                <div class="col-lg-3 col-sm-12">
+                    <button class="btn btn-primary w-100" type="submit">Verwijder</button>
 
-        </div>
+                </div>
+
+            </div>
+        @else
+            <div class="row">
+                <div class="col">
+                    <p>Er zijn nog geen score activiteiten, voeg deze hieronder toe.</p>
+                </div>
+            </div>
+        @endif
 
     </form>
+
 
     <form action="{{ route('clientActivities.store') }}" method="post">
         @csrf
@@ -69,39 +80,46 @@
     </form>
 
     <hr>
-
-    <form action="{{ route('clientActivities.destroy') }}" method="POST">
-        @csrf
-        @method('DELETE')
-        <div class="row">
-            <div class="col">
-                <h6 class="">Activiteiten</h6>
+        <form action="{{ route('clientActivities.destroy') }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <div class="row">
+                <div class="col">
+                    <h6 class="">Activiteiten</h6>
+                </div>
             </div>
-        </div>
+            @if ($activities->where('type', 'main')->isNotEmpty())
 
-        <div class="form-group row">
-            <div class="col">
-                <label>Selecteer te verwijderen activiteit:</label>
-                <select class="form-control" name="removeActivity">
-                    @foreach ($activities as $activity)
-                        @if ($activity->type == 'main')
-                            <option value="{{ $activity->id }}">{{ $activity->value }}</option>
-                        @endif
-                    @endforeach
-                </select>
-            </div>
+            <div class="form-group row">
+                <div class="col">
+                    <label>Selecteer te verwijderen activiteit:</label>
+                    <select class="form-control" name="removeActivity">
+                        @foreach ($activities as $activity)
+                            @if ($activity->type == 'main')
+                                <option value="{{ $activity->id }}">{{ $activity->value }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
 
-
-        </div>
-        <div class="row">
-            <div class="col-lg-3 col-sm-12">
-                <button class="btn btn-primary w-100" type="submit">Verwijder</button>
 
             </div>
+            <div class="row">
+                <div class="col-lg-3 col-sm-12">
+                    <button class="btn btn-primary w-100" type="submit">Verwijder</button>
 
-        </div>
+                </div>
 
-    </form>
+            </div>
+            @else
+            <div class="row">
+                <div class="col">
+                    <p>Er zijn nog geen activiteiten, voeg deze hieronder toe.</p>
+                </div>
+            </div>
+        @endif
+
+        </form>
 
     <form action="{{ route('clientActivities.store') }}" method="post">
         @csrf

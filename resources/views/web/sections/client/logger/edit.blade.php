@@ -1,7 +1,7 @@
 @extends('web.layout.navbar')
 
 @section('content')
-<h1>persoonlijke data encrypten met crypt library en triats</h1>
+{{-- <h1>persoonlijke data encrypten met crypt library en triats</h1>
 <ul>
     <li>
         https://www.positronx.io/laravel-traits-example/
@@ -9,7 +9,7 @@
     <li>
         https://laracasts.com/discuss/channels/laravel/encrypting-model-data
     </li>
-</ul>
+</ul> --}}
     {{-- <ul>
     <li>waarde duplicaties uit de frontend halen om de layout rustiger te maken</li>
     <li>Wanneer een uurblok in is gevuld deze minimizen</li>

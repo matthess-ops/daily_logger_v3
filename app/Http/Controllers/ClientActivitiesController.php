@@ -25,9 +25,16 @@ class ClientActivitiesController extends Controller
         error_log('ClientActivitiesController@index called');
 
         $clientActivities = Auth::user()->client->activities->sortByDesc('created_at'); // sort for created_at to put the latest on top
-        $this->authorize('viewAny', $clientActivities[0]);
+        // dd($clientActivities->isEmpty());
+        if($clientActivities->isEmpty()){
+            return view('web.sections.client.activities.index', ['activities' => $clientActivities  ]);
 
-        return view('web.sections.client.activities.index', ['activities' => $clientActivities  ]);
+        }else{
+            $this->authorize('viewAny', $clientActivities[0]);
+            return view('web.sections.client.activities.index', ['activities' => $clientActivities  ]);
+
+        }
+
     }
 
 

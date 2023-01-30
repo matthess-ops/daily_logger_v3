@@ -35,9 +35,13 @@ class LogController extends Controller
             ->orderBy('created_at', 'DESC')
             ->get();
 
-        if ($dailyQuestions != null && $dailyActivities != null) {
+
+
+        if ($dailyQuestions->isNotEmpty() && $dailyActivities->isNotEmpty()) {
             $this->authorize('isClientDailyQuestionOwner', $dailyQuestions[0]);
             $this->authorize('isClientDailyActivityOwner', $dailyActivities[0]);
+            return view('web.sections.client.logger.index', ['dailyQuestions' => $dailyQuestions, 'dailyActivities' => $dailyActivities]);
+
         }
 
         return view('web.sections.client.logger.index', ['dailyQuestions' => $dailyQuestions, 'dailyActivities' => $dailyActivities]);
