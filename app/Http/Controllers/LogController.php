@@ -95,6 +95,20 @@ class LogController extends Controller
         //    }
         $dailyQuestions = DailyQuestion::where('user_id', $user_id)->where('date_today', Carbon::parse($date)->format('Y-m-d'))->first();
         $activities = User::find($user_id)->client->activities;
+        dump($activities);
+        $activities = $activities->where('created_at','<',Carbon::now()->today());
+        dump($activities);
+        // $activitiesNotToday = [];
+        // foreach ($activities as $activity) {
+        //     if($activity->created_at->format('Y-m-d') != Carbon::now()->format('Y-m-d') ){
+        //         array_push($activitiesNotToday,$activity);
+        //     }
+        // }
+        // $activities = $activitiesNotToday;
+        // dd($activitiesNotToday);
+        // dd($activities);
+        // $activities = $activities->where('type',"==",'scaled')->get();
+        // dd($activities);
         // $dailyActivity =$dailyActivity->forget('started');
         if ($dailyActivity != null && $dailyQuestions != null) {
             $this->authorize('isClientDailyQuestionOwner', $dailyQuestions);

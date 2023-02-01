@@ -28,8 +28,8 @@ class ActivitySeeder extends Seeder
             }
             $activities = $newActivities;
             Activity::create([
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
+                'created_at' => Carbon::now()->subDay(),
+                'updated_at' => Carbon::now()->subDay(),
                 'user_id' => $user_id,
                 'value' => $randActivity,
                 'type' => $type,

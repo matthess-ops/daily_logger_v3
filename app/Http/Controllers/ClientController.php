@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Question;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
+use App\Activity;
+
 
 class ClientController extends Controller
 {
@@ -17,14 +22,12 @@ class ClientController extends Controller
     // only admin accessable.
     public function index(Request $request)
     {
-        if(Auth::user()->isAdmin()){
+        if (Auth::user()->isAdmin()) {
             $this->authorize('isAdmin');
-
         }
 
-        if(Auth::user()->isMentor()){
+        if (Auth::user()->isMentor()) {
             $this->authorize('isMentor');
-
         }
         $search = $request->input('search');
         $clients = Client::paginate(10);
@@ -33,8 +36,6 @@ class ClientController extends Controller
             ->orWhere('lastname', 'LIKE', "%{$search}%")
             ->paginate(10);
         return view('web.sections.admin.client.index', compact('clients'));
-
-
     }
 
     /**
@@ -104,7 +105,45 @@ class ClientController extends Controller
         $client->phone_number = $request->input('phone_number');
 
         $client->save();
-        
+
+        //add the default daily question for client
+
+        $defaultQuestions =  Question::where('user_id', Auth::id())->get(); //get the admin default questions
+        foreach ($defaultQuestions as $defaultquestion) {
+            $newQuestion = new Question();
+            $newQuestion->user_id = $user->id;
+            $newQuestion->question = $defaultquestion->question;
+            $newQuestion->save();
+        }
+
+        //add number of default activities for client
+        $defaultMainActivities = ["werken", "rusten", "ontspanning"];
+        foreach ($defaultMainActivities as $defaulMainActivity) {
+            Activity::create([
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'user_id' => $user->id,
+                'value' => $defaulMainActivity,
+                'color' => '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT),
+
+                'type' => 'main',
+            ]);
+        }
+        $defaultScaledActivities = ["Stress", "Vol hoofd", "concentratie"];
+
+        foreach ($defaultScaledActivities as $defaultScaledActivity) {
+            Activity::create([
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'user_id' => $user->id,
+                'value' => $defaultScaledActivity,
+                'color' => '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT),
+
+                'type' => 'scaled',
+            ]);
+        }
+
+
         // return Redirect::route('client.show', ['client_id' => $user->id]);
         return view('web.sections.admin.client.show', compact('client'));
     }
@@ -122,7 +161,7 @@ class ClientController extends Controller
     {
         $client = Client::find($id);
         // dd($id);
-      
+
 
         if (Auth::user()->isAdmin()) {
             $this->authorize('isAdmin');
@@ -131,7 +170,7 @@ class ClientController extends Controller
 
             return view('web.sections.admin.client.show', compact('client'));
         } elseif (Auth::user()->isClient()) {
-            $client =Auth::user()->client;
+            $client = Auth::user()->client;
             // dd($client);
             // $this->authorize('isClientUser', $client);
 
@@ -218,8 +257,7 @@ class ClientController extends Controller
             }
             $user->save();
 
-            return view('web.sections.admin.client.show', compact('client'));
-            ;
+            return view('web.sections.admin.client.show', compact('client'));;
         }
     }
 }

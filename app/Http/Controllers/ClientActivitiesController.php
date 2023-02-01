@@ -56,11 +56,13 @@ class ClientActivitiesController extends Controller
                 'mainActivity' => 'required|string',
 
             ]);
+            error_log("wordt dit nie gecalled");
             Activity::create([
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'user_id' => Auth::id(),
                 'value' => $request->input('mainActivity'),
+                'color' => '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT),
                 'type' => 'main',
             ]);
         }
@@ -76,6 +78,7 @@ class ClientActivitiesController extends Controller
                 'updated_at' => Carbon::now(),
                 'user_id' => Auth::id(),
                 'value' => $request->input('scaledActivity'),
+                'color' => '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT),
                 'type' => 'scaled',
             ]);
         }
