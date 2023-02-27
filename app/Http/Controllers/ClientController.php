@@ -128,6 +128,8 @@ class ClientController extends Controller
 
                 'type' => 'main',
             ]);
+
+            
         }
         $defaultScaledActivities = ["Stress", "Vol hoofd", "concentratie"];
 

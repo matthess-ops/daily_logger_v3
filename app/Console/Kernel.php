@@ -38,8 +38,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('dailyActivity:cron')->everyTwoMinutes();
 
         // $schedule->command('demo:cron')->everyTwoMinutes();
-        $schedule->command('CreateDailyActivityLogger:cron')->everyMinute();
-        $schedule->command('CreateDailyQuestionLogger:cron')->everyMinute();
+        $schedule->command('CreateDailyActivityLogger:cron')->everyFifteenMinutes();
+        $schedule->command('CreateDailyQuestionLogger:cron')->everyFifteenMinutes();
 
     }
 
