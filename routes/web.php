@@ -3,6 +3,7 @@
 use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Route;
 use App\DailyActivity;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +24,19 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-// Route::get('client/{id}/show', 'ClientController@show')->name('client.show');
+Route::get('/scheduler', function() {
+    echo "doe je het";
+    Artisan::call('schedule:run',[]);
+    echo "doet dit het";
+});
+
+Route::get('/runschedule', 'CreateDailyLogController@run');
+
+
+Route::get('migrate', function(){
+    Artisan::call('migrate:refresh --seed', []);
+    return '<h1>Symlink created</h1>';
+});
 
 Route::get('/testgates',function(){
     $dailyActivity = collect(DailyActivity::find(1));

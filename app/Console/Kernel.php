@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
         Commands\CreateDailyActivityLogger::class,
         Commands\CreateDailyQuestionLogger::class,
 
-        
+
 
 
     ];
@@ -37,9 +37,9 @@ class Kernel extends ConsoleKernel
         // $schedule->command('dailyQuestion:cron')->everyMinute();
         // $schedule->command('dailyActivity:cron')->everyTwoMinutes();
 
-        // $schedule->command('demo:cron')->everyTwoMinutes();
-        $schedule->command('CreateDailyActivityLogger:cron')->everyFifteenMinutes();
-        $schedule->command('CreateDailyQuestionLogger:cron')->everyFifteenMinutes();
+        // $schedule->command('demo:cropn')->everyTwoMinutes();
+        $schedule->command('CreateDailyActivityLogger:cron')->everyMinute();
+        $schedule->command('CreateDailyQuestionLogger:cron')->everyMinute();
 
     }
 

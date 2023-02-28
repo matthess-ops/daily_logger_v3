@@ -2,7 +2,7 @@
 
 @section('content')
 
-<ul>
+{{-- <ul>
     <li>wat je eigenlijk wil hebben is dat je een paar activiteiten kan selecteren
         en dan kan zien wat de scores aan deze activiteiten waren. Op deze manier
         kan je dan achterhalen wat ontspannende activiteiten zijn.
@@ -11,7 +11,7 @@
         hoe de persoon zich voelde tijdens deze activiteiten. Op deze manier is 1 in keer zichtbaar
         bij welke activiteit de patient zicht het meest gespannen/ontspannen zicht voelt.
     </li>
-</ul>
+</ul> --}}
     <script src="{{ asset('js/graphfrontend.js') }}" defer></script>
     <script>
         const dailyQuestions = @json($dailyQuestions);
