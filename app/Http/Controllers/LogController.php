@@ -84,7 +84,7 @@ class LogController extends Controller
     public function edit($user_id, $date)
     {
         $dailyActivity = DailyActivity::where('user_id', $user_id)->first();
-        dump($dailyActivity);
+        // dump($dailyActivity);
 
 
         $dailyActivity = DailyActivity::where('user_id', $user_id)->where('date_today', Carbon::parse($date)->format('Y-m-d'))->first();

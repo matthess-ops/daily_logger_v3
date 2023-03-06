@@ -61,12 +61,12 @@ Route::get('/runschedule', 'CreateDailyLogController@run');
 
 
 
-Route::get('/testgates',function(){
-    $dailyActivity = collect(DailyActivity::find(1));
-    $new =  $dailyActivity->forget('started');
+// Route::get('/testgates',function(){
+//     $dailyActivity = collect(DailyActivity::find(1));
+//     $new =  $dailyActivity->forget('started');
 
-    return view("web.sections.test.gatetext",['dailyActivity'=>$new]);
-});
+//     return view("web.sections.test.gatetext",['dailyActivity'=>$new]);
+// });
 
 Route::group(['prefix' => 'client'], function() {
 
@@ -198,20 +198,30 @@ Route::patch('worktime/{client_id}/update', 'ClientWorkTimeController@update')->
 
 
 
+Route::get('send-mail', function () {
+   
+    $details = [
+        'title' => 'Mail from ItSolutionStuff.com',
+        'body' => 'This is for testing email using smtp'
+    ];
+   
+    \Mail::to('matthijnwur@gmail.com')->send(new \App\Mail\MyTestMail($details));
+   
+    dd("Email is Sent.");
+}); 
 
 
 
+// Route::get('/testjson', function () {
+//     $dailyActivity = DailyActivity::first();
+//     dump($dailyActivity);
+//     dump($dailyActivity);
+//     dump(gettype($dailyActivity->main_activities));
+//     return view('web.sections.test.testjsonindex',compact('dailyActivity'));
+// });
 
-Route::get('/testjson', function () {
-    $dailyActivity = DailyActivity::first();
-    dump($dailyActivity);
-    dump($dailyActivity);
-    dump(gettype($dailyActivity->main_activities));
-    return view('web.sections.test.testjsonindex',compact('dailyActivity'));
-});
 
-
-    Route::get('/testactivityjson', 'TestjsonController@index')->name('testjson.index');
+//     Route::get('/testactivityjson', 'TestjsonController@index')->name('testjson.index');
     // Route::get('/create', 'Mentor\DailyQuestionController@create')->name('mentor.dailyquestion.create')
     // Route::post('/create', 'Mentor\DailyQuestionController@store')->name('mentor.dailyquestion.store')->middleware('auth');
     // Route::get('/{question_id}/show', 'Mentor\DailyQuestionController@show')->name('mentor.dailyquestion.show')->middleware('auth');

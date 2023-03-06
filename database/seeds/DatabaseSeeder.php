@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(QuestionSeeder::class);
         $this->call(DailyQuestionSeeder::class);
         $this->call(DailyActivitySeeder::class);
-        $this->call(TestjsonSeeder::class);
+        // $this->call(TestjsonSeeder::class);
 
     }
 }
