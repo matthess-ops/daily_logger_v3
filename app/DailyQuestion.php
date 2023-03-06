@@ -31,13 +31,43 @@ class DailyQuestion extends Model
     //     'user_id', 'questions', 'scores','filled','filled_at','date_today'
     // ];
 
+    public function getQuestionsAttribute($value)
+    {
+        return json_decode($value);
+    }
+
+    public function setQuestionsAttribute($value)
+    {
+        $this->attributes['questions'] = json_encode($value);
+    }
+
+    public function getScoresAttribute($value)
+    {
+        return json_decode($value);
+    }
+
+    public function setScoresAttribute($value)
+    {
+        $this->attributes['scores'] = json_encode($value);
+    }
+
+    public function getMentorScoresAttribute($value)
+    {
+        return json_decode($value);
+    }
+
+    public function setMentorScoresAttribute($value)
+    {
+        $this->attributes['mentor_scores'] = json_encode($value);
+    }
+
 
     protected $casts = [
         'filled_at' => 'datetime',
         'mentor_filled_at'=> 'datetime',
-        'questions' => 'json',
-        'scores' => 'json',
-        'mentor_scores'=>'json',
+        // 'questions' => 'json',
+        // 'scores' => 'json',
+        // 'mentor_scores'=>'json',
         'filled'=>'boolean',
         'mentor_filled'=>'boolean',
         'client_remark'=>'string',

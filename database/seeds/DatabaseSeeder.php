@@ -13,12 +13,13 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(UserSeeder::class);
         $this->call(ClientSeeder::class);
-        // $this->call(MentorSeeder::class);
+        $this->call(MentorSeeder::class);
         $this->call(AdminSeeder::class);
         $this->call(ActivitySeeder::class);
         $this->call(QuestionSeeder::class);
-        // $this->call(DailyQuestionSeeder::class);
-        // $this->call(DailyActivitySeeder::class);
+        $this->call(DailyQuestionSeeder::class);
+        $this->call(DailyActivitySeeder::class);
+        $this->call(TestjsonSeeder::class);
 
     }
 }

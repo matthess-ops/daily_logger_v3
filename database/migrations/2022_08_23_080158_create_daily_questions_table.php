@@ -17,12 +17,12 @@ class CreateDailyQuestionsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('user_id');
-            $table->json('questions');
-            $table->json('scores');
+            $table->text('questions');
+            $table->text('scores');
             $table->string('date_today');
 
-            $table->json('mentor_scores');
-            $table->json('mentor_id')->nullable();
+            $table->text('mentor_scores');
+            $table->string('mentor_id')->nullable();
             $table->timestamp('filled_at')->nullable();
             $table->timestamp('mentor_filled_at')->nullable();
 

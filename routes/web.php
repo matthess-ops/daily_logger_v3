@@ -22,21 +22,44 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/symlink', function(){
+//     $targetFolder = $_SERVER['DOCUMENT_ROOT'].'/setup/storage/app/public';
+//     $linkFolder = $_SERVER['DOCUMENT_ROOT'].'/storage';
+//     symlink($targetFolder, $linkFolder);
+//     return 'success';
+// });
 
-Route::get('/scheduler', function() {
-    echo "doe je het";
-    Artisan::call('schedule:run',[]);
-    echo "doet dit het";
+// //Clear Cache facade value:
+Route::get('/clear', function() {
+    $exitCode = Artisan::call('cache:clear');
+    $exitCodea = Artisan::call('route:clear');
+    $exitCodeb = Artisan::call('config:clear');
+    $exitCodec = Artisan::call('view:clear');
+
+    return '<h1>Cache facade value cleared</h1>';
 });
+
+
+// Route::get('clearsession', function(Request $request){
+//     $request->session()->flush();
+//     return '<h1>clear session data</h1>';
+// });
+
+Route::get('migrate', function(){
+    Artisan::call('migrate:refresh --seed', []);
+    return '<h1>migration done</h1>';
+});
+
+// Route::get('symlink', function(){
+//     Artisan::call('storage:link', []);
+//     return '<h1>Symlink created</h1>';
+// });
+
+
 
 Route::get('/runschedule', 'CreateDailyLogController@run');
 
 
-Route::get('migrate', function(){
-    Artisan::call('migrate:refresh --seed', []);
-    return '<h1>Symlink created</h1>';
-});
 
 Route::get('/testgates',function(){
     $dailyActivity = collect(DailyActivity::find(1));
@@ -178,3 +201,20 @@ Route::patch('worktime/{client_id}/update', 'ClientWorkTimeController@update')->
 
 
 
+
+Route::get('/testjson', function () {
+    $dailyActivity = DailyActivity::first();
+    dump($dailyActivity);
+    dump($dailyActivity);
+    dump(gettype($dailyActivity->main_activities));
+    return view('web.sections.test.testjsonindex',compact('dailyActivity'));
+});
+
+
+    Route::get('/testactivityjson', 'TestjsonController@index')->name('testjson.index');
+    // Route::get('/create', 'Mentor\DailyQuestionController@create')->name('mentor.dailyquestion.create')
+    // Route::post('/create', 'Mentor\DailyQuestionController@store')->name('mentor.dailyquestion.store')->middleware('auth');
+    // Route::get('/{question_id}/show', 'Mentor\DailyQuestionController@show')->name('mentor.dailyquestion.show')->middleware('auth');
+    // Route::patch('/{question_id}/update', 'Mentor\DailyQuestionController@update')->name('mentor.dailyquestion.update')->middleware('auth');
+    // Route::delete('/{question_id}/delete', 'Mentor\DailyQuestionController@destroy')->name('mentor.dailyquestion.destroy')->middleware('auth');
+    // Route::get('/{question_id}/edit', 'Mentor\DailyQuestionController@edit')->name('mentor.dailyquestion.edit')->middleware('auth');

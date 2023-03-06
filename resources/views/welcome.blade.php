@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Brand
+                    Actitracker
                 </div>
 
                 {{-- <div class="links">

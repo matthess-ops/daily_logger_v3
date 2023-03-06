@@ -17,14 +17,16 @@ class CreateDailyActivitiesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('user_id');
-            $table->json('time_slots');
-            $table->json('main_activities');
-            $table->json('scaled_activities');
-            $table->json('scaled_activities_scores');
+            // $table->json('time_slots');
+            $table->text('time_slots');
+
+            $table->text('main_activities');
+            $table->text('scaled_activities');
+            $table->text('scaled_activities_scores');
 
             $table->string('date_today');
-            $table->json('colors');
-            $table->json('time_values');
+            $table->text('colors');
+            $table->text('time_values');
             $table->boolean('started')->default(0);
             $table->boolean('completed')->default(0);
 
