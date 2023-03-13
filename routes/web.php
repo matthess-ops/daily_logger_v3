@@ -121,7 +121,7 @@ Route::group(['prefix' => 'client/activities'], function() {
 
 Route::group(['prefix' => 'client/daily-activity'], function() {
 
-    Route::get('{user_id}/', 'DailyActivityController@index')->name('dailyActivity.index')->middleware('auth');
+    // Route::get('{user_id}/', 'DailyActivityController@index')->name('dailyActivity.index')->middleware('auth');
     Route::get('{user_id}/create', 'DailyActivityController@create')->name('dailyActivity.create')->middleware('auth');
     Route::post('{user_id}/create', 'DailyActivityController@store')->name('dailyActivity.store')->middleware('auth');
     Route::get('{user_id}/{daily_activity_id}/show', 'DailyActivityController@show')->name('dailyActivity.show')->middleware('auth');
