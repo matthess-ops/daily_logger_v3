@@ -24,18 +24,31 @@ class ClientController extends Controller
     {
         if (Auth::user()->isAdmin()) {
             $this->authorize('isAdmin');
+            $search = $request->input('search');
+            $clients = Client::paginate(10);
+            $clients = Client::with('user')
+                ->where('firstname', 'LIKE', "%{$search}%")
+                ->orWhere('lastname', 'LIKE', "%{$search}%")
+                ->paginate(10);
+            return view('web.sections.admin.client.index', compact('clients'));
         }
 
         if (Auth::user()->isMentor()) {
             $this->authorize('isMentor');
+            $search = $request->input('search');
+            $clients = Client::paginate(10);
+            $clients = Client::with('user')
+                ->where('firstname', 'LIKE', "%{$search}%")
+                ->orWhere('lastname', 'LIKE', "%{$search}%")
+                ->paginate(10);
+            return view('web.sections.admin.client.index', compact('clients'));
         }
-        $search = $request->input('search');
-        $clients = Client::paginate(10);
-        $clients = Client::with('user')
-            ->where('firstname', 'LIKE', "%{$search}%")
-            ->orWhere('lastname', 'LIKE', "%{$search}%")
-            ->paginate(10);
-        return view('web.sections.admin.client.index', compact('clients'));
+        if (Auth::user()->isClient()) {
+           abort(403);
+        }
+
+
+    
     }
 
     /**

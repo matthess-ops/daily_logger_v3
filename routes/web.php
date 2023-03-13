@@ -1,8 +1,9 @@
 <?php
 
+use App\DailyActivity;
+use Illuminate\Support\Carbon;
 use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Route;
-use App\DailyActivity;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -17,7 +18,26 @@ use Illuminate\Support\Facades\Artisan;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+
+    if (Auth::check()) {
+        if (Auth::user()->isClient()) { // do your magic here
+     return redirect()->route('log.edit', ["user_id" => Auth::id(), 'date' => Carbon::today()]);
+ }
+
+ if (Auth::user()->isAdmin()) { // do your magic here
+     return redirect()->route('client.index');
+ }
+
+ if (Auth::user()->isMentor()) { // do your magic here
+     return redirect()->route('mentor.dailyquestion.index');
+ }
+ }   else{
+    //  dump('user not loggged in');
+     return view('welcome');
+
+ }
+
+
 });
 
 Auth::routes();
@@ -201,8 +221,8 @@ Route::patch('worktime/{client_id}/update', 'ClientWorkTimeController@update')->
 Route::get('send-mail', function () {
    
     $details = [
-        'title' => 'Mail from ItSolutionStuff.com',
-        'body' => 'This is for testing email using smtp'
+        'title' => 'Dit is een testmail',
+        'body' => 'testmail using using smtp'
     ];
    
     \Mail::to('matthijnwur@gmail.com')->send(new \App\Mail\MyTestMail($details));
